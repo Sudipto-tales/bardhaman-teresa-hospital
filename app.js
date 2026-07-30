@@ -7,15 +7,15 @@
 
     /* Validated categorical palette (CVD-checked, fixed order — never cycled) */
     const C = {
-        teal: '#00897B',
-        orange: '#F57C00',
-        indigo: '#5C6BC0',
-        pink: '#C2185B',
-        grid: '#E7EEED',
-        ink: '#5A6B75',
+        red: '#C1272D',
+        blue: '#2E6BB8',
+        navy: '#1B3E7A',
+        magenta: '#A81E5C',
+        grid: '#F0E3E8',
+        ink: '#6B5A62',
         surface: '#FFFFFF'
     };
-    const SERIES = [C.teal, C.orange, C.indigo, C.pink];
+    const SERIES = [C.red, C.blue, C.navy, C.magenta];
 
     /* =====================================================
        1. SIDEBAR — active pill tracking
@@ -59,10 +59,10 @@
         patients: {
             title: ['Patient', 'Records'], crumb: 'Hospital · Patients',
             stats: [
-                ['fa-users', 'teal', '1,245', 'Registered patients', 'up', '6.1% this month'],
-                ['fa-bed-pulse', 'orange', '212', 'Currently admitted', 'up', '11 since Monday'],
-                ['fa-person-walking-arrow-right', 'indigo', '94', 'Discharged this week', 'up', '4.2%'],
-                ['fa-triangle-exclamation', 'pink', '7', 'Critical care', 'down', '2 vs yesterday']
+                ['fa-users', 'red', '1,245', 'Registered patients', 'up', '6.1% this month'],
+                ['fa-bed-pulse', 'blue', '212', 'Currently admitted', 'up', '11 since Monday'],
+                ['fa-person-walking-arrow-right', 'navy', '94', 'Discharged this week', 'up', '4.2%'],
+                ['fa-triangle-exclamation', 'magenta', '7', 'Critical care', 'down', '2 vs yesterday']
             ],
             table: {
                 title: 'All patients',
@@ -81,10 +81,10 @@
         doctors: {
             title: ['Doctors', 'Directory'], crumb: 'Hospital · Doctors',
             stats: [
-                ['fa-user-doctor', 'teal', '142', 'Active doctors', 'up', '4 joined this month'],
-                ['fa-calendar-check', 'indigo', '96%', 'Slot utilisation', 'up', '3.1%'],
-                ['fa-star', 'orange', '4.7', 'Avg. patient rating', 'up', '0.2'],
-                ['fa-user-clock', 'pink', '9', 'On leave today', 'down', '2 vs last week']
+                ['fa-user-doctor', 'red', '142', 'Active doctors', 'up', '4 joined this month'],
+                ['fa-calendar-check', 'navy', '96%', 'Slot utilisation', 'up', '3.1%'],
+                ['fa-star', 'blue', '4.7', 'Avg. patient rating', 'up', '0.2'],
+                ['fa-user-clock', 'magenta', '9', 'On leave today', 'down', '2 vs last week']
             ],
             table: {
                 title: 'Doctor profiles shown on the website',
@@ -103,10 +103,10 @@
         departments: {
             title: ['Department', 'Manager'], crumb: 'Hospital · Departments',
             stats: [
-                ['fa-hospital', 'teal', '18', 'Departments', 'up', '1 added'],
-                ['fa-bed', 'indigo', '640', 'Total beds', 'up', '24 new'],
-                ['fa-gauge-high', 'orange', '78%', 'Average occupancy', 'up', '5.4%'],
-                ['fa-truck-medical', 'pink', '28', 'Ambulances on call', 'up', '3']
+                ['fa-hospital', 'red', '18', 'Departments', 'up', '1 added'],
+                ['fa-bed', 'navy', '640', 'Total beds', 'up', '24 new'],
+                ['fa-gauge-high', 'blue', '78%', 'Average occupancy', 'up', '5.4%'],
+                ['fa-truck-medical', 'magenta', '28', 'Ambulances on call', 'up', '3']
             ],
             table: {
                 title: 'Departments listed on the website',
@@ -125,10 +125,10 @@
         appointments: {
             title: ['Appointment', 'Desk'], crumb: 'Hospital · Appointments',
             stats: [
-                ['fa-calendar-day', 'teal', '318', 'Booked today', 'up', '8.2%'],
-                ['fa-globe', 'indigo', '61%', 'Booked from website', 'up', '9.6%'],
-                ['fa-clock-rotate-left', 'orange', '24', 'Rescheduled', 'down', '4'],
-                ['fa-ban', 'pink', '11', 'No-shows', 'down', '2.3%']
+                ['fa-calendar-day', 'red', '318', 'Booked today', 'up', '8.2%'],
+                ['fa-globe', 'navy', '61%', 'Booked from website', 'up', '9.6%'],
+                ['fa-clock-rotate-left', 'blue', '24', 'Rescheduled', 'down', '4'],
+                ['fa-ban', 'magenta', '11', 'No-shows', 'down', '2.3%']
             ],
             table: {
                 title: 'Today’s schedule',
@@ -147,10 +147,10 @@
         billing: {
             title: ['Billing', 'Ledger'], crumb: 'Hospital · Billing',
             stats: [
-                ['fa-indian-rupee-sign', 'teal', '₹42.8L', 'Revenue this month', 'up', '5.6%'],
-                ['fa-file-invoice-dollar', 'indigo', '1,082', 'Invoices raised', 'up', '3.9%'],
-                ['fa-hourglass-half', 'orange', '₹6.2L', 'Outstanding', 'down', '1.8%'],
-                ['fa-shield-heart', 'pink', '38%', 'Insurance claims', 'up', '2.4%']
+                ['fa-indian-rupee-sign', 'red', '₹42.8L', 'Revenue this month', 'up', '5.6%'],
+                ['fa-file-invoice-dollar', 'navy', '1,082', 'Invoices raised', 'up', '3.9%'],
+                ['fa-hourglass-half', 'blue', '₹6.2L', 'Outstanding', 'down', '1.8%'],
+                ['fa-shield-heart', 'magenta', '38%', 'Insurance claims', 'up', '2.4%']
             ],
             table: {
                 title: 'Recent invoices',
@@ -168,10 +168,10 @@
         pages: {
             title: ['Pages &', 'Content'], crumb: 'Website · Pages & Content',
             stats: [
-                ['fa-file-lines', 'teal', '46', 'Published pages', 'up', '3 this month'],
-                ['fa-pen-ruler', 'orange', '7', 'Drafts', 'up', '2'],
-                ['fa-eye', 'indigo', '96,110', 'Page views', 'up', '9.8%'],
-                ['fa-link-slash', 'pink', '3', 'Broken links', 'down', '5 fixed']
+                ['fa-file-lines', 'red', '46', 'Published pages', 'up', '3 this month'],
+                ['fa-pen-ruler', 'blue', '7', 'Drafts', 'up', '2'],
+                ['fa-eye', 'navy', '96,110', 'Page views', 'up', '9.8%'],
+                ['fa-link-slash', 'magenta', '3', 'Broken links', 'down', '5 fixed']
             ],
             table: {
                 title: 'Website pages',
@@ -190,10 +190,10 @@
         testimonials: {
             title: ['Patient', 'Testimonials'], crumb: 'Website · Testimonials',
             stats: [
-                ['fa-comment-medical', 'teal', '218', 'Total testimonials', 'up', '12 new'],
-                ['fa-circle-check', 'indigo', '186', 'Approved', 'up', '8'],
-                ['fa-clock', 'orange', '4', 'Awaiting review', 'up', '4'],
-                ['fa-star', 'pink', '4.7', 'Average rating', 'up', '0.1']
+                ['fa-comment-medical', 'red', '218', 'Total testimonials', 'up', '12 new'],
+                ['fa-circle-check', 'navy', '186', 'Approved', 'up', '8'],
+                ['fa-clock', 'blue', '4', 'Awaiting review', 'up', '4'],
+                ['fa-star', 'magenta', '4.7', 'Average rating', 'up', '0.1']
             ],
             table: {
                 title: 'Moderation queue',
@@ -211,10 +211,10 @@
         gallery: {
             title: ['Media', 'Gallery'], crumb: 'Website · Media Gallery',
             stats: [
-                ['fa-images', 'teal', '412', 'Media files', 'up', '26 uploaded'],
-                ['fa-folder-open', 'indigo', '14', 'Albums', 'up', '1'],
-                ['fa-file-zipper', 'orange', '1.8 GB', 'Storage used', 'up', '120 MB'],
-                ['fa-image', 'pink', '38', 'Missing alt text', 'down', '14 fixed']
+                ['fa-images', 'red', '412', 'Media files', 'up', '26 uploaded'],
+                ['fa-folder-open', 'navy', '14', 'Albums', 'up', '1'],
+                ['fa-file-zipper', 'blue', '1.8 GB', 'Storage used', 'up', '120 MB'],
+                ['fa-image', 'magenta', '38', 'Missing alt text', 'down', '14 fixed']
             ],
             table: {
                 title: 'Recent uploads',
@@ -232,10 +232,10 @@
         blog: {
             title: ['Blog &', 'News'], crumb: 'Website · Blog & News',
             stats: [
-                ['fa-newspaper', 'teal', '84', 'Published posts', 'up', '5 this month'],
-                ['fa-eye', 'indigo', '18,420', 'Blog reads', 'up', '16.2%'],
-                ['fa-comments', 'orange', '96', 'Comments', 'up', '11'],
-                ['fa-share-nodes', 'pink', '1,204', 'Social shares', 'up', '7.8%']
+                ['fa-newspaper', 'red', '84', 'Published posts', 'up', '5 this month'],
+                ['fa-eye', 'navy', '18,420', 'Blog reads', 'up', '16.2%'],
+                ['fa-comments', 'blue', '96', 'Comments', 'up', '11'],
+                ['fa-share-nodes', 'magenta', '1,204', 'Social shares', 'up', '7.8%']
             ],
             table: {
                 title: 'Latest articles',
@@ -253,10 +253,10 @@
         seo: {
             title: ['SEO', 'Manager'], crumb: 'Growth · SEO Manager',
             stats: [
-                ['fa-magnifying-glass-chart', 'teal', '82', 'SEO health score', 'up', '6 pts'],
-                ['fa-ranking-star', 'indigo', '14', 'Keywords in top 10', 'up', '3'],
-                ['fa-link', 'orange', '208', 'Backlinks', 'up', '18'],
-                ['fa-bug', 'pink', '9', 'Crawl issues', 'down', '12 fixed']
+                ['fa-magnifying-glass-chart', 'red', '82', 'SEO health score', 'up', '6 pts'],
+                ['fa-ranking-star', 'navy', '14', 'Keywords in top 10', 'up', '3'],
+                ['fa-link', 'blue', '208', 'Backlinks', 'up', '18'],
+                ['fa-bug', 'magenta', '9', 'Crawl issues', 'down', '12 fixed']
             ],
             table: {
                 title: 'Keyword positions',
@@ -285,10 +285,10 @@
         enquiries: {
             title: ['Website', 'Enquiries'], crumb: 'Growth · Enquiries',
             stats: [
-                ['fa-envelope-open-text', 'teal', '264', 'Enquiries this month', 'up', '13.7%'],
-                ['fa-reply', 'indigo', '92%', 'Responded < 24h', 'up', '4.1%'],
-                ['fa-phone', 'orange', '118', 'Callback requests', 'up', '9'],
-                ['fa-face-smile', 'pink', '31%', 'Converted to visits', 'up', '2.8%']
+                ['fa-envelope-open-text', 'red', '264', 'Enquiries this month', 'up', '13.7%'],
+                ['fa-reply', 'navy', '92%', 'Responded < 24h', 'up', '4.1%'],
+                ['fa-phone', 'blue', '118', 'Callback requests', 'up', '9'],
+                ['fa-face-smile', 'magenta', '31%', 'Converted to visits', 'up', '2.8%']
             ],
             table: {
                 title: 'Inbox',
@@ -321,8 +321,8 @@
             form2: {
                 title: 'Appearance & integrations',
                 fields: [
-                    ['Brand primary colour', 'input', '#00897B', ''],
-                    ['Brand accent colour', 'input', '#F57C00', ''],
+                    ['Brand primary colour', 'input', '#C1272D', ''],
+                    ['Brand accent colour', 'input', '#2E6BB8', ''],
                     ['Booking widget', 'select', 'Enabled|Disabled', ''],
                     ['Live chat', 'select', 'Enabled — 08:00 to 22:00|Disabled', ''],
                     ['Facebook page', 'input', 'facebook.com/teresamemorial', ''],
@@ -334,10 +334,10 @@
         users: {
             title: ['Users &', 'Roles'], crumb: 'System · Users & Roles',
             stats: [
-                ['fa-user-shield', 'teal', '24', 'Panel users', 'up', '2 added'],
-                ['fa-key', 'indigo', '6', 'Roles defined', 'up', '1'],
-                ['fa-clock-rotate-left', 'orange', '318', 'Actions logged today', 'up', '12%'],
-                ['fa-lock', 'pink', '2', 'Locked accounts', 'down', '1']
+                ['fa-user-shield', 'red', '24', 'Panel users', 'up', '2 added'],
+                ['fa-key', 'navy', '6', 'Roles defined', 'up', '1'],
+                ['fa-clock-rotate-left', 'blue', '318', 'Actions logged today', 'up', '12%'],
+                ['fa-lock', 'magenta', '2', 'Locked accounts', 'down', '1']
             ],
             table: {
                 title: 'Panel access',
@@ -539,7 +539,7 @@
     });
 
     const tooltipCfg = {
-        backgroundColor: '#24333F', padding: 10, cornerRadius: 10, displayColors: true,
+        backgroundColor: '#2C2028', padding: 10, cornerRadius: 10, displayColors: true,
         usePointStyle: true, titleFont: { family: 'Poppins', size: 11 },
         bodyFont: { family: 'Poppins', size: 12 }
     };
@@ -623,8 +623,8 @@
             data: {
                 labels: v.labels,
                 datasets: [
-                    lineDataset('This period', v.now, C.teal, true),
-                    lineDataset('Previous period', v.prev, C.indigo, false)
+                    lineDataset('This period', v.now, C.red, true),
+                    lineDataset('Previous period', v.prev, C.navy, false)
                 ]
             },
             options: {
@@ -668,7 +668,7 @@
                 datasets: [{
                     label: 'Appointments',
                     data: [5120, 5480, 5960, 6340, 6810, 7420],
-                    backgroundColor: C.teal,
+                    backgroundColor: C.red,
                     borderRadius: { topLeft: 4, topRight: 4 },
                     borderSkipped: 'bottom',
                     maxBarThickness: 24
@@ -694,8 +694,8 @@
             data: {
                 labels: ['Organic', 'Direct', 'Social', 'Referral', 'Paid'],
                 datasets: [
-                    { label: 'This month', data: [16140, 9990, 6916, 3458, 1916], backgroundColor: C.teal, borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: 'bottom', maxBarThickness: 22 },
-                    { label: 'Last month', data: [14020, 9310, 5480, 3110, 1740], backgroundColor: C.indigo, borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: 'bottom', maxBarThickness: 22 }
+                    { label: 'This month', data: [16140, 9990, 6916, 3458, 1916], backgroundColor: C.red, borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: 'bottom', maxBarThickness: 22 },
+                    { label: 'Last month', data: [14020, 9310, 5480, 3110, 1740], backgroundColor: C.navy, borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: 'bottom', maxBarThickness: 22 }
                 ]
             },
             options: {
@@ -712,7 +712,7 @@
                 labels: ['Mobile', 'Desktop', 'Tablet'],
                 datasets: [{
                     data: [62, 31, 7],
-                    backgroundColor: [C.teal, C.orange, C.indigo],
+                    backgroundColor: [C.red, C.blue, C.navy],
                     borderColor: C.surface, borderWidth: 2, hoverOffset: 6
                 }]
             },
