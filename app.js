@@ -88,14 +88,26 @@
             ],
             table: {
                 title: 'Doctor profiles shown on the website',
-                cols: ['Doctor', 'Department', 'Experience', 'Consults / wk', 'Rating', 'Profile'],
+                cols: ['Doctor', 'Department', 'Experience', 'Consults / wk', 'Rating', 'Profile', 'Action'],
+                actions: [{ label: 'Add doctor', route: 'doctors-add' }],
                 rows: [
-                    ['Dr. Rupa Sen', 'Cardiology', '18 yrs', '64', '4.9 ★', ['ok', 'Published']],
-                    ['Dr. Arindam Bose', 'Neurology', '15 yrs', '52', '4.8 ★', ['ok', 'Published']],
-                    ['Dr. Sneha Iyer', 'Pediatrics', '11 yrs', '71', '4.9 ★', ['ok', 'Published']],
-                    ['Dr. Manoj Roy', 'Orthopedics', '20 yrs', '48', '4.6 ★', ['warn', 'Draft']],
-                    ['Dr. Nabanita Dutta', 'Oncology', '13 yrs', '39', '4.7 ★', ['ok', 'Published']],
-                    ['Dr. Kabir Alam', 'ENT', '8 yrs', '44', '4.5 ★', ['off', 'Hidden']]
+                    ['Dr. Rupa Sen', 'Cardiology', '18 yrs', '64', '4.9 ★', ['ok', 'Published'], { type: 'action', page: 'doctors', index: 0 }],
+                    ['Dr. Arindam Bose', 'Neurology', '15 yrs', '52', '4.8 ★', ['ok', 'Published'], { type: 'action', page: 'doctors', index: 1 }],
+                    ['Dr. Sneha Iyer', 'Pediatrics', '11 yrs', '71', '4.9 ★', ['ok', 'Published'], { type: 'action', page: 'doctors', index: 2 }],
+                    ['Dr. Manoj Roy', 'Orthopedics', '20 yrs', '48', '4.6 ★', ['warn', 'Draft'], { type: 'action', page: 'doctors', index: 3 }],
+                    ['Dr. Nabanita Dutta', 'Oncology', '13 yrs', '39', '4.7 ★', ['ok', 'Published'], { type: 'action', page: 'doctors', index: 4 }],
+                    ['Dr. Kabir Alam', 'ENT', '8 yrs', '44', '4.5 ★', ['off', 'Hidden'], { type: 'action', page: 'doctors', index: 5 }]
+                ]
+            },
+            form: {
+                title: 'Doctor profile editor',
+                fields: [
+                    ['Doctor name', 'input', '', ''],
+                    ['Department', 'input', '', ''],
+                    ['Experience', 'input', '', ''],
+                    ['Consults / wk', 'input', '', ''],
+                    ['Rating', 'input', '', ''],
+                    ['Status', 'select', 'Published|Draft|Hidden', '']
                 ]
             }
         },
@@ -110,14 +122,26 @@
             ],
             table: {
                 title: 'Departments listed on the website',
-                cols: ['Department', 'Head', 'Doctors', 'Beds', 'Occupancy', 'Page'],
+                cols: ['Department', 'Head', 'Doctors', 'Beds', 'Occupancy', 'Page', 'Action'],
+                actions: [{ label: 'Add department', route: 'departments-add' }],
                 rows: [
-                    ['Cardiology', 'Dr. Rupa Sen', '19', '96', '84%', ['ok', 'Live']],
-                    ['Neurology', 'Dr. Arindam Bose', '14', '72', '69%', ['ok', 'Live']],
-                    ['Pediatrics', 'Dr. Sneha Iyer', '17', '80', '77%', ['ok', 'Live']],
-                    ['Orthopedics', 'Dr. Manoj Roy', '12', '64', '71%', ['warn', 'Draft']],
-                    ['Oncology', 'Dr. Nabanita Dutta', '11', '58', '81%', ['ok', 'Live']],
-                    ['Emergency & Trauma', 'Dr. Kabir Alam', '22', '110', '92%', ['ok', 'Live']]
+                    ['Cardiology', 'Dr. Rupa Sen', '19', '96', '84%', ['ok', 'Live'], { type: 'action', page: 'departments', index: 0 }],
+                    ['Neurology', 'Dr. Arindam Bose', '14', '72', '69%', ['ok', 'Live'], { type: 'action', page: 'departments', index: 1 }],
+                    ['Pediatrics', 'Dr. Sneha Iyer', '17', '80', '77%', ['ok', 'Live'], { type: 'action', page: 'departments', index: 2 }],
+                    ['Orthopedics', 'Dr. Manoj Roy', '12', '64', '71%', ['warn', 'Draft'], { type: 'action', page: 'departments', index: 3 }],
+                    ['Oncology', 'Dr. Nabanita Dutta', '11', '58', '81%', ['ok', 'Live'], { type: 'action', page: 'departments', index: 4 }],
+                    ['Emergency & Trauma', 'Dr. Kabir Alam', '22', '110', '92%', ['ok', 'Live'], { type: 'action', page: 'departments', index: 5 }]
+                ]
+            },
+            form: {
+                title: 'Department editor',
+                fields: [
+                    ['Department', 'input', '', ''],
+                    ['Head', 'input', '', ''],
+                    ['Doctors', 'input', '', ''],
+                    ['Beds', 'input', '', ''],
+                    ['Occupancy', 'input', '', ''],
+                    ['Status', 'select', 'Live|Draft|Hidden', '']
                 ]
             }
         },
@@ -386,13 +410,23 @@
             <span class="delta ${dir}"><i class="fa-solid fa-caret-${dir === 'up' ? 'up' : 'down'}"></i> ${esc(note)}</span>
         </article>`;
 
-    const cell = (v) => Array.isArray(v)
-        ? `<td><span class="tag ${v[0]}">${esc(v[1])}</span></td>`
-        : `<td>${esc(v)}</td>`;
+    const cell = (v) => {
+        if (Array.isArray(v)) return `<td><span class="tag ${v[0]}">${esc(v[1])}</span></td>`;
+        if (v && typeof v === 'object' && v.type === 'action') {
+            return `<td class="cell-actions"><button type="button" class="table-btn" data-route="${esc(v.page)}-edit" data-index="${v.index}">Edit</button></td>`;
+        }
+        return `<td>${esc(v)}</td>`;
+    };
 
     const tableCard = (t, span = 'c12') => `
         <article class="card ${span} anim-item">
-            <div class="card-head"><h3>${esc(t.title)}</h3><span class="pill soft">${t.rows.length} records</span></div>
+            <div class="card-head">
+                <h3>${esc(t.title)}</h3>
+                <div class="card-head-actions">
+                    ${(t.actions || []).map(action => `<button type="button" class="btn-link" data-route="${esc(action.route)}">${esc(action.label)}</button>`).join('')}
+                    <span class="pill soft">${t.rows.length} records</span>
+                </div>
+            </div>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead>
@@ -405,9 +439,35 @@
         const wide = type === 'textarea' ? ' wide' : '';
         let control;
         if (type === 'textarea') control = `<textarea>${esc(value)}</textarea>`;
-        else if (type === 'select') control = `<select>${value.split('|').map(o => `<option>${esc(o)}</option>`).join('')}</select>`;
+        else if (type === 'select') control = `<select>${value.split('|').map(o => `<option ${o === value ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
         else control = `<input type="text" value="${esc(value)}">`;
         return `<div class="field${wide}"><label>${esc(label)}</label>${control}${hint ? `<small>${esc(hint)}</small>` : ''}</div>`;
+    };
+
+    const buildFormFields = (pageKey, mode, rowIndex = null) => {
+        const page = PAGES[pageKey];
+        if (!page || !page.form) return [];
+        const fields = page.form.fields.map(field => [...field]);
+        if (mode === 'edit' && rowIndex !== null) {
+            const row = page.table.rows[rowIndex] || [];
+            if (pageKey === 'doctors') {
+                fields[0][2] = row[0] || '';
+                fields[1][2] = row[1] || '';
+                fields[2][2] = row[2] || '';
+                fields[3][2] = row[3] || '';
+                fields[4][2] = row[4] || '';
+                fields[5][2] = Array.isArray(row[5]) ? row[5][1] : row[5] || '';
+            }
+            if (pageKey === 'departments') {
+                fields[0][2] = row[0] || '';
+                fields[1][2] = row[1] || '';
+                fields[2][2] = row[2] || '';
+                fields[3][2] = row[3] || '';
+                fields[4][2] = row[4] || '';
+                fields[5][2] = Array.isArray(row[5]) ? row[5][1] : row[5] || '';
+            }
+        }
+        return fields;
     };
 
     const formCard = (f, span = 'c6') => `
@@ -417,7 +477,7 @@
             <button class="btn">Save changes</button>
         </article>`;
 
-    const renderPage = (key) => {
+    const renderPage = (key, mode = 'list') => {
         const p = PAGES[key];
         if (!p) return;
 
@@ -429,6 +489,13 @@
         if (p.static) {
             document.getElementById(p.static).classList.remove('hidden');
         } else {
+            if (mode === 'add' || mode === 'edit') {
+                const formData = { title: p.form.title, fields: buildFormFields(key, mode, Number(location.hash.split('index=')[1] || 0)) };
+                dynamicView.innerHTML = formCard(formData, 'c12');
+                dynamicView.classList.remove('hidden');
+                return;
+            }
+
             let html = (p.stats || []).map(statCard).join('');
             if (p.table) html += tableCard(p.table, p.form ? 'c12' : 'c12');
             if (p.form) html += formCard(p.form, p.form2 ? 'c6' : (p.table ? 'c12' : 'c8'));
@@ -443,10 +510,10 @@
     };
 
     const goTo = (key, push = true) => {
-        const item = navItems.find(i => i.dataset.page === key);
-        if (!item) return;
-        setActive(item);
-        renderPage(key);
+        const [pageKey, mode = 'list'] = key.split('-');
+        const item = navItems.find(i => i.dataset.page === pageKey);
+        if (item) setActive(item);
+        renderPage(pageKey, mode);
         if (push) history.replaceState(null, '', '#' + key);
     };
 
@@ -454,6 +521,17 @@
     window.addEventListener('hashchange', () => goTo(location.hash.slice(1), false));
 
     document.addEventListener('click', (e) => {
+        const routeBtn = e.target.closest('[data-route]');
+        if (routeBtn) {
+            e.preventDefault();
+            const rawRoute = routeBtn.dataset.route;
+            const route = rawRoute.includes('-') ? rawRoute : `${rawRoute}-list`;
+            const index = routeBtn.dataset.index;
+            const finalRoute = index !== undefined ? `${route}-index=${index}` : route;
+            goTo(finalRoute);
+            return;
+        }
+
         const goto = e.target.closest('[data-goto]');
         if (!goto) return;
         e.preventDefault();
@@ -791,6 +869,7 @@
     const boot = () => {
         const hash = location.hash.slice(1);
         if (hash && PAGES[hash] && hash !== 'dashboard') goTo(hash, false);
+        else if (hash) goTo(hash, false);
         stagger();
         fillTracks();
         setTimeout(initDashCharts, 320);
