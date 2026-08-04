@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Theme resolved before the stylesheet so the first paint is already
+         correct — a deferred script would flash the light page first.
+         Stored choice wins; with none, follow the OS. -->
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('tmh-theme');
+                document.documentElement.dataset.theme = stored
+                    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            } catch (e) { /* private mode — stay on the light default */ }
+        })();
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Appointments &mdash; Teresa Memorial Hospital</title>
+    <meta name="description" content="Book an appointment, find us on G.T. Road Bardhaman, or reach the 24-hour emergency line at Teresa Memorial Hospital.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/website.css">
+    <link rel="stylesheet" href="assets/pages.css">
+</head>
+
+<body>
+
+    <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
+    <div class="brand-rail" id="brandRail">
+        <a href="website.html" class="brand-rail__link">
+            <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <span class="brand-rail__fallback" style="display:none">
+                <span class="brand-rail__mark"><i class="fa-solid fa-plus"></i></span>
+                <span class="brand-rail__word">TERESA<span>MEMORIAL</span></span>
+            </span>
+        </a>
+    </div>
+
+    <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
+    <div class="nav-shell" id="navShell">
+        <div class="nav-topbar">
+            <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
+            <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
+        </div>
+
+        <nav class="nav-bar" aria-label="Primary">
+            <a href="website.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+
+            <div class="nav-drop">
+                <a href="departments.html" class="nav-link">Our Department <i class="fa-solid fa-chevron-down"></i></a>
+                <div class="nav-mega">
+                    <a href="departments.html" class="nav-mega-item">All Departments <span>Overview &amp; Directory</span></a>
+                    <a href="cardiology.html" class="nav-mega-item">Cardiology <span>6+ Doctors Available</span></a>
+                    <a href="neuro-surgery.html" class="nav-mega-item">Neuro Surgery <span>2+ Doctors Available</span></a>
+                    <a href="nephrology.html" class="nav-mega-item">Medicine & Nephrology <span>2+ Doctors Available</span></a>
+                    <a href="orthopedics.html" class="nav-mega-item">Orthopedic Surgery <span>2+ Doctors Available</span></a>
+                    <a href="dental-care.html" class="nav-mega-item">Dental Care <span>1+ Doctors Available</span></a>
+                    <a href="prenatal-care.html" class="nav-mega-item">Prenatal Care <span>1+ Doctors Available</span></a>
+                    <a href="nutrition.html" class="nav-mega-item">Food & Nutrition <span>1+ Doctors Available</span></a>
+                    <a href="ophthalmology.html" class="nav-mega-item">Ophthalmology <span>2+ Doctors Available</span></a>
+                    <a href="general-surgery.html" class="nav-mega-item">General Surgery <span>1+ Doctors Available</span></a>
+                    <a href="pediatric-surgery.html" class="nav-mega-item">Pediatric Surgery <span>2+ Doctors Available</span></a>
+                    <a href="lab-diagnostics.html" class="nav-mega-item">Lab Diagnostics <span>Same-day Reports</span></a>
+                </div>
+            </div>
+
+            <a href="facilities.html" class="nav-link">Facilities</a>
+            <a href="careers.html" class="nav-link">Careers</a>
+            <a href="contact.html" class="nav-link is-active">Contact</a>
+
+            <button type="button" class="nav-search-toggle" id="navSearchBtn" aria-label="Search the site"
+                aria-expanded="false" aria-controls="navSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+
+            <!-- borrows .nav-search-toggle so it picks up the same shape and
+                 the same over-hero / is-compact colour states -->
+            <button type="button" class="nav-search-toggle nav-theme-toggle" id="themeBtn" aria-pressed="false"
+                aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
+                    class="fa-solid fa-sun"></i></button>
+
+            <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
+
+            <!-- takes over the whole bar while open; see .nav-bar.is-searching -->
+            <div class="nav-search" id="navSearch" role="search">
+                <i class="fa-solid fa-magnifying-glass nav-search__icon"></i>
+                <input type="text" id="navSearchInput" class="nav-search__input" autocomplete="off" spellcheck="false"
+                    placeholder="Search this page — sections, doctors, tests…" aria-label="Search the site"
+                    aria-autocomplete="list" aria-controls="navSearchResults">
+                <button type="button" class="nav-search__close" id="navSearchClose" aria-label="Close search"><i
+                        class="fa-solid fa-xmark"></i></button>
+                <div class="nav-search__panel" id="navSearchResults" role="listbox" aria-label="Search results"></div>
+            </div>
+
+            <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobileMenu"><span></span></button>
+        </nav>
+    </div>
+
+    <!-- mobile overlay menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="website.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="departments.html">Our Department</a>
+        <a href="facilities.html">Facilities</a>
+        <a href="doctors.html">Doctors</a>
+        <a href="blog.html">Blog</a>
+        <a href="careers.html">Careers</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- ============ FLOATING GLASS DOCK (left) ============ -->
+    <aside class="dock" aria-label="Quick actions">
+        <div class="dock__inner" id="dock">
+            <a href="doctors.html" class="dock__btn" aria-label="Find a Doctor">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span class="dock__tip">Find a Doctor</span>
+            </a>
+            <a href="contact.html#map" class="dock__btn" aria-label="Our Location">
+                <i class="fa-solid fa-truck-medical"></i>
+                <span class="dock__tip">Our Location</span>
+            </a>
+            <a href="tel:+913423254567" class="dock__btn" aria-label="Connect With Us">
+                <i class="fa-solid fa-phone"></i>
+                <span class="dock__tip">Connect With Us</span>
+            </a>
+            <a href="https://wa.me/913423254567" class="dock__btn dock__btn--wa" aria-label="WhatsApp" target="_blank"
+                rel="noopener">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span class="dock__tip">WhatsApp</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ============ SCROLL-SPY RAIL (right, populated from [data-section]) ============ -->
+    <nav class="spy" id="spy" aria-label="Section navigation"></nav>
+
+    <main id="top">
+        <!-- ============ PAGE BANNER ============ -->
+        <section class="pg-hero">
+            <img class="pg-hero__img" src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1600&auto=format&fit=crop" alt="" aria-hidden="true">
+            <div class="pg-hero__scrim"></div>
+            <div class="pg-hero__ring" aria-hidden="true"></div>
+            <svg class="pg-hero__ecg" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 40 H300 l14 -24 l16 46 l14 -32 l12 16 H680 l16 -28 l18 42 l14 -30 H1200" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <div class="pg-hero__inner">
+                <nav class="pg-crumb" aria-label="Breadcrumb">
+                    <a href="website.html">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span aria-current="page">Contact</span>
+                </nav>
+
+                <div class="pg-hero__head">
+                    <h1>Book, Ask, <strong>Or Just Come In</strong></h1>
+                    <p class="pg-hero__lead">Appointments are confirmed the same day. Emergencies need no appointment at all — the department is staffed every hour of the year.</p>
+                </div>
+
+                <div class="pg-hero__actions">
+                    <a href="#book" class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Book an Appointment</a>
+                    <a href="tel:+913423254567" class="btn-ghost"><i class="fa-solid fa-phone"></i> +91 342 325 4567</a>
+                </div>
+
+                <div class="pg-hero__chips">
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Same-day confirmation</span>
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Emergency 24/7</span>
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Cashless with 30+ insurers</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section" data-section="Reach Us">
+            <div class="pg-wrap">
+                <div class="ct-tiles">
+                    <article class="ct-tile">
+                        <span class="ct-tile__icon"><i class="fa-solid fa-location-dot"></i></span>
+                        <h3>Visit Us</h3>
+                        <p>G.T. Road, Bardhaman,<br>West Bengal 713101</p>
+                        <a href="#map"><i class="fa-solid fa-arrow-right"></i> See on the map</a>
+                    </article>
+
+                    <article class="ct-tile">
+                        <span class="ct-tile__icon"><i class="fa-solid fa-phone"></i></span>
+                        <h3>Call Us</h3>
+                        <p>Reception and appointments, 8 AM &ndash; 9 PM.</p>
+                        <a href="tel:+913423254567">+91 342 325 4567</a>
+                    </article>
+
+                    <article class="ct-tile">
+                        <span class="ct-tile__icon"><i class="fa-solid fa-envelope"></i></span>
+                        <h3>Email Us</h3>
+                        <p>General enquiries answered within one working day.</p>
+                        <a href="mailto:contact@teresamemorial.org">contact@teresamemorial.org</a>
+                    </article>
+
+                    <article class="ct-tile">
+                        <span class="ct-tile__icon"><i class="fa-brands fa-whatsapp"></i></span>
+                        <h3>WhatsApp</h3>
+                        <p>Reports, prescriptions and appointment changes.</p>
+                        <a href="https://wa.me/913423254567" target="_blank" rel="noopener">Message us</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section pg-section--alt" id="book" data-section="Appointment">
+            <div class="pg-wrap">
+                <div class="ct-split">
+                    <div class="ct-form">
+                        <div class="ct-form__head">
+                            <span class="eyebrow">Appointments</span>
+                            <h2>Request An <strong>Appointment</strong></h2>
+                            <p>Send this and the desk will call you back to confirm a slot, usually within the hour.</p>
+                        </div>
+
+                        <!-- no backend in this build: assets/pages.js validates, confirms and clears -->
+                        <form id="appointmentForm" class="ct-grid" novalidate>
+                            <div class="ct-field">
+                                <label for="ctName">Full name</label>
+                                <input type="text" id="ctName" name="name" required autocomplete="name">
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctPhone">Phone</label>
+                                <input type="tel" id="ctPhone" name="phone" required autocomplete="tel">
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctEmail">Email</label>
+                                <input type="email" id="ctEmail" name="email" autocomplete="email">
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctDept">Department</label>
+                                <select id="ctDept" name="department" required>
+                                    <option value="">Select a department</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="neuro-surgery">Neuro Surgery</option>
+                                    <option value="nephrology">Medicine & Nephrology</option>
+                                    <option value="orthopedics">Orthopedic Surgery</option>
+                                    <option value="dental-care">Dental Care</option>
+                                    <option value="prenatal-care">Prenatal Care</option>
+                                    <option value="nutrition">Food & Nutrition</option>
+                                    <option value="ophthalmology">Ophthalmology</option>
+                                    <option value="general-surgery">General Surgery</option>
+                                    <option value="pediatric-surgery">Pediatric Surgery</option>
+                                    <option value="lab-diagnostics">Lab Diagnostics</option>
+                                    <option value="other">Not sure / other</option>
+                                </select>
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctDate">Preferred date</label>
+                                <input type="date" id="ctDate" name="date">
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctTime">Preferred time</label>
+                                <select id="ctTime" name="time">
+                                    <option value="morning">Morning (8 AM &ndash; 12 PM)</option>
+                                    <option value="afternoon">Afternoon (12 PM &ndash; 4 PM)</option>
+                                    <option value="evening">Evening (4 PM &ndash; 8 PM)</option>
+                                </select>
+                            </div>
+
+                            <div class="ct-field ct-field--full">
+                                <label for="ctMsg">What is the problem?</label>
+                                <textarea id="ctMsg" name="message"
+                                    placeholder="Describe the symptom in your own words — you do not need medical terms."></textarea>
+                            </div>
+
+                            <label class="ct-consent">
+                                <input type="checkbox" name="consent" required>
+                                <span>I agree to be contacted about this request. My details will not be shared
+                                    outside the hospital.</span>
+                            </label>
+
+                            <div class="ct-form__foot">
+                                <button type="submit" class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Request Appointment</button>
+                                <span class="ct-note" id="formNote"><i class="fa-solid fa-circle-check"></i> Thank you — the desk will call you shortly.</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <aside class="ct-aside">
+                        <div class="ct-panel">
+                            <h3>Opening Hours</h3>
+                            <ul class="ct-hours">
+                                <li><span>Emergency</span> <strong>24 hours</strong></li>
+                                <li><span>OPD &mdash; Mon to Fri</span> <strong>8 AM &ndash; 8 PM</strong></li>
+                                <li><span>OPD &mdash; Saturday</span> <strong>8 AM &ndash; 4 PM</strong></li>
+                                <li><span>OPD &mdash; Sunday</span> <strong>9 AM &ndash; 1 PM</strong></li>
+                                <li><span>Laboratory</span> <strong>6 AM &ndash; 10 PM</strong></li>
+                                <li><span>Pharmacy</span> <strong>24 hours</strong></li>
+                                <li><span>General visiting</span> <strong>4 PM &ndash; 7 PM</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="ct-emergency" id="emergency">
+                            <h3>Emergency &amp; Ambulance</h3>
+                            <p>Do not wait for an appointment and do not drive yourself. Call and an ambulance is
+                                dispatched immediately.</p>
+                            <a class="ct-emergency__num" href="tel:+913423254567"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section" id="map" data-section="Location">
+            <div class="pg-wrap">
+                <div class="section-head section-head--center">
+                    <span class="eyebrow">Find Us</span>
+                    <h2>On G.T. Road, <strong>Bardhaman</strong></h2>
+                </div>
+
+                <div class="ct-map" style="margin-top:clamp(24px,3vw,40px)">
+                    <iframe
+                        src="https://www.google.com/maps?q=Bardhaman%2C%20West%20Bengal%20713101&output=embed"
+                        title="Map to Teresa Memorial Hospital, Bardhaman" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                    <div class="ct-map__card">
+                        <h4>Teresa Memorial Hospital</h4>
+                        <p>G.T. Road, Bardhaman, West Bengal 713101</p>
+                        <p>Parking on site &middot; Ambulance bay at the north gate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section pg-section--tight">
+            <div class="pg-wrap">
+                <div class="pg-cta">
+                    <div>
+                        <h2>Still not sure who to ask for?</h2>
+                        <p>Describe the symptom on the phone. The duty physician will route you to the right clinic — that is the desk’s job, not yours.</p>
+                    </div>
+                    <div class="pg-cta__actions">
+                        <a href="contact.html" class="btn-light"><i class="fa-solid fa-calendar-check"></i> Book an Appointment</a>
+                        <a href="tel:+913423254567" class="btn-outline"><i class="fa-solid fa-phone"></i> +91 342 325 4567</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ PRE-FOOTER ============ -->
+    <div class="prefooter" id="prefooter">
+        <div class="prefooter__card">
+            <p>Teresa Memorial operates more than 20 units, including specialist day-care centres.</p>
+            <a class="prefooter__btn" href="departments.html" aria-label="See our departments"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>Delivering an exceptional care experience for every kind of patient.</p>
+            <a class="prefooter__btn" href="about.html" aria-label="About the hospital"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>It is our privilege to care for more than a million people across the district.</p>
+            <a class="prefooter__btn" href="about.html" aria-label="Our reach"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>Driven by a desire to help, we collaborate and support one another.</p>
+            <a class="prefooter__btn" href="doctors.html" aria-label="Meet the team"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <svg class="site-footer__ecg" id="footerEcg" viewBox="0 0 1200 60" preserveAspectRatio="none"
+            aria-hidden="true">
+            <path d="M0 30 H320 l14 -22 l16 44 l14 -30 l12 14 H700 l16 -26 l18 40 l14 -28 H1200" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
+        <div class="ft__grid">
+            <div class="ft__col">
+                <a class="ft__logo" href="website.html" aria-label="Teresa Memorial Hospital">
+                    <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" loading="lazy">
+                </a>
+
+                <div class="ft__contact">
+                    <p><strong>Location:</strong> G.T. Road, Bardhaman,<br>West Bengal 713101</p>
+                    <p><strong>Visiting Hours:</strong><br>
+                        Sunday: 08:00 AM &ndash; 10:00 PM<br>
+                        Monday &ndash; Friday: 06:00 AM &ndash; 12:00 AM</p>
+                </div>
+            </div>
+
+            <div class="ft__col">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="doctors.html">Doctors</a></li>
+                    <li><a href="website.html#testimonials">Testimonials</a></li>
+                    <li><a href="website.html#faq">FAQs</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="departments.html">Site Map</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="careers.html">Careers</a></li>
+                    <li><a href="blog.html">Education</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="departments.html">Areas of Care</a></li>
+                    <li><a href="careers.html#openings">Volunteers</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="facilities.html#visiting">Visitor Information</a></li>
+                    <li><a href="contact.html#emergency">Emergency Care</a></li>
+                    <li><a href="contact.html">Donate</a></li>
+                    <li><a href="lab-diagnostics.html">Online Services</a></li>
+                    <li><a href="contact.html">Pay Your Bills</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>Trust &amp; Legal</h4>
+                <ul>
+                    <li><a href="contact.html">Terms &amp; Conditions</a></li>
+                    <li><a href="contact.html">Privacy Policy</a></li>
+                    <li><a href="facilities.html#visiting">Hospital Stay</a></li>
+                </ul>
+
+                <h4>Social Media</h4>
+                <div class="ft__social">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ft__bottom">
+        <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
+        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
+            aria-label="Developed by Promix">
+            <span>Developed by</span>
+            <img src="assets/promix-logo.png" alt="Promix" loading="lazy">
+        </a>
+    </div>
+
+    <button class="to-top" id="toTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="assets/website.js"></script>
+    <script src="assets/pages.js"></script>
+</body>
+
+</html>

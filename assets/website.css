@@ -48,6 +48,14 @@
     --grad-cool: linear-gradient(135deg, var(--navy), var(--blue));
     --grad-ring: linear-gradient(135deg, var(--crimson), var(--magenta), var(--blue), var(--navy), var(--crimson));
 
+    /* pastel card fills — the about-page pillars and mosaic. Text on
+       them stays var(--ink)/var(--ink-soft), so the dark values below
+       are the only override either theme needs. */
+    --tint-blue: #DCE7F7;
+    --tint-mint: #D9EBE1;
+    --tint-lilac: #E3DCF6;
+    --tint-slate: #ECEDF0;
+
     /* glass */
     --glass-bg: rgba(255, 255, 255, .62);
     --glass-bg-strong: rgba(255, 255, 255, .78);
@@ -161,6 +169,13 @@ html[data-theme="dark"] {
        flat brand tokens are lifted would drop that text below 4.5:1. */
     --grad-cta: linear-gradient(135deg, #C1272D, #A81E5C);
     --grad-cool: linear-gradient(135deg, #1B3E7A, #2E6BB8);
+
+    /* pastels invert to deep tints — same hue family, dark enough to
+       carry the light --ink text */
+    --tint-blue: #16294A;
+    --tint-mint: #12302A;
+    --tint-lilac: #241E45;
+    --tint-slate: #18273D;
 
     /* glass re-bases from white to the surface colour */
     --glass-bg: rgba(16, 31, 54, .62);
@@ -2999,15 +3014,22 @@ body.menu-open .nav-shell {
 
     /* Below 1025px the wide desktop gutter no longer applies, so a left-pinned
        dock would sit on top of section content. Rotate it to a thumb-reachable
-       bottom bar for the whole tablet+phone range instead. */
+       bottom bar for the whole tablet+phone range instead.
+
+       The reserve below has to clear the dock and nothing more, or the page
+       ends on a band of dead space. Dock is 58px tall (40px button + 8px
+       padding each side + 1px border each side) and sits 10px off the bottom,
+       and .ft__bottom already contributes --ft-inset of its own margin, so:
+       10 + 58 + 10 clearance - 10 inset = 68. Keep the two in step if the
+       button size or the dock padding changes. */
     body {
-        padding-bottom: 82px;
+        padding-bottom: 68px;
     }
 
     .dock {
         left: 50%;
         top: auto;
-        bottom: 14px;
+        bottom: 10px;
         transform: translateX(-50%);
     }
 

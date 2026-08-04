@@ -126,6 +126,11 @@
             '.ct-form',
             '.ct-aside > *',
             '.pg-cta',
+            '.ab-banner',
+            '.ab-pillar',
+            '.ab-mosaic > *',
+            '.cr-job',
+            '.cr-mail',
         ];
 
         groups.forEach((sel) => {
@@ -168,11 +173,286 @@
         });
     };
 
+    /* ---------------------------------------------------------
+       About-page testimonial carousel. The quote text lives in
+       .ab-quote__slide elements; the attribution rides on each of
+       them as data-* and is copied into the single footer block.
+       --------------------------------------------------------- */
+    const initQuotes = () => {
+        const box = $('#abQuote');
+        if (!box) return;
+
+        const slides = $$('.ab-quote__slide', box);
+        if (slides.length < 2) return;
+
+        const avatar = $('.ab-quote__avatar', box);
+        const name = $('.ab-quote__name', box);
+        const role = $('.ab-quote__role', box);
+        let i = 0;
+
+        const show = (next) => {
+            i = (next + slides.length) % slides.length;
+            slides.forEach((s, n) => s.classList.toggle('is-active', n === i));
+
+            const d = slides[i].dataset;
+            if (avatar) avatar.src = d.img;
+            if (name) name.textContent = d.name;
+            if (role) role.textContent = d.role;
+        };
+
+        $$('[data-quote]', box).forEach((btn) => {
+            btn.addEventListener('click', () => show(i + (btn.dataset.quote === 'next' ? 1 : -1)));
+        });
+
+        /* arrows work while anywhere in the card has focus */
+        box.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') show(i + 1);
+            else if (e.key === 'ArrowLeft') show(i - 1);
+        });
+    };
+
+    /* ---------------------------------------------------------
+       Careers. window.TMH_JOBS (assets/jobs.js) is the single
+       source for both the list and the detail page, so a vacancy
+       opens or closes without rebuilding the static HTML.
+       --------------------------------------------------------- */
+    const JOBS = () => (Array.isArray(window.TMH_JOBS) ? window.TMH_JOBS : []);
+
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+
+    /* '2026-07-28' -> '28 Jul 2026'; anything unparseable passes through */
+    const niceDate = (iso) => {
+        const d = new Date(`${iso}T00:00:00`);
+        if (Number.isNaN(d.getTime())) return iso || '';
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+
+    const jobChips = (job) => `<ul class="cr-chips">
+                    <li><i class="fa-solid fa-hospital"></i> ${esc(job.dept)}</li>
+                    <li><i class="fa-solid fa-clock"></i> ${esc(job.type)}</li>
+                    <li><i class="fa-solid fa-location-dot"></i> ${esc(job.location)}</li>
+                    <li><i class="fa-solid fa-user-clock"></i> ${esc(job.experience)}</li>
+                </ul>`;
+
+    const initCareers = () => {
+        const list = $('#jobList');
+        if (!list) return;
+
+        const empty = $('#jobEmpty');
+        const count = $('#jobCount');
+        const filter = $('#jobFilter');
+        const all = JOBS();
+
+        if (filter) {
+            [...new Set(all.map((j) => j.dept))].sort().forEach((dept) => {
+                const opt = document.createElement('option');
+                opt.value = dept;
+                opt.textContent = dept;
+                filter.appendChild(opt);
+            });
+        }
+
+        const render = (dept) => {
+            const rows = dept ? all.filter((j) => j.dept === dept) : all;
+
+            list.innerHTML = rows.map((job) => `<li class="cr-job">
+                <div>
+                    <h3>${esc(job.title)}</h3>
+                    ${jobChips(job)}
+                    <span class="cr-job__posted">Posted ${niceDate(job.posted)}${job.closes ? ` &middot; closes ${niceDate(job.closes)}` : ''}</span>
+                </div>
+                <a class="arrow-link" href="job.html?id=${encodeURIComponent(job.id)}"><i
+                        class="fa-solid fa-arrow-right"></i> View &amp; apply</a>
+            </li>`).join('');
+
+            list.hidden = rows.length === 0;
+            if (empty) empty.hidden = rows.length > 0;
+            if (count) {
+                count.textContent = rows.length === 0
+                    ? 'No roles match that filter'
+                    : `${rows.length} open ${rows.length === 1 ? 'role' : 'roles'}`;
+            }
+        };
+
+        render('');
+        if (filter) filter.addEventListener('change', () => render(filter.value));
+    };
+
+    /* ---------------------------------------------------------
+       Job detail — job.html?id=<slug>. An unknown or missing id
+       shows the not-found panel and takes the form away, so an
+       expired link cannot collect applications for nothing.
+       --------------------------------------------------------- */
+    const jobBlock = (title, items) => (items && items.length
+        ? `<div class="cr-jd__block">
+                <h3>${title}</h3>
+                <ul>${items.map((t) => `
+                    <li><i class="fa-solid fa-circle-check"></i> ${esc(t)}</li>`).join('')}
+                </ul>
+            </div>`
+        : '');
+
+    const initJob = () => {
+        const box = $('#jobDetail');
+        if (!box) return;
+
+        const id = new URLSearchParams(window.location.search).get('id');
+        const job = JOBS().find((j) => j.id === id);
+        const applySection = $('#apply');
+
+        if (!job) {
+            box.innerHTML = `<div class="cr-notfound">
+                <i class="fa-solid fa-circle-question"></i>
+                <h3>This role is no longer listed</h3>
+                <p>It may have been filled or the link may be out of date. The current openings are always on the
+                    careers page — or send a CV and HR will match it against what is coming up.</p>
+                <a href="careers.html" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> All open roles</a>
+                <a href="mailto:careers@teresamemorial.org" class="arrow-link"><i
+                        class="fa-solid fa-envelope"></i> Email careers@teresamemorial.org</a>
+            </div>`;
+            /* the whole #apply section goes, mailto panel included — the
+               link above is the replacement route */
+            if (applySection) applySection.remove();
+            return;
+        }
+
+        document.title = `${job.title} — Teresa Memorial Hospital`;
+
+        box.innerHTML = `<div class="cr-jd">
+            <div>
+                <div class="cr-jd__head">
+                    <span class="eyebrow">${esc(job.dept)}</span>
+                    <h2>${esc(job.title)}</h2>
+                    ${jobChips(job)}
+                </div>
+
+                <p class="cr-jd__lead">${esc(job.summary)}</p>
+
+                ${jobBlock('What you will be doing', job.responsibilities)}
+                ${jobBlock('What we need from you', job.requirements)}
+                ${jobBlock('Good to have', job.niceToHave)}
+                ${jobBlock('What we offer', job.benefits)}
+            </div>
+
+            <aside class="cr-jd__aside">
+                <h3>At a glance</h3>
+                <ul class="cr-facts">
+                    <li><span>Department</span> <strong>${esc(job.dept)}</strong></li>
+                    <li><span>Employment</span> <strong>${esc(job.type)}</strong></li>
+                    <li><span>Location</span> <strong>${esc(job.location)}</strong></li>
+                    <li><span>Experience</span> <strong>${esc(job.experience)}</strong></li>
+                    <li><span>Posted</span> <strong>${niceDate(job.posted)}</strong></li>
+                    <li><span>Applications close</span> <strong>${niceDate(job.closes)}</strong></li>
+                </ul>
+                <a href="#apply" class="btn-primary"><i class="fa-solid fa-arrow-down"></i> Apply for this role</a>
+            </aside>
+        </div>`;
+
+        /* carry the role through to the form and the mailto fallback */
+        const role = $('#apRole');
+        if (role) role.value = job.title;
+
+        const mailto = $('#applyMailto');
+        if (mailto) {
+            mailto.href = `mailto:careers@teresamemorial.org?subject=${encodeURIComponent(`Application — ${job.title}`)}`;
+        }
+
+        const crumb = $('.pg-crumb [aria-current]');
+        if (crumb) crumb.textContent = job.title;
+    };
+
+    /* ---------------------------------------------------------
+       Application form. Same no-backend contract as the
+       appointment form above, plus client-side file checks —
+       type and size are the two things a visitor can get wrong
+       in a way no amount of server code will forgive later.
+       --------------------------------------------------------- */
+    const MAX_FILE = 5 * 1024 * 1024;
+    const FILE_TYPES = ['pdf', 'doc', 'docx'];
+
+    const checkFile = (input) => {
+        const box = input.closest('.cr-file');
+        const field = input.closest('.ct-field');
+        const nameEl = box && $('[data-file-name]', box);
+        const errEl = field && $('[data-file-err]', field);
+        const file = input.files && input.files[0];
+
+        const fail = (msg) => {
+            if (box) box.classList.add('has-error');
+            if (errEl) {
+                /* keep the leading <i>, replace the text after it */
+                errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
+                errEl.classList.add('is-visible');
+            }
+            input.value = '';
+            if (nameEl) nameEl.classList.remove('is-visible');
+            return false;
+        };
+
+        if (box) box.classList.remove('has-error');
+        if (errEl) errEl.classList.remove('is-visible');
+        if (nameEl) nameEl.classList.remove('is-visible');
+
+        if (!file) return true;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!FILE_TYPES.includes(ext)) return fail('That file type is not accepted — send a PDF, DOC or DOCX.');
+        if (file.size > MAX_FILE) return fail(`That file is ${(file.size / 1048576).toFixed(1)} MB — the limit is 5 MB.`);
+
+        if (nameEl) {
+            nameEl.innerHTML = `<i class="fa-solid fa-file-lines"></i> ${esc(file.name)}`;
+            nameEl.classList.add('is-visible');
+        }
+        return true;
+    };
+
+    const initApplyForm = () => {
+        const form = $('#applyForm');
+        if (!form) return;
+
+        const note = $('#applyNote', form);
+        const files = $$('input[type="file"]', form);
+
+        files.forEach((input) => input.addEventListener('change', () => checkFile(input)));
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            /* file checks first — reportValidity() would otherwise pass a
+               5 MB .png sitting in a required input */
+            if (files.some((input) => !checkFile(input))) return;
+            if (!form.reportValidity()) return;
+
+            const role = $('#apRole', form);
+            const keepRole = role ? role.value : '';
+            form.reset();
+            if (role) role.value = keepRole;
+
+            files.forEach((input) => {
+                const box = input.closest('.cr-file');
+                const nameEl = box && $('[data-file-name]', box);
+                if (nameEl) nameEl.classList.remove('is-visible');
+            });
+
+            if (note) {
+                note.classList.add('is-visible');
+                setTimeout(() => note.classList.remove('is-visible'), 6000);
+            }
+        });
+    };
+
     const boot = () => {
         initBanner();
         initStats();
+        initQuotes();
+        initCareers();
+        /* fills #jobDetail, so it has to run before the reveals measure it */
+        initJob();
         initReveals();
         initForm();
+        initApplyForm();
         if (HAS_GSAP) ScrollTrigger.refresh();
     };
 

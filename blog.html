@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Theme resolved before the stylesheet so the first paint is already
+         correct — a deferred script would flash the light page first.
+         Stored choice wins; with none, follow the OS. -->
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('tmh-theme');
+                document.documentElement.dataset.theme = stored
+                    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            } catch (e) { /* private mode — stay on the light default */ }
+        })();
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog & Articles &mdash; Teresa Memorial Hospital</title>
+    <meta name="description" content="Health writing from the consultants of Teresa Memorial Hospital — cardiology, maternity, nutrition, orthopedics and emergency care.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/website.css">
+    <link rel="stylesheet" href="assets/pages.css">
+</head>
+
+<body>
+
+    <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
+    <div class="brand-rail" id="brandRail">
+        <a href="website.html" class="brand-rail__link">
+            <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <span class="brand-rail__fallback" style="display:none">
+                <span class="brand-rail__mark"><i class="fa-solid fa-plus"></i></span>
+                <span class="brand-rail__word">TERESA<span>MEMORIAL</span></span>
+            </span>
+        </a>
+    </div>
+
+    <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
+    <div class="nav-shell" id="navShell">
+        <div class="nav-topbar">
+            <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
+            <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
+        </div>
+
+        <nav class="nav-bar" aria-label="Primary">
+            <a href="website.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+
+            <div class="nav-drop">
+                <a href="departments.html" class="nav-link">Our Department <i class="fa-solid fa-chevron-down"></i></a>
+                <div class="nav-mega">
+                    <a href="departments.html" class="nav-mega-item">All Departments <span>Overview &amp; Directory</span></a>
+                    <a href="cardiology.html" class="nav-mega-item">Cardiology <span>6+ Doctors Available</span></a>
+                    <a href="neuro-surgery.html" class="nav-mega-item">Neuro Surgery <span>2+ Doctors Available</span></a>
+                    <a href="nephrology.html" class="nav-mega-item">Medicine & Nephrology <span>2+ Doctors Available</span></a>
+                    <a href="orthopedics.html" class="nav-mega-item">Orthopedic Surgery <span>2+ Doctors Available</span></a>
+                    <a href="dental-care.html" class="nav-mega-item">Dental Care <span>1+ Doctors Available</span></a>
+                    <a href="prenatal-care.html" class="nav-mega-item">Prenatal Care <span>1+ Doctors Available</span></a>
+                    <a href="nutrition.html" class="nav-mega-item">Food & Nutrition <span>1+ Doctors Available</span></a>
+                    <a href="ophthalmology.html" class="nav-mega-item">Ophthalmology <span>2+ Doctors Available</span></a>
+                    <a href="general-surgery.html" class="nav-mega-item">General Surgery <span>1+ Doctors Available</span></a>
+                    <a href="pediatric-surgery.html" class="nav-mega-item">Pediatric Surgery <span>2+ Doctors Available</span></a>
+                    <a href="lab-diagnostics.html" class="nav-mega-item">Lab Diagnostics <span>Same-day Reports</span></a>
+                </div>
+            </div>
+
+            <a href="facilities.html" class="nav-link">Facilities</a>
+            <a href="careers.html" class="nav-link">Careers</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+
+            <button type="button" class="nav-search-toggle" id="navSearchBtn" aria-label="Search the site"
+                aria-expanded="false" aria-controls="navSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
+
+            <!-- borrows .nav-search-toggle so it picks up the same shape and
+                 the same over-hero / is-compact colour states -->
+            <button type="button" class="nav-search-toggle nav-theme-toggle" id="themeBtn" aria-pressed="false"
+                aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
+                    class="fa-solid fa-sun"></i></button>
+
+            <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
+
+            <!-- takes over the whole bar while open; see .nav-bar.is-searching -->
+            <div class="nav-search" id="navSearch" role="search">
+                <i class="fa-solid fa-magnifying-glass nav-search__icon"></i>
+                <input type="text" id="navSearchInput" class="nav-search__input" autocomplete="off" spellcheck="false"
+                    placeholder="Search this page — sections, doctors, tests…" aria-label="Search the site"
+                    aria-autocomplete="list" aria-controls="navSearchResults">
+                <button type="button" class="nav-search__close" id="navSearchClose" aria-label="Close search"><i
+                        class="fa-solid fa-xmark"></i></button>
+                <div class="nav-search__panel" id="navSearchResults" role="listbox" aria-label="Search results"></div>
+            </div>
+
+            <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobileMenu"><span></span></button>
+        </nav>
+    </div>
+
+    <!-- mobile overlay menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="website.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="departments.html">Our Department</a>
+        <a href="facilities.html">Facilities</a>
+        <a href="doctors.html">Doctors</a>
+        <a href="blog.html">Blog</a>
+        <a href="careers.html">Careers</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- ============ FLOATING GLASS DOCK (left) ============ -->
+    <aside class="dock" aria-label="Quick actions">
+        <div class="dock__inner" id="dock">
+            <a href="doctors.html" class="dock__btn" aria-label="Find a Doctor">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span class="dock__tip">Find a Doctor</span>
+            </a>
+            <a href="contact.html#map" class="dock__btn" aria-label="Our Location">
+                <i class="fa-solid fa-truck-medical"></i>
+                <span class="dock__tip">Our Location</span>
+            </a>
+            <a href="tel:+913423254567" class="dock__btn" aria-label="Connect With Us">
+                <i class="fa-solid fa-phone"></i>
+                <span class="dock__tip">Connect With Us</span>
+            </a>
+            <a href="https://wa.me/913423254567" class="dock__btn dock__btn--wa" aria-label="WhatsApp" target="_blank"
+                rel="noopener">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span class="dock__tip">WhatsApp</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ============ SCROLL-SPY RAIL (right, populated from [data-section]) ============ -->
+    <nav class="spy" id="spy" aria-label="Section navigation"></nav>
+
+    <main id="top">
+        <!-- ============ PAGE BANNER ============ -->
+        <section class="pg-hero pg-hero--stats">
+            <img class="pg-hero__img" src="https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?q=80&w=1600&auto=format&fit=crop" alt="" aria-hidden="true">
+            <div class="pg-hero__scrim"></div>
+            <div class="pg-hero__ring" aria-hidden="true"></div>
+            <svg class="pg-hero__ecg" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 40 H300 l14 -24 l16 46 l14 -32 l12 16 H680 l16 -28 l18 42 l14 -30 H1200" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <div class="pg-hero__inner">
+                <nav class="pg-crumb" aria-label="Breadcrumb">
+                    <a href="website.html">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span aria-current="page">Blog</span>
+                </nav>
+
+                <div class="pg-hero__head">
+                    <h1>Health Writing By <strong>The People Treating You</strong></h1>
+                    <p class="pg-hero__lead">Every article here is written or reviewed by a consultant on staff. No syndicated filler, no advice we would not give in the clinic.</p>
+                </div>
+
+                <div class="pg-hero__actions">
+                    <a href="contact.html" class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Ask a Doctor</a>
+                    <a href="departments.html" class="btn-ghost"><i class="fa-solid fa-hospital"></i> Browse Departments</a>
+                </div>
+
+                <div class="pg-hero__chips">
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Written by consultants</span>
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Reviewed before publishing</span>
+                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Updated when guidance changes</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ GROWTH STATS ============ -->
+        <section class="pg-stats" aria-label="Key figures">
+            <div class="pg-stats__grid">
+                <div class="pg-stat">
+                    <i class="pg-stat__icon fa-solid fa-newspaper"></i>
+                    <p class="pg-stat__num"><span class="pg-stat__value" data-count="148">148</span><span
+                            class="pg-stat__suffix"></span></p>
+                    <p class="pg-stat__label">Articles published</p>
+                    <span class="pg-stat__note"><i class="fa-solid fa-arrow-trend-up"></i> 24 this year</span>
+                </div>
+                <div class="pg-stat">
+                    <i class="pg-stat__icon fa-solid fa-user-doctor"></i>
+                    <p class="pg-stat__num"><span class="pg-stat__value" data-count="21">21</span><span
+                            class="pg-stat__suffix"></span></p>
+                    <p class="pg-stat__label">Contributing doctors</p>
+                    <span class="pg-stat__note"><i class="fa-solid fa-arrow-trend-up"></i> Across 11 departments</span>
+                </div>
+                <div class="pg-stat">
+                    <i class="pg-stat__icon fa-solid fa-eye"></i>
+                    <p class="pg-stat__num"><span class="pg-stat__value" data-count="310000">310000</span><span
+                            class="pg-stat__suffix">+</span></p>
+                    <p class="pg-stat__label">Reads a year</p>
+                    <span class="pg-stat__note"><i class="fa-solid fa-arrow-trend-up"></i> 31% more than 2024</span>
+                </div>
+                <div class="pg-stat">
+                    <i class="pg-stat__icon fa-solid fa-language"></i>
+                    <p class="pg-stat__num"><span class="pg-stat__value" data-count="2">2</span><span
+                            class="pg-stat__suffix"></span></p>
+                    <p class="pg-stat__label">Languages</p>
+                    <span class="pg-stat__note"><i class="fa-solid fa-arrow-trend-up"></i> Bengali and English</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section" data-section="Articles">
+            <div class="pg-wrap">
+                <div class="section-head section-head--center">
+                    <span class="eyebrow">Blog &amp; Articles</span>
+                    <h2>Read Top Articles From <strong>Expert Doctors</strong></h2>
+                </div>
+
+                <div class="blog__grid" style="margin-top:clamp(28px,3vw,44px)">
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1400&auto=format&fit=crop" alt="The six hours after chest pain: what actually decides the outcome" loading="lazy">
+                            <span class="blog__cat">Cardiology</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>August 2, 2026</span> &ndash; <span>6 MINS READ</span>
+                        </div>
+                        <h3>The six hours after chest pain: what actually decides the outcome</h3>
+                        <p class="pg-post__excerpt">Heart muscle does not wait. Here is what happens between the first symptom and the cath lab — and the part of it you control.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=800&auto=format&fit=crop" alt="How to prepare for your baby's arrival: a checklist for expectant parents" loading="lazy">
+                            <span class="blog__cat">Maternity</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 29, 2026</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>How to prepare for your baby's arrival: a checklist for expectant parents</h3>
+                        <p class="pg-post__excerpt">What to pack, what to arrange and what genuinely does not matter.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop" alt="Caring for yourself postpartum: what every new mother should know" loading="lazy">
+                            <span class="blog__cat">Maternity</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 29, 2026</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>Caring for yourself postpartum: what every new mother should know</h3>
+                        <p class="pg-post__excerpt">The six weeks after birth deserve a care plan of their own.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?q=80&w=800&auto=format&fit=crop" alt="The importance of self-care in managing everyday stress" loading="lazy">
+                            <span class="blog__cat">Wellness</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 28, 2026</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>The importance of self-care in managing everyday stress</h3>
+                        <p class="pg-post__excerpt">Small, repeatable habits beat one heroic weekend of rest.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=800&auto=format&fit=crop" alt="Eating for a diabetic household without cooking two dinners" loading="lazy">
+                            <span class="blog__cat">Nutrition</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 14, 2026</span> &ndash; <span>5 MINS READ</span>
+                        </div>
+                        <h3>Eating for a diabetic household without cooking two dinners</h3>
+                        <p class="pg-post__excerpt">One pot, one menu, portions that work for everybody at the table.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=800&auto=format&fit=crop" alt="After a knee replacement: the first fortnight, hour by hour" loading="lazy">
+                            <span class="blog__cat">Orthopedics</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>December 30, 2025</span> &ndash; <span>5 MINS READ</span>
+                        </div>
+                        <h3>After a knee replacement: the first fortnight, hour by hour</h3>
+                        <p class="pg-post__excerpt">What to expect on day one, day three and the day you climb stairs.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=800&auto=format&fit=crop" alt="Reading your blood report without panicking about the arrows" loading="lazy">
+                            <span class="blog__cat">Diagnostics</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>December 12, 2025</span> &ndash; <span>3 MINS READ</span>
+                        </div>
+                        <h3>Reading your blood report without panicking about the arrows</h3>
+                        <p class="pg-post__excerpt">Why a value slightly out of range is usually not the story.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop" alt="When a childhood fever needs a doctor — and when it needs patience" loading="lazy">
+                            <span class="blog__cat">Pediatrics</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>November 26, 2025</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>When a childhood fever needs a doctor — and when it needs patience</h3>
+                        <p class="pg-post__excerpt">The specific signs that should move you from watching to going in.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=800&auto=format&fit=crop" alt="Stroke: the four-hour window most families miss" loading="lazy">
+                            <span class="blog__cat">Emergency</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>November 3, 2025</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>Stroke: the four-hour window most families miss</h3>
+                        <p class="pg-post__excerpt">FAST is not a slogan. It is the difference between recovery and disability.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section pg-section--tight">
+            <div class="pg-wrap">
+                <div class="pg-cta">
+                    <div>
+                        <h2>A question the article did not answer?</h2>
+                        <p>Book a consultation and ask the doctor who wrote it. Second opinions are welcome here.</p>
+                    </div>
+                    <div class="pg-cta__actions">
+                        <a href="contact.html" class="btn-light"><i class="fa-solid fa-calendar-check"></i> Book an Appointment</a>
+                        <a href="tel:+913423254567" class="btn-outline"><i class="fa-solid fa-phone"></i> +91 342 325 4567</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ PRE-FOOTER ============ -->
+    <div class="prefooter" id="prefooter">
+        <div class="prefooter__card">
+            <p>Teresa Memorial operates more than 20 units, including specialist day-care centres.</p>
+            <a class="prefooter__btn" href="departments.html" aria-label="See our departments"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>Delivering an exceptional care experience for every kind of patient.</p>
+            <a class="prefooter__btn" href="about.html" aria-label="About the hospital"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>It is our privilege to care for more than a million people across the district.</p>
+            <a class="prefooter__btn" href="about.html" aria-label="Our reach"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="prefooter__card">
+            <p>Driven by a desire to help, we collaborate and support one another.</p>
+            <a class="prefooter__btn" href="doctors.html" aria-label="Meet the team"><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <svg class="site-footer__ecg" id="footerEcg" viewBox="0 0 1200 60" preserveAspectRatio="none"
+            aria-hidden="true">
+            <path d="M0 30 H320 l14 -22 l16 44 l14 -30 l12 14 H700 l16 -26 l18 40 l14 -28 H1200" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
+        <div class="ft__grid">
+            <div class="ft__col">
+                <a class="ft__logo" href="website.html" aria-label="Teresa Memorial Hospital">
+                    <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" loading="lazy">
+                </a>
+
+                <div class="ft__contact">
+                    <p><strong>Location:</strong> G.T. Road, Bardhaman,<br>West Bengal 713101</p>
+                    <p><strong>Visiting Hours:</strong><br>
+                        Sunday: 08:00 AM &ndash; 10:00 PM<br>
+                        Monday &ndash; Friday: 06:00 AM &ndash; 12:00 AM</p>
+                </div>
+            </div>
+
+            <div class="ft__col">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="doctors.html">Doctors</a></li>
+                    <li><a href="website.html#testimonials">Testimonials</a></li>
+                    <li><a href="website.html#faq">FAQs</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="departments.html">Site Map</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="careers.html">Careers</a></li>
+                    <li><a href="blog.html">Education</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="departments.html">Areas of Care</a></li>
+                    <li><a href="careers.html#openings">Volunteers</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="facilities.html#visiting">Visitor Information</a></li>
+                    <li><a href="contact.html#emergency">Emergency Care</a></li>
+                    <li><a href="contact.html">Donate</a></li>
+                    <li><a href="lab-diagnostics.html">Online Services</a></li>
+                    <li><a href="contact.html">Pay Your Bills</a></li>
+                </ul>
+            </div>
+
+            <div class="ft__col">
+                <h4>Trust &amp; Legal</h4>
+                <ul>
+                    <li><a href="contact.html">Terms &amp; Conditions</a></li>
+                    <li><a href="contact.html">Privacy Policy</a></li>
+                    <li><a href="facilities.html#visiting">Hospital Stay</a></li>
+                </ul>
+
+                <h4>Social Media</h4>
+                <div class="ft__social">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ft__bottom">
+        <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
+        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
+            aria-label="Developed by Promix">
+            <span>Developed by</span>
+            <img src="assets/promix-logo.png" alt="Promix" loading="lazy">
+        </a>
+    </div>
+
+    <button class="to-top" id="toTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="assets/website.js"></script>
+    <script src="assets/pages.js"></script>
+</body>
+
+</html>
