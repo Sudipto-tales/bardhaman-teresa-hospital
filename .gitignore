@@ -1,0 +1,13 @@
+# Scratch renders used to eyeball the two themes side by side.
+# Regenerate them whenever; they are never served.
+__t_dark.html
+__t_light.html
+
+# Pre-rebuild copy of the old single-page site, kept locally for
+# reference. The current home page is website.html.
+website.original.html
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
