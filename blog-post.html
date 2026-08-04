@@ -14,6 +14,23 @@
                 document.documentElement.dataset.theme = stored
                     || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             } catch (e) { /* private mode — stay on the light default */ }
+
+            /* Language rides on the googtrans cookie because that is what the
+               Google Translate widget reads at init — see initLang() in
+               assets/website.js. Resolving it here rather than in that file
+               matters for one reason: Inter and Sora carry no Bengali glyphs,
+               so the font has to be requested before first paint or the
+               translated page renders in whatever the OS falls back to. */
+            if (/(^|;\s*)googtrans=[^;]*\/bn/.test(document.cookie)) {
+                var el = document.documentElement;
+                el.lang = 'bn';
+                el.dataset.lang = 'bn';
+
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap';
+                document.head.appendChild(link);
+            }
         })();
     </script>
 
@@ -34,7 +51,10 @@
 <body>
 
     <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
-    <div class="brand-rail" id="brandRail">
+    <!-- translate="no" throughout the brand and contact chrome: the Google
+         widget would otherwise transliterate the wordmark and, worse, rewrite
+         the digits of the emergency number into Bengali numerals -->
+    <div class="brand-rail" id="brandRail" translate="no">
         <a href="website.html" class="brand-rail__link">
             <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
@@ -47,7 +67,7 @@
 
     <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
     <div class="nav-shell" id="navShell">
-        <div class="nav-topbar">
+        <div class="nav-topbar" translate="no">
             <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
             <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
         </div>
@@ -86,6 +106,13 @@
             <button type="button" class="nav-search-toggle nav-theme-toggle" id="themeBtn" aria-pressed="false"
                 aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
                     class="fa-solid fa-sun"></i></button>
+
+            <!-- sits here rather than in .nav-topbar because that bar is
+                 display:none below 640px; the nav pill survives every width -->
+            <div class="nav-lang" id="navLang" role="group" aria-label="Language" translate="no">
+                <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাং</button>
+            </div>
 
             <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
 
@@ -143,39 +170,54 @@
     <nav class="spy" id="spy" aria-label="Section navigation"></nav>
 
     <main id="top">
-        <!-- ============ PAGE BANNER ============ -->
-        <section class="pg-hero">
-            <img class="pg-hero__img" src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1400&auto=format&fit=crop" alt="" aria-hidden="true">
-            <div class="pg-hero__scrim"></div>
-            <div class="pg-hero__ring" aria-hidden="true"></div>
-            <svg class="pg-hero__ecg" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 40 H300 l14 -24 l16 46 l14 -32 l12 16 H680 l16 -28 l18 42 l14 -30 H1200" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+        <!-- ============ ARTICLE BANNER ============ -->
+        <section class="post-hero">
+            <div class="post-hero__media">
+                <img class="post-hero__img" src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1400&auto=format&fit=crop" alt="" aria-hidden="true">
+                <div class="post-hero__scrim"></div>
+            </div>
 
-            <div class="pg-hero__inner">
-                <nav class="pg-crumb" aria-label="Breadcrumb">
-                    <a href="website.html">Home</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <a href="blog.html">Blog</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <span aria-current="page">Cardiology</span>
-                </nav>
+            <div class="post-hero__panel">
+                <div class="post-hero__card">
+                    <div class="post-hero__intro">
+                        <div class="post-hero__flags">
+                            <span class="post-hero__flag post-hero__flag--cat">Cardiology</span>
+                            <span class="post-hero__flag">August 2, 2026</span>
+                            <span class="post-hero__flag">6 MINS READ</span>
+                        </div>
 
-                <div class="pg-hero__head">
-                    <h1>The Six Hours After Chest Pain: <strong>What Decides The Outcome</strong></h1>
-                    <p class="pg-hero__lead">Heart muscle does not wait. Here is what happens between the first symptom and the cath lab — and the part of it you control.</p>
-                </div>
+                        <h1 class="post-hero__title">The Six Hours After Chest Pain: What Decides The Outcome</h1>
+                        <p class="post-hero__lead">Heart muscle does not wait. Here is what happens between the first symptom and the cath lab — and the part of it you control.</p>
 
-                <div class="pg-hero__actions">
-                    <a href="cardiology.html" class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Cardiology Department</a>
-                    <a href="contact.html" class="btn-ghost"><i class="fa-solid fa-calendar-check"></i> Book a Consultation</a>
-                </div>
+                        <nav class="pg-crumb pg-crumb--ink" aria-label="Breadcrumb">
+                            <a href="website.html">Home</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <a href="blog.html">Blog</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span aria-current="page">Cardiology</span>
+                        </nav>
+                    </div>
 
-                <div class="pg-hero__chips">
-                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> Cardiology</span>
-                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> August 2, 2026</span>
-                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> 6 MINS READ</span>
+                    <div class="post-hero__side">
+                        <a class="post-hero__call" href="tel:+913423254567" translate="no">
+                            <span class="post-hero__call-ic"><i class="fa-solid fa-phone-volume"></i></span>
+                            <span>Call: <strong>+91 342 325 4567</strong></span>
+                        </a>
+
+                        <!-- wired in pages.js. Without JS the mail link still
+                             works and the two buttons are inert rather than broken -->
+                        <div class="post-hero__tools" role="group" aria-label="Print or share this article">
+                            <button type="button" class="post-hero__tool" data-post-tool="print"
+                                aria-label="Print this article"><i class="fa-solid fa-print"></i></button>
+                            <a class="post-hero__tool" data-post-tool="mail"
+                                href="mailto:?subject=The%20Six%20Hours%20After%20Chest%20Pain%3A%20What%20Decides%20The%20Outcome"
+                                aria-label="Email this article"><i class="fa-solid fa-envelope"></i></a>
+                            <button type="button" class="post-hero__tool" data-post-tool="share"
+                                aria-label="Share this article"><i class="fa-solid fa-share-nodes"></i></button>
+                        </div>
+
+                        <p class="post-hero__flash" id="postFlash" role="status" aria-live="polite"></p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -254,9 +296,13 @@
                         <p>If you take one thing from this article: new chest discomfort lasting more than ten
                             minutes is a phone call, not a wait-and-see.</p>
 
+                        <!-- ?tag= is read by initBlogFilter() on the listing, so a
+                             tag that is also a category lands on the filtered view.
+                             The rest are descriptive only and stay unlinked rather
+                             than pointing at a filter that would match nothing. -->
                         <div class="pg-tags">
-                            <span class="pg-tag">Cardiology</span>
-                            <span class="pg-tag">Emergency</span>
+                            <a class="pg-tag" href="blog.html?tag=Cardiology">Cardiology</a>
+                            <a class="pg-tag" href="blog.html?tag=Emergency">Emergency</a>
                             <span class="pg-tag">Heart Attack</span>
                             <span class="pg-tag">Prevention</span>
                         </div>
@@ -266,7 +312,7 @@
                         <div class="ct-emergency">
                             <h3>Chest pain right now?</h3>
                             <p>Do not finish this article. Call, and do not drive yourself.</p>
-                            <a class="ct-emergency__num" href="tel:+913423254567"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
+                            <a class="ct-emergency__num" href="tel:+913423254567" translate="no"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
                         </div>
 
                         <div class="ct-panel">
@@ -279,6 +325,59 @@
                             </ul>
                         </div>
                     </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="pg-section pg-section--alt post-related" data-section="Related">
+            <div class="pg-wrap">
+                <div class="post-related__head">
+                    <div class="section-head">
+                        <span class="eyebrow">Keep reading</span>
+                        <h2>More From <strong>Our Health Library</strong></h2>
+                    </div>
+                    <a href="blog.html" class="arrow-link arrow-link--cool"><i class="fa-solid fa-arrow-right"></i> All articles</a>
+                </div>
+
+                <div class="blog__grid">
+                    <article class="blog__card" data-cat="Emergency">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=800&auto=format&fit=crop" alt="Stroke: the four-hour window most families miss" loading="lazy">
+                            <span class="blog__cat">Emergency</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>November 3, 2025</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>Stroke: the four-hour window most families miss</h3>
+                        <p class="pg-post__excerpt">FAST is not a slogan. It is the difference between recovery and disability.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card" data-cat="Maternity">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=800&auto=format&fit=crop" alt="How to prepare for your baby's arrival: a checklist for expectant parents" loading="lazy">
+                            <span class="blog__cat">Maternity</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 29, 2026</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>How to prepare for your baby's arrival: a checklist for expectant parents</h3>
+                        <p class="pg-post__excerpt">What to pack, what to arrange and what genuinely does not matter.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
+
+                    <article class="blog__card" data-cat="Maternity">
+                        <div class="blog__card-img img-stretch">
+                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop" alt="Caring for yourself postpartum: what every new mother should know" loading="lazy">
+                            <span class="blog__cat">Maternity</span>
+                        </div>
+                        <div class="blog__meta">
+                            <span>January 29, 2026</span> &ndash; <span>4 MINS READ</span>
+                        </div>
+                        <h3>Caring for yourself postpartum: what every new mother should know</h3>
+                        <p class="pg-post__excerpt">The six weeks after birth deserve a care plan of their own.</p>
+                        <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
+                    </article>
                 </div>
             </div>
         </section>
@@ -395,7 +494,8 @@
 
     <div class="ft__bottom">
         <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
-        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <!-- already Bengali; left to the widget it gets round-tripped -->
+        <p class="ft__bottom-tag" lang="bn" translate="no">মানুষের সাথে ..... মানুষের পাশে</p>
         <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
             aria-label="Developed by Promix">
             <span>Developed by</span>

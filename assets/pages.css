@@ -1206,6 +1206,415 @@
     color: #fff;
 }
 
+/* --- listing sidebar: search + tags + recent ---
+   The article page gets away with a single navy .ct-panel. Three of
+   them stacked would turn the whole right column dark, so the two
+   interactive panels go light and only "Recent articles" stays navy. */
+.ct-panel--light {
+    border: 1px solid var(--line);
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+}
+
+.ct-panel--light h3 {
+    color: var(--ink);
+}
+
+.blog__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(18px, 2vw, 26px);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--ink-soft);
+}
+
+.blog__clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+
+.blog__clear:hover {
+    color: var(--action);
+    border-color: var(--action);
+}
+
+/* auto-fit at 270px would still reach for three columns inside the
+   two-thirds-width main column; auto-fill at 260 keeps it to two */
+.pg-post .blog__grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: clamp(20px, 2.4vw, 32px);
+}
+
+.blog-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.blog-search i {
+    position: absolute;
+    left: 14px;
+    font-size: .85rem;
+    color: var(--ink-mute);
+    pointer-events: none;
+}
+
+.blog-search input {
+    width: 100%;
+    padding: 12px 14px 12px 38px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    color: var(--ink);
+    transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.blog-search input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-50);
+}
+
+/* the search UA clear button is a different shape in every browser and
+   .blog__clear already covers it */
+.blog-search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.blog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* .pg-tag is a static <span> on the article page; as a filter chip it
+   needs the button reset and the two extra states */
+.blog-tags .pg-tag {
+    background: var(--surface);
+    cursor: pointer;
+    transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+
+.blog-tags .pg-tag:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
+.blog-tags .pg-tag.is-active {
+    background: var(--grad-cool);
+    border-color: transparent;
+    color: #fff;
+}
+
+.blog__empty {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: clamp(36px, 5vw, 64px);
+    border: 1px dashed var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface-alt);
+    text-align: center;
+}
+
+.blog__empty i {
+    font-size: 1.8rem;
+    color: var(--ink-mute);
+}
+
+.blog__empty h3 {
+    font-family: var(--font-head);
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.blog__empty p {
+    max-width: 46ch;
+    color: var(--ink-soft);
+}
+
+/* --- single article banner ---------------------------------
+   The listing keeps .pg-hero. A post gets this instead: the
+   photo runs as a band under the fixed nav and the title card
+   is lifted over its foot, so the headline sits on paper
+   rather than on the picture and the utility row has somewhere
+   solid to live. */
+.post-hero {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: clamp(24px, 3vw, 44px);
+}
+
+.post-hero__media {
+    position: relative;
+    isolation: isolate;
+    min-height: clamp(360px, 52vh, 560px);
+    /* matches .pg-hero — curve on the two outer corners only */
+    margin: 0 var(--ft-inset);
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+    background: var(--surface-navy);
+    overflow: hidden;
+}
+
+.post-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* parallaxed in pages.js; the scale keeps the edges covered */
+    transform: scale(1.08);
+    will-change: transform;
+}
+
+/* Heavier at the top than .pg-hero__scrim: nothing of ours sits on the
+   photo here, but the nav does, and it is still in its white over-hero
+   palette until the page scrolls 90px. */
+.post-hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(18, 41, 79, .74) 0%, rgba(18, 41, 79, .22) 44%, rgba(18, 41, 79, .5) 100%),
+        linear-gradient(115deg, rgba(27, 62, 122, .6) 0%, rgba(168, 30, 92, .2) 58%, rgba(18, 41, 79, .05) 100%);
+}
+
+.post-hero__panel {
+    position: relative;
+    z-index: 2;
+    max-width: 1360px;
+    /* the overlap: never less than 64px, so the card always reads as
+       sitting on the photo rather than under it */
+    margin: clamp(-140px, -9vw, -64px) auto 0;
+    padding: 0 var(--sp-gutter);
+}
+
+.post-hero__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: clamp(20px, 3vw, 48px);
+    padding: clamp(24px, 3.2vw, 46px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--sh-lg);
+}
+
+.post-hero__intro {
+    display: grid;
+    gap: 14px;
+}
+
+.post-hero__flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.post-hero__flag {
+    padding: 6px 14px;
+    border-radius: var(--r-pill);
+    background: var(--surface-alt);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.post-hero__flag--cat {
+    background: var(--grad-cta);
+    color: #fff;
+}
+
+.post-hero__title {
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    max-width: 22ch;
+}
+
+.post-hero__lead {
+    max-width: 58ch;
+    color: var(--ink-soft);
+}
+
+/* .pg-crumb is written for white-on-photo; doubled class so this wins
+   wherever the two end up in the cascade */
+.pg-crumb.pg-crumb--ink,
+.pg-crumb.pg-crumb--ink [aria-current] {
+    color: var(--ink-mute);
+}
+
+.pg-crumb.pg-crumb--ink a {
+    color: var(--blue);
+}
+
+.pg-crumb.pg-crumb--ink a:hover {
+    color: var(--action);
+}
+
+.post-hero__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.post-hero__call {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 22px 7px 7px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface-alt);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+
+.post-hero__call:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sh-md);
+}
+
+.post-hero__call strong {
+    font-family: var(--font-head);
+    font-size: 1.02rem;
+    color: var(--navy);
+}
+
+.post-hero__call-ic {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--grad-cool);
+    color: #fff;
+    font-size: .9rem;
+}
+
+.post-hero__tools {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: var(--r-pill);
+    background: var(--grad-cool);
+    box-shadow: var(--sh-md);
+}
+
+.post-hero__tool {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, .84);
+    font-size: .9rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .3s var(--ease), color .3s var(--ease);
+}
+
+/* hairline between the buttons — a border would be clipped by the
+   circular radius, so it rides on a pseudo-element instead */
+.post-hero__tool+.post-hero__tool::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 24%;
+    bottom: 24%;
+    width: 1px;
+    background: rgba(255, 255, 255, .26);
+}
+
+.post-hero__tool:hover,
+.post-hero__tool:focus-visible {
+    background: rgba(255, 255, 255, .18);
+    color: #fff;
+}
+
+/* "Link copied" after the share fallback. Holds its line so the tool
+   row does not jump when the message appears. */
+.post-hero__flash {
+    min-height: 1.1em;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--ink-mute);
+    opacity: 0;
+    transition: opacity .3s var(--ease);
+}
+
+.post-hero__flash.is-visible {
+    opacity: 1;
+}
+
+/* --- related articles --------------------------------------
+   Same cards as the listing; only the head row is new. */
+.post-related__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.post-related__head .section-head {
+    margin-bottom: 0;
+}
+
+/* Grid rows already stretch the cards to a common height; this puts the
+   dek's slack under the dek so every "Read More" lands on one line. */
+.post-related .blog__card {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-related .blog__card .arrow-link {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+/* article tags are links now — .pg-tag is written for a <span> */
+a.pg-tag {
+    text-decoration: none;
+    transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+
+a.pg-tag:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
 /* ---------------------------------------------------------
    11. ABOUT — PURPOSE BAND
    A rounded photo strip with the copy sitting in its own
@@ -1993,6 +2402,13 @@
         position: static;
     }
 
+    /* stacked, the search and tags belong above the results they filter.
+       Only on the listing — the article page's aside is supplementary and
+       stays where it is. */
+    .blog__layout .pg-post__aside {
+        order: -1;
+    }
+
     .pg-hero {
         min-height: clamp(400px, 56vh, 520px);
     }
@@ -2008,6 +2424,27 @@
     .pg-cta {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .post-hero__media {
+        min-height: clamp(300px, 42vh, 420px);
+    }
+
+    .post-hero__card {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* one column, so the utility stack becomes a row and reads left to
+       right with the rest of the card */
+    .post-hero__side {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .post-hero__flash {
+        flex-basis: 100%;
     }
 }
 
@@ -2060,11 +2497,32 @@
         max-width: none;
         margin-top: 14px;
     }
+
+    .post-hero__media {
+        border-radius: 0 0 var(--r-card) var(--r-card);
+    }
+
+    /* the card is nearly the full width here, so a deep overlap would
+       hide most of the photo */
+    .post-hero__panel {
+        margin-top: -48px;
+    }
+
+    .post-hero__title {
+        font-size: var(--fs-h2);
+        max-width: none;
+    }
+
+    .post-hero__call {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
     .pg-hero__img,
+    .post-hero__img,
     .pg-doc__img img,
     .ab-tile:hover img {
         transform: none;
@@ -2072,5 +2530,69 @@
 
     .ab-quote__slide.is-active {
         animation: none;
+    }
+}
+
+/* ---------------------------------------------------------
+   16. PRINT
+   The article page carries a print button, so paper is a real
+   target: drop the chrome and everything that is navigation
+   rather than content.
+   --------------------------------------------------------- */
+@media print {
+
+    .topbar,
+    .brand-rail,
+    .nav-shell,
+    .pg-spy,
+    .pg-dock,
+    .site-footer,
+    .post-hero__side,
+    .post-related,
+    .pg-cta,
+    .pg-post__aside {
+        display: none !important;
+    }
+
+    .post-hero__media {
+        min-height: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .post-hero__img {
+        position: static;
+        height: auto;
+        max-height: 240px;
+        transform: none;
+    }
+
+    .post-hero__scrim {
+        display: none;
+    }
+
+    .post-hero__panel {
+        margin-top: 0;
+        padding: 0;
+    }
+
+    .post-hero__card {
+        display: block;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* the layout grids collapse on their own once the aside is gone, but
+       the section rhythm is tuned for screens */
+    .pg-section {
+        padding: 18px 0;
+    }
+
+    /* GSAP leaves reveal targets at opacity 0 until they scroll into
+       view — nothing scrolls on paper */
+    [class] {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }

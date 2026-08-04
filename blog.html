@@ -14,6 +14,23 @@
                 document.documentElement.dataset.theme = stored
                     || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             } catch (e) { /* private mode — stay on the light default */ }
+
+            /* Language rides on the googtrans cookie because that is what the
+               Google Translate widget reads at init — see initLang() in
+               assets/website.js. Resolving it here rather than in that file
+               matters for one reason: Inter and Sora carry no Bengali glyphs,
+               so the font has to be requested before first paint or the
+               translated page renders in whatever the OS falls back to. */
+            if (/(^|;\s*)googtrans=[^;]*\/bn/.test(document.cookie)) {
+                var el = document.documentElement;
+                el.lang = 'bn';
+                el.dataset.lang = 'bn';
+
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap';
+                document.head.appendChild(link);
+            }
         })();
     </script>
 
@@ -34,7 +51,10 @@
 <body>
 
     <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
-    <div class="brand-rail" id="brandRail">
+    <!-- translate="no" throughout the brand and contact chrome: the Google
+         widget would otherwise transliterate the wordmark and, worse, rewrite
+         the digits of the emergency number into Bengali numerals -->
+    <div class="brand-rail" id="brandRail" translate="no">
         <a href="website.html" class="brand-rail__link">
             <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
@@ -47,7 +67,7 @@
 
     <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
     <div class="nav-shell" id="navShell">
-        <div class="nav-topbar">
+        <div class="nav-topbar" translate="no">
             <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
             <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
         </div>
@@ -86,6 +106,13 @@
             <button type="button" class="nav-search-toggle nav-theme-toggle" id="themeBtn" aria-pressed="false"
                 aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
                     class="fa-solid fa-sun"></i></button>
+
+            <!-- sits here rather than in .nav-topbar because that bar is
+                 display:none below 640px; the nav pill survives every width -->
+            <div class="nav-lang" id="navLang" role="group" aria-label="Language" translate="no">
+                <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাং</button>
+            </div>
 
             <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
 
@@ -219,8 +246,18 @@
                     <h2>Read Top Articles From <strong>Expert Doctors</strong></h2>
                 </div>
 
-                <div class="blog__grid" style="margin-top:clamp(28px,3vw,44px)">
-                    <article class="blog__card">
+                <!-- borrows .pg-post from the article page: same main + sticky
+                     aside grid, same collapse at 1024px -->
+                <div class="pg-post blog__layout" style="margin-top:clamp(28px,3vw,44px)">
+                    <div>
+                        <div class="blog__toolbar">
+                            <span id="blogCount" role="status">9 articles</span>
+                            <button type="button" class="blog__clear" id="blogClear" hidden><i
+                                    class="fa-solid fa-xmark"></i> Clear filters</button>
+                        </div>
+
+                        <div class="blog__grid">
+                    <article class="blog__card" data-cat="Cardiology">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1400&auto=format&fit=crop" alt="The six hours after chest pain: what actually decides the outcome" loading="lazy">
                             <span class="blog__cat">Cardiology</span>
@@ -233,7 +270,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Maternity">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=800&auto=format&fit=crop" alt="How to prepare for your baby's arrival: a checklist for expectant parents" loading="lazy">
                             <span class="blog__cat">Maternity</span>
@@ -246,7 +283,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Maternity">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop" alt="Caring for yourself postpartum: what every new mother should know" loading="lazy">
                             <span class="blog__cat">Maternity</span>
@@ -259,7 +296,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Wellness">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?q=80&w=800&auto=format&fit=crop" alt="The importance of self-care in managing everyday stress" loading="lazy">
                             <span class="blog__cat">Wellness</span>
@@ -272,7 +309,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Nutrition">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=800&auto=format&fit=crop" alt="Eating for a diabetic household without cooking two dinners" loading="lazy">
                             <span class="blog__cat">Nutrition</span>
@@ -285,7 +322,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Orthopedics">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=800&auto=format&fit=crop" alt="After a knee replacement: the first fortnight, hour by hour" loading="lazy">
                             <span class="blog__cat">Orthopedics</span>
@@ -298,7 +335,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Diagnostics">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=800&auto=format&fit=crop" alt="Reading your blood report without panicking about the arrows" loading="lazy">
                             <span class="blog__cat">Diagnostics</span>
@@ -311,7 +348,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Pediatrics">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop" alt="When a childhood fever needs a doctor — and when it needs patience" loading="lazy">
                             <span class="blog__cat">Pediatrics</span>
@@ -324,7 +361,7 @@
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
 
-                    <article class="blog__card">
+                    <article class="blog__card" data-cat="Emergency">
                         <div class="blog__card-img img-stretch">
                             <img src="https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=800&auto=format&fit=crop" alt="Stroke: the four-hour window most families miss" loading="lazy">
                             <span class="blog__cat">Emergency</span>
@@ -336,6 +373,52 @@
                         <p class="pg-post__excerpt">FAST is not a slogan. It is the difference between recovery and disability.</p>
                         <a href="blog-post.html" class="arrow-link"><i class="fa-solid fa-arrow-right"></i> Read More</a>
                     </article>
+                        </div>
+
+                        <div class="blog__empty" id="blogEmpty" hidden>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <h3>Nothing matches that</h3>
+                            <p>Try a shorter word, or clear the filters and browse the lot. If you are looking for
+                                advice on something we have not written about, ask and we will.</p>
+                        </div>
+                    </div>
+
+                    <aside class="pg-post__aside">
+                        <div class="ct-panel ct-panel--light">
+                            <h3>Search articles</h3>
+                            <div class="blog-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="search" id="blogSearch" autocomplete="off"
+                                    placeholder="Chest pain, fever, diet&hellip;" aria-label="Search articles">
+                            </div>
+                        </div>
+
+                        <div class="ct-panel ct-panel--light">
+                            <h3>Browse by tag</h3>
+                            <div class="blog-tags" id="blogTags">
+                                <button type="button" class="pg-tag is-active" data-tag="">All</button>
+                                <button type="button" class="pg-tag" data-tag="Cardiology">Cardiology</button>
+                                <button type="button" class="pg-tag" data-tag="Maternity">Maternity</button>
+                                <button type="button" class="pg-tag" data-tag="Wellness">Wellness</button>
+                                <button type="button" class="pg-tag" data-tag="Nutrition">Nutrition</button>
+                                <button type="button" class="pg-tag" data-tag="Orthopedics">Orthopedics</button>
+                                <button type="button" class="pg-tag" data-tag="Diagnostics">Diagnostics</button>
+                                <button type="button" class="pg-tag" data-tag="Pediatrics">Pediatrics</button>
+                                <button type="button" class="pg-tag" data-tag="Emergency">Emergency</button>
+                            </div>
+                        </div>
+
+                        <div class="ct-panel">
+                            <h3>Recent articles</h3>
+                            <ul class="pg-related">
+                                <li><a href="blog-post.html"><span>Cardiology</span> The six hours after chest pain: what actually decides the outcome</a></li>
+                                <li><a href="blog-post.html"><span>Maternity</span> How to prepare for your baby's arrival: a checklist for expectant parents</a></li>
+                                <li><a href="blog-post.html"><span>Maternity</span> Caring for yourself postpartum: what every new mother should know</a></li>
+                                <li><a href="blog-post.html"><span>Wellness</span> The importance of self-care in managing everyday stress</a></li>
+                                <li><a href="blog-post.html"><span>Nutrition</span> Eating for a diabetic household without cooking two dinners</a></li>
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>
@@ -452,7 +535,8 @@
 
     <div class="ft__bottom">
         <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
-        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <!-- already Bengali; left to the widget it gets round-tripped -->
+        <p class="ft__bottom-tag" lang="bn" translate="no">মানুষের সাথে ..... মানুষের পাশে</p>
         <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
             aria-label="Developed by Promix">
             <span>Developed by</span>

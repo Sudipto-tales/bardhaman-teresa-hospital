@@ -14,6 +14,23 @@
                 document.documentElement.dataset.theme = stored
                     || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             } catch (e) { /* private mode — stay on the light default */ }
+
+            /* Language rides on the googtrans cookie because that is what the
+               Google Translate widget reads at init — see initLang() in
+               assets/website.js. Resolving it here rather than in that file
+               matters for one reason: Inter and Sora carry no Bengali glyphs,
+               so the font has to be requested before first paint or the
+               translated page renders in whatever the OS falls back to. */
+            if (/(^|;\s*)googtrans=[^;]*\/bn/.test(document.cookie)) {
+                var el = document.documentElement;
+                el.lang = 'bn';
+                el.dataset.lang = 'bn';
+
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap';
+                document.head.appendChild(link);
+            }
         })();
     </script>
 
@@ -34,7 +51,10 @@
 <body>
 
     <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
-    <div class="brand-rail" id="brandRail">
+    <!-- translate="no" throughout the brand and contact chrome: the Google
+         widget would otherwise transliterate the wordmark and, worse, rewrite
+         the digits of the emergency number into Bengali numerals -->
+    <div class="brand-rail" id="brandRail" translate="no">
         <a href="website.html" class="brand-rail__link">
             <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
@@ -47,7 +67,7 @@
 
     <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
     <div class="nav-shell" id="navShell">
-        <div class="nav-topbar">
+        <div class="nav-topbar" translate="no">
             <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
             <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
         </div>
@@ -86,6 +106,13 @@
             <button type="button" class="nav-search-toggle nav-theme-toggle" id="themeBtn" aria-pressed="false"
                 aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
                     class="fa-solid fa-sun"></i></button>
+
+            <!-- sits here rather than in .nav-topbar because that bar is
+                 display:none below 640px; the nav pill survives every width -->
+            <div class="nav-lang" id="navLang" role="group" aria-label="Language" translate="no">
+                <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাং</button>
+            </div>
 
             <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
 
@@ -418,7 +445,8 @@
 
     <div class="ft__bottom">
         <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
-        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <!-- already Bengali; left to the widget it gets round-tripped -->
+        <p class="ft__bottom-tag" lang="bn" translate="no">মানুষের সাথে ..... মানুষের পাশে</p>
         <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
             aria-label="Developed by Promix">
             <span>Developed by</span>

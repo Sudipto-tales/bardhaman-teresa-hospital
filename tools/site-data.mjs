@@ -475,9 +475,16 @@ export const POSTS = [
         date: 'August 2, 2026',
         read: '6 MINS READ',
         title: 'The six hours after chest pain: what actually decides the outcome',
+        /* Headline set separately: `title` is the listing card's sentence
+           case, this is what the article's own banner carries. */
+        heading: 'The Six Hours After Chest Pain: What Decides The Outcome',
         excerpt: 'Heart muscle does not wait. Here is what happens between the first symptom and the cath lab — and the part of it you control.',
         img: IMG.ward(1400),
         author: DOCS.ronan,
+        /* Drives both the tag row at the foot of the article and the
+           "related" picker — a post whose cat matches any of these is
+           surfaced first. `cat` is implied and does not repeat here. */
+        tags: ['Emergency', 'Heart Attack', 'Prevention'],
     },
     { cat: 'Maternity', date: 'January 29, 2026', read: '4 MINS READ', title: "How to prepare for your baby's arrival: a checklist for expectant parents", excerpt: 'What to pack, what to arrange and what genuinely does not matter.', img: IMG.maternity(800) },
     { cat: 'Maternity', date: 'January 29, 2026', read: '4 MINS READ', title: 'Caring for yourself postpartum: what every new mother should know', excerpt: 'The six weeks after birth deserve a care plan of their own.', img: IMG.newborn(800) },

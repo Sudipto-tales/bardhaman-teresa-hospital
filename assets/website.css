@@ -3168,6 +3168,67 @@ body.menu-open .nav-shell {
     background: var(--surface-alt);
 }
 
+/* --- language pill (EN | বাং) ---
+   Same 38px height as the two round buttons beside it so the three
+   line up, and it mirrors their over-hero / is-compact colour states. */
+.nav-lang {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 2px;
+    height: 38px;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: var(--r-pill);
+}
+
+.nav-lang button {
+    padding: 0 11px;
+    height: 100%;
+    border-radius: var(--r-pill);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(255, 255, 255, .78);
+    cursor: pointer;
+    transition: background .3s var(--ease), color .3s var(--ease);
+}
+
+.nav-lang button:hover {
+    color: #fff;
+}
+
+.nav-lang button[aria-pressed="true"] {
+    background: var(--grad-cta);
+    color: #fff;
+    box-shadow: var(--sh-action);
+}
+
+/* past the hero the bar turns white, so the idle segment has to darken
+   or it disappears into the pill */
+.nav-shell.is-compact .nav-lang {
+    border-color: var(--line);
+}
+
+.nav-shell.is-compact .nav-lang button {
+    color: var(--ink-soft);
+}
+
+.nav-shell.is-compact .nav-lang button:hover {
+    color: var(--navy);
+}
+
+.nav-shell.is-compact .nav-lang button[aria-pressed="true"] {
+    color: #fff;
+}
+
+/* the widget is applying a language — freeze the control so a second
+   click cannot queue a competing reload */
+.nav-lang.is-busy {
+    opacity: .55;
+    pointer-events: none;
+}
+
 .nav-search {
     display: none;
     position: relative;
@@ -3181,6 +3242,7 @@ body.menu-open .nav-shell {
 .nav-bar.is-searching .nav-link,
 .nav-bar.is-searching .nav-drop,
 .nav-bar.is-searching .nav-emergency,
+.nav-bar.is-searching .nav-lang,
 .nav-bar.is-searching .nav-search-toggle {
     display: none;
 }
@@ -3587,8 +3649,126 @@ body.menu-open .nav-shell {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .nav-search {
-        width: min(420px, 58vw);
+    /* Search below 1025px: the pill has no room for an inline field. Left to
+       itself it grows leftwards under the fixed brand rail (z-index 1200) and
+       loses both its backdrop and its first 140px of text.
+
+       Instead the open field takes over the whole header row: the rail steps
+       aside, the shell stretches gutter to gutter, and the bar itself becomes
+       the search sheet. Nothing here is position:fixed on purpose — .nav-shell
+       carries will-change:transform, so a fixed descendant would be contained
+       by the shell rather than the viewport and land back in the corner. */
+    body.search-open .brand-rail {
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity .28s var(--ease), transform .28s var(--ease);
+    }
+
+    body.search-open .nav-shell {
+        left: var(--sp-gutter);
+        align-items: stretch;
+    }
+
+    /* the contact strip would push the sheet off the rail line at 641–1024px */
+    body.search-open .nav-topbar {
+        display: none;
+    }
+
+    .nav-bar.is-searching {
+        width: 100%;
+        gap: 8px;
+        padding: 7px 7px 7px 18px;
+        background: var(--surface);
+        border-color: var(--line);
+        border-radius: var(--r-pill);
+        box-shadow: var(--sh-lg);
+        animation: searchSheet .32s var(--ease) both;
+    }
+
+    .nav-shell.is-compact .nav-bar.is-searching {
+        background: var(--surface);
+        border-color: var(--line);
+        box-shadow: var(--sh-lg);
+    }
+
+    .nav-bar.is-searching .nav-search {
+        flex: 1;
+        width: auto;
+        gap: 8px;
+    }
+
+    /* the sheet carries its own opaque surface at every scroll position, so the
+       over-hero white text and icons would disappear into it — pin the
+       is-compact palette regardless of what the nav shell is doing */
+    .nav-bar.is-searching .nav-search__icon {
+        color: var(--ink-mute);
+    }
+
+    .nav-bar.is-searching .nav-search__input {
+        color: var(--navy);
+        padding: 10px 0;
+    }
+
+    .nav-bar.is-searching .nav-search__input::placeholder {
+        color: var(--ink-mute);
+    }
+
+    .nav-bar.is-searching .nav-search__close {
+        width: 36px;
+        color: var(--navy);
+        background: var(--surface-alt);
+    }
+
+    /* one control at a time — both of these would otherwise float above the
+       sheet with nothing left in the pill beside them */
+    .nav-bar.is-searching .nav-burger,
+    .nav-bar.is-searching .nav-theme-toggle {
+        display: none;
+    }
+
+    .nav-bar.is-searching .nav-search__panel {
+        top: calc(100% + 8px);
+        right: 0;
+        left: 0;
+        width: auto;
+        max-height: min(58vh, 420px);
+    }
+
+    /* dims the page behind the sheet so the field and its results read over
+       the hero; clicking it closes, since the document-level handler already
+       treats anything outside #navSearch as an outside click */
+    body.search-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 1090;
+        background: rgba(9, 22, 44, .5);
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+        animation: searchScrim .3s var(--ease) both;
+    }
+}
+
+@keyframes searchSheet {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes searchScrim {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }
 
@@ -3613,19 +3793,17 @@ body.menu-open .nav-shell {
         box-shadow: var(--sh-lg);
     }
 
-    .nav-search {
-        width: min(300px, 64vw);
+    /* the sheet is already gutter-to-gutter here — only the inner rhythm
+       tightens so the close button keeps its thumb target */
+    .nav-bar.is-searching {
+        padding-left: 15px;
+        gap: 6px;
     }
 
-    .nav-search__panel {
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        width: calc(100vw - 24px);
-    }
-
-    .nav-search__panel.is-open {
-        animation: none;
+    /* 16px exactly: iOS Safari zooms the viewport on focus for anything
+       smaller, which would leave the page scaled after the sheet closes */
+    .nav-bar.is-searching .nav-search__input {
+        font-size: 16px;
     }
 
     .track__rating {
@@ -3800,4 +3978,57 @@ body.menu-open .nav-shell {
 
 [data-theme="dark"] .nav-theme-toggle .fa-moon {
     display: none;
+}
+
+/* ---------------------------------------------------------
+   30. BENGALI + THE GOOGLE TRANSLATE WIDGET
+
+   Translation is done client-side by Google's (deprecated but
+   still live) website widget, injected by initLang() in
+   website.js only when the visitor has chosen Bengali. Two
+   things have to be handled here: the font, and the widget's
+   own chrome.
+   --------------------------------------------------------- */
+
+/* Neither Sora nor Inter has a Bengali glyph, so without this the
+   translated page renders in whatever the OS happens to supply — the
+   stylesheet itself is requested by the inline <head> script. */
+html[data-lang="bn"] {
+    --font-head: 'Noto Sans Bengali', 'Sora', system-ui, sans-serif;
+    --font-body: 'Noto Sans Bengali', 'Inter', system-ui, sans-serif;
+}
+
+/* Bengali sits taller than Latin and its matras clip against the tight
+   display leading the headings were set with */
+html[data-lang="bn"] h1,
+html[data-lang="bn"] h2,
+html[data-lang="bn"] h3 {
+    line-height: 1.35;
+}
+
+/* The widget injects a banner iframe and sets `top: 40px` INLINE on
+   <body>. Everything anchored to the viewport — .brand-rail,
+   .nav-shell, .dock, .to-top — would shift with it, so the banner goes
+   and the offset is overridden. `!important` is what beats an inline
+   style; there is no cleaner lever. */
+body>.skiptranslate,
+.goog-te-banner-frame,
+.goog-te-gadget-icon {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+}
+
+/* the widget needs a mount point in the DOM but we drive it from
+   .nav-lang, so its own select never has to be seen */
+#google_translate_element {
+    display: none;
+}
+
+/* Google highlights every translated run in yellow on hover */
+.goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
 }

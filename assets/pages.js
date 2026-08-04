@@ -109,6 +109,95 @@
     };
 
     /* ---------------------------------------------------------
+       Single-article banner: same parallax as initBanner (which
+       only knows .pg-hero) plus the print / mail / share row.
+       The markup ships those three working without JS as far as
+       it can — the mail link is a real mailto — so everything
+       here is an upgrade, not a requirement.
+       --------------------------------------------------------- */
+    const initPostHero = () => {
+        const hero = $('.post-hero');
+        if (!hero) return;
+
+        const flash = $('#postFlash');
+        /* the message clears itself; the timer is held so a second
+           click restarts it rather than being cut short by the first */
+        let flashTimer;
+        const say = (msg) => {
+            if (!flash) return;
+            flash.textContent = msg;
+            flash.classList.add('is-visible');
+            clearTimeout(flashTimer);
+            flashTimer = setTimeout(() => flash.classList.remove('is-visible'), 2600);
+        };
+
+        const title = $('.post-hero__title');
+        const url = location.href;
+
+        $$('[data-post-tool]', hero).forEach((el) => {
+            const kind = el.dataset.postTool;
+
+            if (kind === 'mail') {
+                /* the subject was baked at build time; only the body needs
+                   the live URL, which the generator cannot know */
+                el.href += `&body=${encodeURIComponent(url)}`;
+                return;
+            }
+
+            el.addEventListener('click', async () => {
+                if (kind === 'print') {
+                    window.print();
+                    return;
+                }
+
+                const data = { title: title ? title.textContent.trim() : document.title, url };
+
+                /* navigator.share is mobile and https only; the desktop
+                   path is the clipboard, and a cancelled share sheet
+                   throws AbortError, which is not a failure */
+                if (navigator.share) {
+                    try {
+                        await navigator.share(data);
+                        return;
+                    } catch (err) {
+                        if (err && err.name === 'AbortError') return;
+                    }
+                }
+
+                if (navigator.clipboard) {
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        say('Link copied');
+                        return;
+                    } catch (err) { /* falls through to the prompt */ }
+                }
+
+                window.prompt('Copy this link', url);
+            });
+        });
+
+        if (REDUCED || !HAS_GSAP) return;
+
+        const img = $('.post-hero__img', hero);
+        if (img) {
+            gsap.to(img, {
+                yPercent: 10,
+                ease: 'none',
+                scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
+            });
+        }
+
+        gsap.from($$('.post-hero__flags, .post-hero__title, .post-hero__lead, .post-hero__card .pg-crumb, .post-hero__side > *', hero), {
+            y: 24,
+            opacity: 0,
+            duration: .7,
+            ease: 'power3.out',
+            stagger: .07,
+            delay: .15,
+        });
+    };
+
+    /* ---------------------------------------------------------
        Section reveals for the inner-page blocks. website.js's
        initSections() only knows the home page's section ids.
        --------------------------------------------------------- */
@@ -131,6 +220,7 @@
             '.ab-mosaic > *',
             '.cr-job',
             '.cr-mail',
+            '.post-related .blog__card',
         ];
 
         groups.forEach((sel) => {
@@ -171,6 +261,89 @@
                 setTimeout(() => note.classList.remove('is-visible'), 6000);
             }
         });
+    };
+
+    /* ---------------------------------------------------------
+       Blog listing sidebar: free-text search + a single-select
+       tag chip, combined with AND.
+
+       The query is matched against card.textContent rather than a
+       baked-in data-search string, so it keeps working once the
+       Google Translate widget has rewritten the cards into
+       Bengali. The chips match on data-cat, which the widget
+       leaves alone — attributes are never translated.
+       --------------------------------------------------------- */
+    const initBlogFilter = () => {
+        const search = $('#blogSearch');
+        if (!search) return;
+
+        const cards = $$('.blog__card');
+        const chips = $$('#blogTags .pg-tag');
+        const count = $('#blogCount');
+        const empty = $('#blogEmpty');
+        const clear = $('#blogClear');
+
+        let q = '';
+        let tag = '';
+
+        const apply = () => {
+            let shown = 0;
+
+            cards.forEach((card) => {
+                const hit = (!tag || card.dataset.cat === tag)
+                    && (!q || card.textContent.toLowerCase().includes(q));
+                card.hidden = !hit;
+                if (hit) shown += 1;
+            });
+
+            if (empty) empty.hidden = shown > 0;
+            if (clear) clear.hidden = !q && !tag;
+            if (count) {
+                count.textContent = shown === 0
+                    ? 'No articles match'
+                    : `${shown} article${shown === 1 ? '' : 's'}${tag ? ` in ${tag}` : ''}`;
+            }
+        };
+
+        /* typing is cheap here — nine cards — but the debounce keeps the
+           status line from thrashing a screen reader mid-word */
+        let timer;
+        search.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                q = search.value.trim().toLowerCase();
+                apply();
+            }, 120);
+        });
+
+        chips.forEach((chip) => {
+            chip.addEventListener('click', () => {
+                /* clicking the active chip clears it, same as picking All */
+                tag = chip.dataset.tag === tag ? '' : chip.dataset.tag;
+                chips.forEach((c) => c.classList.toggle('is-active', c.dataset.tag === tag));
+                apply();
+            });
+        });
+
+        if (clear) {
+            clear.addEventListener('click', () => {
+                q = '';
+                tag = '';
+                search.value = '';
+                chips.forEach((c) => c.classList.toggle('is-active', !c.dataset.tag));
+                apply();
+            });
+        }
+
+        /* An article's tag links point here as blog.html?tag=Cardiology.
+           Only honour a value that an actual chip carries, so a stale or
+           hand-typed tag shows the full list instead of an empty grid. */
+        const wanted = new URLSearchParams(location.search).get('tag');
+        if (wanted && chips.some((c) => c.dataset.tag === wanted)) {
+            tag = wanted;
+            chips.forEach((c) => c.classList.toggle('is-active', c.dataset.tag === tag));
+            apply();
+        }
     };
 
     /* ---------------------------------------------------------
@@ -445,7 +618,9 @@
 
     const boot = () => {
         initBanner();
+        initPostHero();
         initStats();
+        initBlogFilter();
         initQuotes();
         initCareers();
         /* fills #jobDetail, so it has to run before the reveals measure it */

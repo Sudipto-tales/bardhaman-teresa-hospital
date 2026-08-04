@@ -56,6 +56,13 @@ ${megaMenu()}
                 aria-label="Switch to dark theme"><i class="fa-solid fa-moon"></i><i
                     class="fa-solid fa-sun"></i></button>
 
+            <!-- sits here rather than in .nav-topbar because that bar is
+                 display:none below 640px; the nav pill survives every width -->
+            <div class="nav-lang" id="navLang" role="group" aria-label="Language" translate="no">
+                <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাং</button>
+            </div>
+
             <a href="contact.html#emergency" class="nav-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency</a>
 
             <!-- takes over the whole bar while open; see .nav-bar.is-searching -->
@@ -73,7 +80,10 @@ ${megaMenu()}
         </nav>`;
 
 const HEADER = (active) => `    <!-- ============ BRAND RAIL (fixed — never scrolls away) ============ -->
-    <div class="brand-rail" id="brandRail">
+    <!-- translate="no" throughout the brand and contact chrome: the Google
+         widget would otherwise transliterate the wordmark and, worse, rewrite
+         the digits of the emergency number into Bengali numerals -->
+    <div class="brand-rail" id="brandRail" translate="no">
         <a href="website.html" class="brand-rail__link">
             <img src="assets/logo-teresa.png" alt="Teresa Memorial Hospital" class="brand-rail__logo"
                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
@@ -86,7 +96,7 @@ const HEADER = (active) => `    <!-- ============ BRAND RAIL (fixed — never sc
 
     <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
     <div class="nav-shell" id="navShell">
-        <div class="nav-topbar">
+        <div class="nav-topbar" translate="no">
             <span><i class="fa-solid fa-envelope"></i> contact@teresamemorial.org</span>
             <span><i class="fa-solid fa-phone"></i> +91 342 325 4567</span>
         </div>
@@ -228,7 +238,8 @@ const FOOTER = `    <!-- ============ PRE-FOOTER ============ -->
 
     <div class="ft__bottom">
         <p class="ft__bottom-copy">&copy; 2026 Teresa Memorial Hospital. All rights reserved.</p>
-        <p class="ft__bottom-tag" lang="bn">মানুষের সাথে ..... মানুষের পাশে</p>
+        <!-- already Bengali; left to the widget it gets round-tripped -->
+        <p class="ft__bottom-tag" lang="bn" translate="no">মানুষের সাথে ..... মানুষের পাশে</p>
         <a class="ft__dev" href="https://promix.tech/" target="_blank" rel="noopener noreferrer" data-tip="Promix"
             aria-label="Developed by Promix">
             <span>Developed by</span>
@@ -264,6 +275,23 @@ const page = ({ file, title, desc, active, body, scripts = '' }) => `<!DOCTYPE h
                 document.documentElement.dataset.theme = stored
                     || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             } catch (e) { /* private mode — stay on the light default */ }
+
+            /* Language rides on the googtrans cookie because that is what the
+               Google Translate widget reads at init — see initLang() in
+               assets/website.js. Resolving it here rather than in that file
+               matters for one reason: Inter and Sora carry no Bengali glyphs,
+               so the font has to be requested before first paint or the
+               translated page renders in whatever the OS falls back to. */
+            if (/(^|;\\s*)googtrans=[^;]*\\/bn/.test(document.cookie)) {
+                var el = document.documentElement;
+                el.lang = 'bn';
+                el.dataset.lang = 'bn';
+
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap';
+                document.head.appendChild(link);
+            }
         })();
     </script>
 
@@ -331,6 +359,66 @@ ${chips.length ? `
                 <div class="pg-hero__chips">
 ${chips.map((c) => `                    <span class="pg-hero__chip"><i class="fa-solid fa-circle-check"></i> ${c}</span>`).join('\n')}
                 </div>` : ''}
+            </div>
+        </section>`;
+
+/* Strips the markup and the few entities we bake into headings, so a
+   title can be reused inside an attribute (mailto subject, alt text). */
+const plain = (s) => s
+    .replace(/<[^>]+>/g, '')
+    .replace(/&mdash;/g, '—')
+    .replace(/&hellip;/g, '…')
+    .replace(/&amp;/g, '&');
+
+/* The single-article banner. banner() puts its copy *on* the photo; this
+   one runs the photo as a band and lifts a card over its foot, with the
+   utility row (call, print, mail, share) parked on the right. */
+const postBanner = ({ crumb, title, lead, img, flags, tel, phone }) => `        <!-- ============ ARTICLE BANNER ============ -->
+        <section class="post-hero">
+            <div class="post-hero__media">
+                <img class="post-hero__img" src="${img}" alt="" aria-hidden="true">
+                <div class="post-hero__scrim"></div>
+            </div>
+
+            <div class="post-hero__panel">
+                <div class="post-hero__card">
+                    <div class="post-hero__intro">
+                        <div class="post-hero__flags">
+${flags.map((f, i) => `                            <span class="post-hero__flag${i === 0 ? ' post-hero__flag--cat' : ''}">${f}</span>`).join('\n')}
+                        </div>
+
+                        <h1 class="post-hero__title">${title}</h1>
+                        <p class="post-hero__lead">${lead}</p>
+
+                        <nav class="pg-crumb pg-crumb--ink" aria-label="Breadcrumb">
+${crumb.map((c, i) => (i === crumb.length - 1
+        ? `                            <span aria-current="page">${c.label}</span>`
+        : `                            <a href="${c.href}">${c.label}</a>
+                            <i class="fa-solid fa-chevron-right"></i>`)).join('\n')}
+                        </nav>
+                    </div>
+
+                    <div class="post-hero__side">
+                        <a class="post-hero__call" href="tel:${tel}" translate="no">
+                            <span class="post-hero__call-ic"><i class="fa-solid fa-phone-volume"></i></span>
+                            <span>Call: <strong>${phone}</strong></span>
+                        </a>
+
+                        <!-- wired in pages.js. Without JS the mail link still
+                             works and the two buttons are inert rather than broken -->
+                        <div class="post-hero__tools" role="group" aria-label="Print or share this article">
+                            <button type="button" class="post-hero__tool" data-post-tool="print"
+                                aria-label="Print this article"><i class="fa-solid fa-print"></i></button>
+                            <a class="post-hero__tool" data-post-tool="mail"
+                                href="mailto:?subject=${encodeURIComponent(plain(title))}"
+                                aria-label="Email this article"><i class="fa-solid fa-envelope"></i></a>
+                            <button type="button" class="post-hero__tool" data-post-tool="share"
+                                aria-label="Share this article"><i class="fa-solid fa-share-nodes"></i></button>
+                        </div>
+
+                        <p class="post-hero__flash" id="postFlash" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
             </div>
         </section>`;
 
@@ -990,7 +1078,7 @@ ${DEPARTMENTS.map((d) => `                                    <option value="${d
                             <h3>Emergency &amp; Ambulance</h3>
                             <p>Do not wait for an appointment and do not drive yourself. Call and an ambulance is
                                 dispatched immediately.</p>
-                            <a class="ct-emergency__num" href="tel:+913423254567"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
+                            <a class="ct-emergency__num" href="tel:+913423254567" translate="no"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
                         </div>
                     </aside>
                 </div>
@@ -1026,7 +1114,12 @@ ${DEPARTMENTS.map((d) => `                                    <option value="${d
 /* ---------------------------------------------------------
    BLOG
    --------------------------------------------------------- */
-const blogCard = (p) => `                    <article class="blog__card">
+/* data-cat, not a baked-in search string: attributes survive the Google
+   Translate widget untouched, so the tag chips keep matching in Bengali
+   while free-text search reads the (translated) textContent instead. */
+const CATS = new Set(POSTS.map((p) => p.cat));
+
+const blogCard = (p) => `                    <article class="blog__card" data-cat="${p.cat}">
                         <div class="blog__card-img img-stretch">
                             <img src="${p.img}" alt="${p.title}" loading="lazy">
                             <span class="blog__cat">${p.cat}</span>
@@ -1068,8 +1161,53 @@ const blogPage = () => page({
                     <h2>Read Top Articles From <strong>Expert Doctors</strong></h2>
                 </div>
 
-                <div class="blog__grid" style="margin-top:clamp(28px,3vw,44px)">
+                <!-- borrows .pg-post from the article page: same main + sticky
+                     aside grid, same collapse at 1024px -->
+                <div class="pg-post blog__layout" style="margin-top:clamp(28px,3vw,44px)">
+                    <div>
+                        <div class="blog__toolbar">
+                            <span id="blogCount" role="status">${POSTS.length} articles</span>
+                            <button type="button" class="blog__clear" id="blogClear" hidden><i
+                                    class="fa-solid fa-xmark"></i> Clear filters</button>
+                        </div>
+
+                        <div class="blog__grid">
 ${POSTS.map(blogCard).join('\n\n')}
+                        </div>
+
+                        <div class="blog__empty" id="blogEmpty" hidden>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <h3>Nothing matches that</h3>
+                            <p>Try a shorter word, or clear the filters and browse the lot. If you are looking for
+                                advice on something we have not written about, ask and we will.</p>
+                        </div>
+                    </div>
+
+                    <aside class="pg-post__aside">
+                        <div class="ct-panel ct-panel--light">
+                            <h3>Search articles</h3>
+                            <div class="blog-search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="search" id="blogSearch" autocomplete="off"
+                                    placeholder="Chest pain, fever, diet&hellip;" aria-label="Search articles">
+                            </div>
+                        </div>
+
+                        <div class="ct-panel ct-panel--light">
+                            <h3>Browse by tag</h3>
+                            <div class="blog-tags" id="blogTags">
+                                <button type="button" class="pg-tag is-active" data-tag="">All</button>
+${[...CATS].map((c) => `                                <button type="button" class="pg-tag" data-tag="${c}">${c}</button>`).join('\n')}
+                            </div>
+                        </div>
+
+                        <div class="ct-panel">
+                            <h3>Recent articles</h3>
+                            <ul class="pg-related">
+${POSTS.slice(0, 5).map((p) => `                                <li><a href="${p.slug ? `${p.slug}.html` : 'blog-post.html'}"><span>${p.cat}</span> ${p.title}</a></li>`).join('\n')}
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>`,
@@ -1080,7 +1218,44 @@ ${POSTS.map(blogCard).join('\n\n')}
     ),
 });
 
+/* Same category or one of the article's own tags first, then the most
+   recent of whatever is left so the row is never short. Sorting rather
+   than filtering matters: only one Cardiology post exists, and a strict
+   filter would leave a single card sitting alone in a three-up grid.
+   `hit` reports how many of the returned cards are genuine matches so
+   the heading can stop claiming a topic the row does not deliver. */
+const relatedFor = (src, n = 3) => {
+    const keys = new Set([src.cat, ...(src.tags || [])].map((s) => s.toLowerCase()));
+    const rest = POSTS.filter((p) => p !== src);
+    const hit = rest.filter((p) => keys.has(p.cat.toLowerCase()));
+    const items = [...hit, ...rest.filter((p) => !hit.includes(p))].slice(0, n);
+    return { items, hit: items.filter((p) => hit.includes(p)).length };
+};
+
+const related = ({ section = 'Related', eyebrow, title, items }) => `        <section class="pg-section pg-section--alt post-related" data-section="${section}">
+            <div class="pg-wrap">
+                <div class="post-related__head">
+                    <div class="section-head">
+                        <span class="eyebrow">${eyebrow}</span>
+                        <h2>${title}</h2>
+                    </div>
+                    <a href="blog.html" class="arrow-link arrow-link--cool"><i class="fa-solid fa-arrow-right"></i> All articles</a>
+                </div>
+
+                <div class="blog__grid">
+${items.map(blogCard).join('\n\n')}
+                </div>
+            </div>
+        </section>`;
+
 const post = POSTS[0];
+
+/* Name the topic only when every card in the row actually carries it —
+   otherwise the heading promises "Cardiology" over two maternity cards. */
+const postRel = relatedFor(post);
+const postRelTitle = postRel.hit === postRel.items.length
+    ? `More on <strong>${post.cat} &amp; ${post.tags[0]}</strong>`
+    : `More From <strong>Our Health Library</strong>`;
 
 const blogPostPage = () => page({
     file: 'blog-post.html',
@@ -1088,19 +1263,18 @@ const blogPostPage = () => page({
     desc: post.excerpt,
     active: '',
     body: main(
-        banner({
+        postBanner({
             crumb: [
                 { label: 'Home', href: 'website.html' },
                 { label: 'Blog', href: 'blog.html' },
                 { label: post.cat },
             ],
-            title: 'The Six Hours After Chest Pain:',
-            strong: 'What Decides The Outcome',
+            title: post.heading,
             lead: post.excerpt,
             img: post.img,
-            chips: [post.cat, post.date, post.read],
-            primary: { href: 'cardiology.html', label: 'Cardiology Department' },
-            ghost: { href: 'contact.html', icon: 'fa-calendar-check', label: 'Book a Consultation' },
+            flags: [post.cat, post.date, post.read],
+            tel: '+913423254567',
+            phone: '+91 342 325 4567',
         }),
         `        <section class="pg-section" data-section="Article">
             <div class="pg-wrap">
@@ -1176,11 +1350,14 @@ const blogPostPage = () => page({
                         <p>If you take one thing from this article: new chest discomfort lasting more than ten
                             minutes is a phone call, not a wait-and-see.</p>
 
+                        <!-- ?tag= is read by initBlogFilter() on the listing, so a
+                             tag that is also a category lands on the filtered view.
+                             The rest are descriptive only and stay unlinked rather
+                             than pointing at a filter that would match nothing. -->
                         <div class="pg-tags">
-                            <span class="pg-tag">Cardiology</span>
-                            <span class="pg-tag">Emergency</span>
-                            <span class="pg-tag">Heart Attack</span>
-                            <span class="pg-tag">Prevention</span>
+${[post.cat, ...post.tags].map((t) => (CATS.has(t)
+        ? `                            <a class="pg-tag" href="blog.html?tag=${encodeURIComponent(t)}">${t}</a>`
+        : `                            <span class="pg-tag">${t}</span>`)).join('\n')}
                         </div>
                     </article>
 
@@ -1188,19 +1365,24 @@ const blogPostPage = () => page({
                         <div class="ct-emergency">
                             <h3>Chest pain right now?</h3>
                             <p>Do not finish this article. Call, and do not drive yourself.</p>
-                            <a class="ct-emergency__num" href="tel:+913423254567"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
+                            <a class="ct-emergency__num" href="tel:+913423254567" translate="no"><i class="fa-solid fa-truck-medical"></i> +91 342 325 4567</a>
                         </div>
 
                         <div class="ct-panel">
                             <h3>More from the blog</h3>
                             <ul class="pg-related">
-${POSTS.slice(1, 5).map((p) => `                                <li><a href="blog.html"><span>${p.cat}</span> ${p.title}</a></li>`).join('\n')}
+${POSTS.slice(1, 5).map((p) => `                                <li><a href="${p.slug ? `${p.slug}.html` : 'blog.html'}"><span>${p.cat}</span> ${p.title}</a></li>`).join('\n')}
                             </ul>
                         </div>
                     </aside>
                 </div>
             </div>
         </section>`,
+        related({
+            eyebrow: 'Keep reading',
+            title: postRelTitle,
+            items: postRel.items,
+        }),
         cta({
             title: 'Get your heart checked',
             text: 'A cardiology screening takes ninety minutes and covers ECG, echo and a consultant review.',

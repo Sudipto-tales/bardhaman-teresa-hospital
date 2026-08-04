@@ -295,9 +295,13 @@
         const intro = gsap.timeline({ defaults: { ease: EASE } });
         intro
             .fromTo(navShell, { opacity: 0 }, { opacity: 1, duration: 0.7 }, 0.25)
+            /* clearProps drops the leftover inline transform: a transformed
+               .nav-bar becomes the containing block for position:fixed
+               descendants, which would strand the mobile search sheet inside
+               the pill instead of spanning the viewport */
             .fromTo([$('.nav-topbar', navShell), $('.nav-bar', navShell)],
                 { y: -26, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 }, 0.25)
+                { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, clearProps: 'transform' }, 0.25)
             .fromTo($$('.nav-link, .nav-emergency, .nav-burger', navShell),
                 { y: -14, opacity: 0 },
                 { y: 0, opacity: 1, duration: 0.5, stagger: 0.05 }, 0.4)
@@ -821,6 +825,19 @@
         const closeBtn = $('#navSearchClose');
         if (!bar || !box || !input || !panel || !openBtn) return;
 
+        /* ---------- placeholder ----------
+           The desktop placeholder is a full sentence; in the phone sheet it
+           truncates mid-word, so swap in a short one and keep it in step with
+           the width (the field survives rotation without a reload). */
+        const phFull = input.getAttribute('placeholder') || '';
+        const phShort = 'Search doctors, departments, tests…';
+        const phMq = window.matchMedia('(max-width: 640px)');
+        const syncPlaceholder = () => {
+            input.placeholder = phMq.matches ? phShort : phFull;
+        };
+        syncPlaceholder();
+        phMq.addEventListener('change', syncPlaceholder);
+
         /* ---------- index ---------- */
         const PICK = 'h1, h2, h3, h4, p, li, .spec__proc-tag, .blog__cat, .lab__price';
         /* the speciality card is rendered one tab at a time — indexed from data instead */
@@ -1155,10 +1172,114 @@
     };
 
     /* =====================================================
-       17. BOOT
+       17. LANGUAGE — EN / BENGALI
+
+       Translation is Google's website widget. It is deprecated
+       (unsupported since 2018) but still live, and it is the only
+       route that covers copy nobody has translated yet — a blog
+       post published tomorrow is Bengali the moment it is read.
+
+       The widget takes its target language from a `googtrans`
+       cookie at init, which is also what carries the choice from
+       page to page. So both directions are: write the cookie,
+       reload, let the widget read it.
+
+       A reload each way, rather than driving the widget's hidden
+       .goog-te-combo select in place: going BACK to English that
+       way is unreliable, and a control that works cleanly one
+       direction and raggedly the other is worse than one that is
+       consistently a page load.
+
+       If the endpoint ever goes away, script.onerror clears the
+       cookie — the failure mode is an English page, not a stuck one.
+       ===================================================== */
+    const LANG_COOKIE = 'googtrans';
+
+    const currentLang = () => (/(^|;\s*)googtrans=[^;]*\/bn/.test(document.cookie) ? 'bn' : 'en');
+
+    /* written twice: a host-only cookie, and a dot-domain one. Which of
+       the two the widget reads depends on how the site is served, and
+       setting both is cheaper than guessing. */
+    const writeLangCookie = (lang) => {
+        const value = lang === 'bn' ? '/en/bn' : '';
+        const expiry = lang === 'bn' ? '' : ';expires=Thu, 01 Jan 1970 00:00:01 GMT';
+
+        document.cookie = `${LANG_COOKIE}=${value};path=/${expiry}`;
+        document.cookie = `${LANG_COOKIE}=${value};path=/;domain=${location.hostname}${expiry}`;
+        document.cookie = `${LANG_COOKIE}=${value};path=/;domain=.${location.hostname}${expiry}`;
+    };
+
+    const initLang = () => {
+        const box = $('#navLang');
+        if (!box) return;
+
+        const buttons = $$('button', box);
+        const lang = currentLang();
+
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+
+        buttons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.lang === currentLang()) return;
+                box.classList.add('is-busy');
+                writeLangCookie(btn.dataset.lang);
+                location.reload();
+            });
+        });
+
+        /* English needs no widget at all — no third-party request is made
+           unless the visitor actually asked for Bengali */
+        if (lang !== 'bn') return;
+
+        /* Left alone, the widget rewrites +91 342 325 4567 into Bengali
+           numerals, which is a number nobody can dial. Tag the links
+           themselves rather than chasing each one through the generator, and
+           only where the text is actually an address or a number — a plain
+           "Email HR" label should still translate. */
+        $$('a[href^="tel:"], a[href^="mailto:"]')
+            .filter((a) => /[0-9@]/.test(a.textContent))
+            .forEach((a) => a.setAttribute('translate', 'no'));
+
+        const mount = document.createElement('div');
+        mount.id = 'google_translate_element';
+        document.body.appendChild(mount);
+
+        window.tmhTranslateInit = () => {
+            /* eslint-disable-next-line no-undef */
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'bn',
+                autoDisplay: false,
+            }, 'google_translate_element');
+        };
+
+        /* Bengali runs to a different length than English, so every scroll
+           trigger measured at DOMContentLoaded is wrong once the swap lands.
+           Google marks completion with a .translated-* class on <html>. */
+        const done = new MutationObserver(() => {
+            if (!/\btranslated-/.test(document.documentElement.className)) return;
+            done.disconnect();
+            setTimeout(() => window.ScrollTrigger?.refresh(), 300);
+        });
+        done.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+        const script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=tmhTranslateInit';
+        script.onerror = () => {
+            writeLangCookie('en');
+            buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === 'en')));
+            document.documentElement.lang = 'en';
+            delete document.documentElement.dataset.lang;
+        };
+        document.body.appendChild(script);
+    };
+
+    /* =====================================================
+       18. BOOT
        ===================================================== */
     const boot = () => {
         initTheme();
+        initLang();
         buildFloaters();
         initHeader();
         initHero();
