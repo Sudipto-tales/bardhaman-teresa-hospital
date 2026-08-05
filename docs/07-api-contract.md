@@ -1,0 +1,163 @@
+# API Contract (Phase 2)
+
+Written now so the mock layer in `assets/js/core/store.js` matches the real thing
+in shape. When the backend lands, `store.js` is deleted and its methods become
+`fetch` calls. No page JS changes.
+
+The stack (PHP+MySQL / Node+SQLite / Node+Mongo) is not decided yet — this
+contract is stack-agnostic.
+
+## Conventions
+
+- Base: `/api`
+- JSON in, JSON out. `Content-Type: application/json`.
+- Auth: session cookie, `HttpOnly; Secure; SameSite=Lax`. Mutating requests carry
+  `X-CSRF-Token`.
+- Timestamps ISO 8601 UTC.
+- IDs are strings.
+
+Envelope:
+
+```json
+{ "data": {...}, "meta": { "page": 1, "pageSize": 20, "total": 47 } }
+```
+
+Errors:
+
+```json
+{ "error": { "code": "VALIDATION_FAILED",
+             "message": "3 fields need attention",
+             "fields": { "slug": "Already in use", "photo": "Required" } } }
+```
+
+| Code | HTTP | Meaning |
+|---|---|---|
+| `UNAUTHENTICATED` | 401 | No/expired session |
+| `FORBIDDEN` | 403 | Role lacks the permission |
+| `NOT_FOUND` | 404 | |
+| `VALIDATION_FAILED` | 422 | `fields` map drives inline errors |
+| `CONFLICT` | 409 | Stale `updatedAt`, or slug taken |
+| `HAS_DEPENDENTS` | 409 | Delete blocked; `dependents[]` lists them |
+| `RATE_LIMITED` | 429 | |
+
+## Auth
+
+```
+POST   /api/auth/login          {email, password, remember}     → {user}
+POST   /api/auth/logout                                          → 204
+GET    /api/auth/me                                              → {user, permissions}
+POST   /api/auth/forgot         {email}                          → 204 (always)
+POST   /api/auth/reset          {token, password}                → 204
+```
+
+## Generic resource routes
+
+Applied uniformly to: `doctors`, `leadership`, `departments`, `facilities`,
+`lab-tests`, `posts`, `categories`, `testimonials`, `faqs`, `jobs`,
+`applications`, `enquiries`, `appointments`, `redirects`, `nav-items`, `counters`,
+`users`, `roles`.
+
+```
+GET    /api/{resource}?q=&status=&sort=&page=&pageSize=&<filters>
+GET    /api/{resource}/{id}
+POST   /api/{resource}                       → 201 {data}
+PATCH  /api/{resource}/{id}                  → {data}
+DELETE /api/{resource}/{id}?force=false      → 204 | 409 HAS_DEPENDENTS
+POST   /api/{resource}/{id}/restore          → {data}
+POST   /api/{resource}/reorder   {ids: []}   → 204
+POST   /api/{resource}/bulk      {ids, action, payload}
+                                 → {succeeded: [], failed: [{id, reason}]}
+```
+
+`PATCH` accepts a partial body and requires `updatedAt` for optimistic
+concurrency. Publish/unpublish are `PATCH {status}` — not separate verbs.
+
+Per-resource filters:
+
+| Resource | Filters |
+|---|---|
+| `doctors` | `department`, `isLeadership` |
+| `posts` | `category`, `author`, `tag`, `from`, `to`, `featured` |
+| `jobs` | `dept`, `type`, `closingWithinDays` |
+| `enquiries` | `source`, `assignedTo`, `priority`, `from`, `to` |
+| `appointments` | `department`, `doctor`, `date` |
+| `counters` | `scope`, `department` |
+| `nav-items` | `location` |
+
+## Settings (singleton)
+
+```
+GET    /api/settings                     → all five groups in one object
+PATCH  /api/settings/{group}             group ∈ general|contact|social|integrations|theme
+POST   /api/settings/integrations/test-smtp   → {ok, message}
+```
+
+## Site pages
+
+```
+GET    /api/pages                                  → list
+GET    /api/pages/{id}                             → {sections: [...]}
+PATCH  /api/pages/{id}                             → {data}
+POST   /api/pages/{id}/sections/reorder  {keys}    → 204
+```
+
+## Media
+
+```
+GET    /api/media?folder=&type=&unused=&missingAlt=&q=
+POST   /api/media            multipart/form-data   → 201 {data}
+PATCH  /api/media/{id}       {alt, caption, folder}
+DELETE /api/media/{id}?force=false                 → 409 lists usedBy
+GET    /api/media/{id}/usage                       → {usedBy: [{entity, id, label}]}
+```
+
+## Enquiries & applications (workflow)
+
+```
+POST   /api/enquiries/{id}/reply    {body, templateId}   → {data}
+POST   /api/enquiries/{id}/note     {body}
+PATCH  /api/enquiries/{id}          {status, assignedTo, priority}
+PATCH  /api/applications/{id}       {stage, rating}
+GET    /api/applications/{id}/cv                          → file stream
+```
+
+## Public intake (called by the website, not the panel)
+
+```
+POST   /api/public/enquiry       {name, email, phone, subject, message, source, recaptcha}
+POST   /api/public/appointment   {patientName, phone, department, doctor, preferredDate, slot, reason}
+POST   /api/public/application   multipart — job application + CV
+```
+
+Rate-limited, reCAPTCHA-verified, honeypot field. These are the endpoints that
+make the site's existing forms actually deliver.
+
+## Public read (if the site fetches at runtime)
+
+```
+GET    /api/public/settings
+GET    /api/public/departments        GET /api/public/departments/{slug}
+GET    /api/public/doctors            GET /api/public/posts?category=&page=
+GET    /api/public/posts/{slug}       GET /api/public/jobs
+GET    /api/public/page/{id}
+```
+
+Published records only, aggressively cacheable, `ETag` + `Cache-Control`.
+If Phase 3 instead regenerates static HTML, these are unnecessary and
+`POST /api/build` triggers `tools/build-pages.mjs` on save.
+
+## Support
+
+```
+GET    /api/activity?user=&entity=&from=&to=
+POST   /api/activity/{id}/revert
+GET    /api/dashboard/summary        → stat tiles, attention list, recent feed
+GET    /api/analytics?range=          → chart series
+GET    /api/seo/pages                 → per-page meta + score
+GET    /api/search?q=                 → global search across entities
+```
+
+## Not in scope for Phase 2
+
+Webhooks, a public write API, multi-tenant, versioned content history beyond the
+activity log.
