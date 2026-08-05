@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Theme resolved before the stylesheet so the first paint is already
+         correct — a deferred script would flash the light panel first. -->
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('tmh-admin-theme');
+                document.documentElement.dataset.theme = stored
+                    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            } catch (e) { /* private mode — stay on the light default */ }
+        })();
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile &mdash; Teresa Memorial Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Baloo+2:wght@600;700;800&family=Noto+Sans+Bengali:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/tokens.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+
+<body data-page="profile">
+    <div class="app">
+        <div id="sidebar"></div>
+
+        <div class="shell">
+            <div id="topbar"></div>
+
+            <main class="main">
+                <div id="pageHead"></div>
+                <div id="view"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- core, in dependency order -->
+    <script src="assets/js/core/util.js"></script>
+    <script src="assets/js/core/nav.js"></script>
+    <script src="assets/js/core/toast.js"></script>
+    <script src="assets/js/core/modal.js"></script>
+    <script src="assets/js/core/store.js"></script>
+    <script src="assets/js/core/session.js"></script>
+    <script src="assets/js/core/repeater.js"></script>
+    <script src="assets/js/core/media.js"></script>
+    <script src="assets/js/core/fields.js"></script>
+    <script src="assets/js/core/form.js"></script>
+    <script src="assets/js/core/layout.js"></script>
+
+    <!-- seed data -->
+    <script src="assets/data/media.js"></script>
+    <script src="assets/data/doctors.js"></script>
+    <script src="assets/data/departments.js"></script>
+    <script src="assets/data/posts.js"></script>
+    <script src="assets/data/content.js"></script>
+    <script src="assets/data/careers.js"></script>
+    <script src="assets/data/inbox.js"></script>
+    <script src="assets/data/system.js"></script>
+    <script src="assets/data/site.js"></script>
+
+    <script src="assets/js/pages/profile.js"></script>
+</body>
+
+</html>
