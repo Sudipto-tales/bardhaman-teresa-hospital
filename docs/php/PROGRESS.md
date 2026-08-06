@@ -1,0 +1,116 @@
+# Progress — HTML → Vayu PHP conversion
+
+**Next action:** 2.1 — copy the Vayu framework into the repo root, run
+`composer install`, write `.env`.
+
+This file is the resume point. If a session dies, read it top to bottom and
+start at the next `todo`. Every numbered step below is one commit, and the row
+is updated in that same commit — so `git log` and this table cannot disagree.
+
+Status values: `todo` · `doing` · `done` · `blocked`
+
+---
+
+## Phase 0 — Admin design corrections
+
+Done on `design/html`, commit `8e67983`.
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 0.1 | Doctor `appointmentEnabled` toggle + list column | done | Two of twelve seeded doctors have it off, so the negative case is visible |
+| 0.2 | Appointments screen → read-only | done | No writes, no bulk bar, no sidebar badge, info banner explains why |
+| 0.3 | Applications: CV download + filename | done | Opens a real URL when one exists; warns honestly when it does not |
+| 0.4 | Popups admin screen | done | New `settings-popups.html`, 43rd screen |
+| 0.5 | Site: per-doctor booking link, cookie bar, ads popup | done | `html/assets/popups.js` + `popups-config.js` |
+| 0.6 | Docs updated to match | done | `00`–`05`, `07`, `08` |
+
+## Phase 1 — Restructure and branches
+
+Done on `design/html`, commit `3527910`.
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 1.1 | Move the public site into `html/` | done | Git recorded pure renames |
+| 1.2 | Retarget the generators, verify byte-identical | done | 20 pages rebuilt, zero content diff |
+| 1.3 | Branch `design/html` + push | done | Pushed to origin |
+| 1.4 | Branch `development` + `docs/php/` scaffold | done | This file |
+
+## Phase 2 — Vayu scaffold and framework patches
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 2.1 | Copy Vayu in, `composer install`, `.env` | todo | |
+| 2.2 | `RouteManager`: frontend `{param}` + real 404 | todo | Blocks `/blog/{slug}` and `/departments/{slug}` |
+| 2.3 | `Mailer`: read SMTP from env, add attachments | todo | Hardcoded Gmail credentials come out; CV mail needs attachments |
+| 2.4 | Add `Csrf`, `Upload`, `RateLimit` | todo | None of the three exist in Vayu |
+| 2.5 | `migrate` / `seed` CLI + dialect helpers | todo | `config/migrate.php` is broken today; migrations must run on SQLite and MySQL |
+| 2.6 | `Auth` fixes + admin guard | todo | Fragile relative require; email-verify blocks admin-created users |
+
+## Phase 3 — Database
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 3.1 | Migrations for every table | todo | Schema from `docs/02-content-model.md` |
+| 3.2 | `tools/seed-export.mjs` | todo | Existing JS content → JSON; nothing retyped |
+| 3.3 | PHP seeder + verify row counts | todo | |
+
+## Phase 4 — API layer
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 4.1 | `config/resources.php` registry | todo | One registry, not twenty controllers |
+| 4.2 | Generic `ResourceController` | todo | |
+| 4.3 | Auth / Settings / Media / Page / Popup controllers | todo | |
+| 4.4 | PublicIntake + application CV stream | todo | |
+| 4.5 | Activity log + dashboard | todo | |
+
+## Phase 5 — Admin panel on PHP
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 5.1 | Admin components + PHP shell scaffolder | todo | Port of `html/admin/tools/scaffold.mjs` |
+| 5.2 | 43 page shells + routes | todo | |
+| 5.3 | `api.js` replaces `store.js` | todo | The only client-side change |
+| 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+
+## Phase 6 — Public site as components
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 6.1 | Layout components | todo | head, header, nav, mega menu, dock, footer |
+| 6.2 | Block + card + form components | todo | One per generator function in `build-pages.mjs` |
+| 6.3 | Pages + controllers + models | todo | |
+| 6.4 | Settings-driven contact details, redirects | todo | Kills the repo-wide find-and-replace |
+
+## Phase 7 — Forms, mail, popups
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 7.1 | Enquiry endpoint + notification | todo | |
+| 7.2 | Application: CV upload, HR mail, applicant ack | todo | Row first, mail second — a failed send must not lose the application |
+| 7.3 | Doctor appointment link behaviour | todo | |
+| 7.4 | Cookie bar + ads popup from the database | todo | |
+
+## Phase 8 — Hardening and handover
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 8.1 | Security pass | todo | CSRF, uploads, storage deny, session flags |
+| 8.2 | MySQL verification | todo | Same migrations and seed, only `.env` changed |
+| 8.3 | Runbook + handover docs | todo | |
+
+---
+
+## Decisions already taken
+
+Recorded in full in [`00-plan.md`](00-plan.md) and
+[`06-decisions.md`](06-decisions.md).
+
+| Decision | Choice |
+|---|---|
+| Admin rendering | Thin PHP shell per screen; the panel keeps its JS. `store.js` → `api.js`. |
+| Auth | Session login, multiple users, roles displayed but not enforced. |
+| Repo layout | Vayu at the repo root; `html/` kept as the frozen design reference. |
+| Public site | Server-rendered PHP components reading the database — not static regeneration, not runtime fetch. |
+| Appointments | Read-only. No write endpoints at all. |
+| Ads popup | One record: enabled, title, image, link, date window, frequency. |
