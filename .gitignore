@@ -4,10 +4,40 @@ __t_dark.html
 __t_light.html
 
 # Pre-rebuild copy of the old single-page site, kept locally for
-# reference. The current home page is website.html.
+# reference. The current home page is html/website.html.
 website.original.html
+
+# Secrets and machine-specific config. .env.example is the template.
+.env
+
+# Composer installs these; composer.json and composer.lock are committed.
+/vendor/
+composer.phar
+
+# The development database. Rebuild it with:
+#     php vayu migrate && php vayu seed
+/database/database.sqlite
+
+# Uploads and CVs. Never committed — a CV is a named person's phone
+# number and employment history, and .gitkeep is enough to keep the
+# directories in the tree.
+/storage/uploads/*
+/storage/cv/*
+!/storage/**/.gitkeep
+
+# Logs and runtime files
+/logs/
+*.log
+*.cache
 
 # OS and editor noise
 .DS_Store
 Thumbs.db
 *.swp
+/.vscode/
+/.idea/
+
+# Build and temporary files
+*.tmp
+*.temp
+*.bak

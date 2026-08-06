@@ -1,0 +1,34 @@
+RewriteEngine On
+RewriteBase /
+
+# Apache strips the Authorization header before PHP sees it unless it is
+# copied into the environment here.
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteRule ^index\.php$ - [L]
+
+# Not for the browser: the CLI entry point, the dev server shim, the
+# environment file, the SQLite database, the design prototype, and anything
+# uploaded. storage/ holds job applicants' CVs — a CV reachable by URL is a
+# named person's address and phone number reachable by URL.
+RewriteRule ^vayu$ - [F,L]
+RewriteRule ^server\.php$ - [F,L]
+RewriteRule ^composer\.(json|lock)$ - [F,L]
+RewriteRule ^\.env - [F,L]
+RewriteRule ^(storage|database|config|core|app|api|vendor|tools|docs|html)/ - [F,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+
+# Belt and braces: if mod_rewrite is off, the rules above do nothing at all,
+# and these directives still refuse the same files.
+<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|vayu|server\.php)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

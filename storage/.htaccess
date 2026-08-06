@@ -1,0 +1,7 @@
+# Nothing under storage/ is served. Uploaded media is delivered through the
+# application, and CVs only through an authenticated endpoint.
+#
+# The root .htaccess already refuses this path, but a misconfigured vhost or a
+# rewrite rule someone adds later would bypass that. This file is inside the
+# directory it protects, so it travels with it.
+Require all denied

@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+/* The migrate and seed commands load config/bootstrap.php, which defines
+   __BASEDIR__ itself. Defining it here as well would be a fatal redeclare, so
+   only the commands that never boot the framework rely on this one. */
+if (!defined('__BASEDIR__')) {
+    define('__BASEDIR__', __DIR__);
+}
+
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require $autoloadPath;
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+}
+
+require __DIR__ . '/config/env.php';
+
+$framework = require __DIR__ . '/config/framework.php';
+
+foreach (glob(__DIR__ . '/core/Console/*.php') as $file) {
+    require_once $file;
+}
+
+$command = $argv[1] ?? null;
+
+$commands = [
+    'run' => 'Start the development server',
+    'setup' => 'Run the interactive setup wizard',
+    'migrate' => 'Run any migrations that have not run yet',
+    'migrate:fresh' => 'Drop every table and rebuild from scratch',
+    'seed' => 'Load the seed data into an empty database',
+];
+
+if ($command === null || $command === 'help' || $command === '--help') {
+    echo PHP_EOL;
+    echo "  \033[1m{$framework['name']}\033[0m v{$framework['version']}" . PHP_EOL;
+    echo PHP_EOL;
+    echo "  \033[33mUsage:\033[0m" . PHP_EOL;
+    echo "    php vayu <command> [options]" . PHP_EOL;
+    echo PHP_EOL;
+    echo "  \033[33mAvailable commands:\033[0m" . PHP_EOL;
+    $width = max(array_map('strlen', array_keys($commands))) + 2;
+    foreach ($commands as $name => $description) {
+        echo "    \033[32m{$name}\033[0m" . str_repeat(' ', $width - strlen($name)) . $description . PHP_EOL;
+    }
+    echo PHP_EOL;
+    exit(0);
+}
+
+$rest = array_slice($argv, 2);
+
+match ($command) {
+    'run' => (new RunCommand(__DIR__, $framework))->run($rest),
+    'setup' => (new SetupCommand(__DIR__, $framework))->run(),
+    'migrate',
+    'migrate:fresh',
+    'seed' => (new MigrateCommand(__DIR__, $framework))->run($command, $rest),
+    default => (function () use ($command) {
+        echo PHP_EOL;
+        echo "  \033[31mUnknown command: {$command}\033[0m" . PHP_EOL;
+        echo "  Run \033[33mphp vayu help\033[0m to see available commands." . PHP_EOL;
+        echo PHP_EOL;
+        exit(1);
+    })(),
+};

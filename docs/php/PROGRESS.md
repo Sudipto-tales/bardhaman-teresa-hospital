@@ -1,7 +1,7 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 2.1 — copy the Vayu framework into the repo root, run
-`composer install`, write `.env`.
+**Next action:** 3.1 — write one migration per table from
+`docs/02-content-model.md`, then run `php vayu migrate`.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -37,14 +37,25 @@ Done on `design/html`, commit `3527910`.
 
 ## Phase 2 — Vayu scaffold and framework patches
 
+Done on `development`. Every patch and its reason is in
+[`01-vayu-notes.md`](01-vayu-notes.md).
+
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 2.1 | Copy Vayu in, `composer install`, `.env` | todo | |
-| 2.2 | `RouteManager`: frontend `{param}` + real 404 | todo | Blocks `/blog/{slug}` and `/departments/{slug}` |
-| 2.3 | `Mailer`: read SMTP from env, add attachments | todo | Hardcoded Gmail credentials come out; CV mail needs attachments |
-| 2.4 | Add `Csrf`, `Upload`, `RateLimit` | todo | None of the three exist in Vayu |
-| 2.5 | `migrate` / `seed` CLI + dialect helpers | todo | `config/migrate.php` is broken today; migrations must run on SQLite and MySQL |
-| 2.6 | `Auth` fixes + admin guard | todo | Fragile relative require; email-verify blocks admin-created users |
+| 2.1 | Copy Vayu in, `composer install`, `.env` | done | v1.0.4, minus `.git`/`vendor`/`.env`/its own `docs`. `.env` is gitignored; `.env.example` rewritten |
+| 2.2 | `RouteManager`: frontend `{param}` + real 404 | done | One matcher for both route tables. Exact beats pattern; params never span `/` |
+| 2.3 | `Mailer`: read SMTP from env, add attachments | done | Hardcoded Gmail address + app password removed. `send()` returns bool so a dead SMTP cannot lose an application row |
+| 2.4 | Add `Csrf`, `Upload`, `RateLimit` | done | Uploads split media (public) from CV (outside the web root) |
+| 2.5 | `migrate` / `seed` CLI + dialect helpers | done | `migrate`, `migrate:fresh`, `seed`. Dialect helpers so migrations are written once for SQLite and MySQL |
+| 2.6 | `Auth` fixes + admin guard | done | Broken requires, email-verify gate, session flags, `session_regenerate_id`, remember token stored hashed |
+
+Also fixed, unplanned: `server.php` resolved every nested route to its last
+segment under the dev server (`SCRIPT_NAME` is the requested path when a router
+script is used), so `/api/v1/users` arrived as `users`. `.htaccess` hardened.
+
+Verified: live smoke test — `/` 200, `/api/v1/users` 401, `/api/nope` 404 JSON,
+`/nope` 404 text, `/.env` and `/config/db.php` 403. Route matching checked by
+reflection across eight cases.
 
 ## Phase 3 — Database
 
