@@ -365,7 +365,7 @@ Attached to Doctor, Department, Post and Site page. Also editable in bulk on
 | `openings` | number | |
 | `status` | enum | `hidden` = closed; an empty published set shows the careers "nothing open" panel |
 
-**Replaces:** `window.TMH_JOBS` in `assets/jobs.js`.
+**Replaces:** `window.TMH_JOBS` in `html/assets/jobs.js`.
 
 ## 18. Application — `applications.html`
 
@@ -482,6 +482,6 @@ Every export in `tools/site-data.mjs`:
 | `CAREER_CHECKS` | `page-careers.html` |
 | `CAREER_BENEFITS` | `page-careers.html` |
 
-Plus `assets/jobs.js` → `jobs.html`, and the three blocks still inline in
+Plus `html/assets/jobs.js` → `jobs.html`, and the three blocks still inline in
 `website.html` (FAQ → `faqs.html`, lab tests → `lab-tests.html`, counters →
 `stats.html`). Nothing unowned.

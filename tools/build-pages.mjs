@@ -3,8 +3,8 @@
 
        node tools/build-pages.mjs
 
-   Writes plain static HTML into the repo root. Nothing on the
-   live site depends on this script — it exists so the eighteen
+   Writes plain static HTML into html/. Nothing on the live
+   site depends on this script — it exists so the eighteen
    inner pages cannot drift apart in their shell, nav or footer.
    Edit the copy in tools/site-data.mjs, the markup here, then
    re-run it.
@@ -18,7 +18,9 @@ import {
     PILLARS, QUOTES, CAREER_CHECKS, CAREER_BENEFITS,
 } from './site-data.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+/* The site lives in html/ — the same folder the admin prototype sits in, so
+   the whole design set is one directory that can be opened from disk. */
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', 'html');
 
 /* ---------------------------------------------------------
    SHELL

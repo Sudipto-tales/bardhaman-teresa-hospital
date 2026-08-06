@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', 'html');
 const FILE = join(ROOT, 'website.html');
 
 let html = readFileSync(FILE, 'utf8');

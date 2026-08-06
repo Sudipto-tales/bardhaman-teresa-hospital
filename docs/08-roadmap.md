@@ -14,7 +14,7 @@ wrong 42 times is not.
 assets/css/tokens.css  base.css  layout.css
 partials/head.html  sidebar.html  topbar.html
 assets/js/core/layout.js  theme.js  toast.js  modal.js  store.js
-assets/data/*.json  (seeded from tools/site-data.mjs and assets/jobs.js)
+assets/data/*.json  (seeded from tools/site-data.mjs and html/assets/jobs.js)
 ```
 Exit check: a blank page renders the full chrome, the sidebar marks the right
 item, dark mode works, and `toast.success('hi')` from the console shows a toast.
@@ -87,7 +87,7 @@ Its generator functions map one-to-one onto the PHP components (`banner()` →
 that those are the right seams.
 
 Migration steps:
-1. Export `tools/site-data.mjs` + `assets/jobs.js` + the panel's seed files to
+1. Export `tools/site-data.mjs` + `html/assets/jobs.js` + the panel's seed files to
    JSON, and seed the database from them — no content is retyped.
 2. Build the components, then the pages that compose them.
 3. Diff the PHP-rendered output against the frozen `html/` prototype. A
@@ -107,7 +107,7 @@ The frozen prototype lives on the `design/html` branch and in `html/` on
 2. Seed production, verify the rendered site matches.
 3. Hand over: two admin accounts, a short screen recording per module, and this
    docs folder.
-4. Delete `tools/site-data.mjs` and `assets/jobs.js` — or leave them as the seed
+4. Delete `tools/site-data.mjs` and `html/assets/jobs.js` — or leave them as the seed
    fixture and mark them read-only in the README.
 
 ---
