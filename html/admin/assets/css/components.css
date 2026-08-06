@@ -2812,3 +2812,186 @@ body.is-file-drag .dropzone {
 .profile-panel {
     padding: var(--s5);
 }
+
+/* =========================================================
+   DASHBOARD & ACTIVITY LOG
+   The two screens that summarise rather than list: a feed of
+   things that happened, a checklist of things that have not.
+   ========================================================= */
+
+/* One line per event. Icon column is fixed so the text of every
+   row starts at the same x, whatever the icon inside it. */
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+}
+
+.feed__item {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: var(--s3);
+    align-items: start;
+}
+
+.feed__icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-3);
+}
+
+.feed__icon.ok {
+    color: var(--good);
+    background: var(--good-bg);
+}
+
+.feed__icon.warn {
+    color: var(--accent-orange);
+    background: var(--warn-bg);
+}
+
+.feed__icon.info {
+    color: var(--info);
+    background: var(--info-bg);
+}
+
+.feed__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--fs-sm);
+    color: var(--text-mid);
+    min-width: 0;
+}
+
+.feed__body b {
+    color: var(--text-dark);
+}
+
+.feed__meta {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+}
+
+.feed__meta a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.feed__meta a:hover {
+    color: var(--text-dark);
+}
+
+/* The fresh-install checklist. A done step is struck through and
+   stops being a link — there is nowhere useful left to go. */
+.checklist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s3);
+    font-size: var(--fs-sm);
+}
+
+.checklist__item {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    color: var(--text-mid);
+}
+
+.checklist__item i {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.checklist__item.is-done {
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.checklist__item.is-done i {
+    color: var(--good);
+}
+
+/* Four shortcuts, wrapping to two columns on a narrow card. */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--s3);
+}
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    padding: var(--s3) var(--s4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-mid);
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.quick-action i {
+    color: var(--brand-red);
+}
+
+.quick-action:hover {
+    border-color: var(--brand-red);
+    color: var(--text-dark);
+}
+
+/* A whole row that navigates. The hover tint is already on
+   .data-table tbody tr; this only has to say so with the cursor. */
+.data-table tbody tr[data-href] {
+    cursor: pointer;
+}
+
+/* Activity log: the field-level diff behind an expanded row.
+   Two columns, was and is, so a changed value can be read
+   without holding the old one in your head. */
+.diff {
+    display: grid;
+    grid-template-columns: minmax(0, 140px) minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s2) var(--s4);
+    font-size: var(--fs-sm);
+    align-items: baseline;
+}
+
+.diff__label {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+}
+
+.diff__from,
+.diff__to {
+    padding: 2px var(--s2);
+    border-radius: var(--radius-xs);
+    overflow-wrap: anywhere;
+}
+
+.diff__from {
+    color: var(--text-muted);
+    background: var(--surface-3);
+    text-decoration: line-through;
+}
+
+.diff__to {
+    color: var(--text-dark);
+    background: var(--good-bg);
+}
+
+/* An empty value is not the same as a short one, and a blank cell
+   would read as "unchanged". */
+.diff em {
+    color: var(--text-muted);
+    font-style: italic;
+    text-decoration: none;
+}

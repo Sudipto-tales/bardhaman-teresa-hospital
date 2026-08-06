@@ -853,7 +853,12 @@ function activity() {
         'activity_log',
         SEED.activity.map((a) => ({
             user_id: str(a.userId),
-            user_name: name.get(a.userId) ?? null,
+            /* The log stores the name as it stood when the entry was written —
+               that is the whole reason the column exists, since the account
+               may be gone by the time anyone reads it. The seed's own value
+               wins; the users map is only the fallback for rows written
+               before the field was there. */
+            user_name: str(a.userName) ?? name.get(a.userId) ?? null,
             action: key(a.action),
             entity: str(a.entity),
             entity_id: str(a.entityId),

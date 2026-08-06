@@ -1,8 +1,9 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 4.5 — the activity log screen and `GET api/dashboard/summary`,
-`GET api/activity`, `GET api/search`. `html/admin/assets/js/pages/activity-log.js`
-is still the "screen not built yet" placeholder.
+**Next action:** 6.3 — the public site's pages and controllers. `app/models/` and
+the components are done and the assets are now served from `assets/`, so what is
+left is the page templates, the controllers behind them and the frontend route
+table. Phase 4 is finished.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -85,7 +86,7 @@ repository contains a hash.
 | 4.2 | Generic `ResourceController` | done | All 18 resources verified over HTTP: list, filter, search, sort, paginate, create, patch, delete, restore, reorder, bulk |
 | 4.3 | Auth / Settings / Media / Page / Enquiry controllers | done | All five. Popups are a settings group, not a controller of their own |
 | 4.4 | PublicIntake + application CV stream | done | Both intake endpoints and the authenticated file stream. Phase 7 is now only the site-side wiring |
-| 4.5 | Activity log + dashboard | todo | Also renders the `view` action the CV stream records |
+| 4.5 | Activity log + dashboard | done | Both screens built, not just the endpoints. Renders the `view` action the CV stream records |
 
 ### 4.3
 
@@ -182,6 +183,70 @@ each file back with `Content-Disposition: attachment` and `no-store`, byte for
 byte, only to a signed-in caller. Two failed validations in a row do not burn
 the hourly quota; three real submissions do.
 
+### 4.5
+
+**`config/route.php` autoloads controllers instead of requiring the directory.**
+It walked `api/controllers/` and required every file in the order the
+filesystem listed them — which is readdir order, not alphabetical, and not
+stable across machines. `EnquiryController` and `ApplicationController` extend
+`ResourceController`, and requiring a child before its parent is a fatal error
+at compile time. It had been working by luck, and adding a file to that
+directory reshuffles the luck. Models stay eagerly required: they are function
+files and have no class name to be found by.
+
+**`POST api/activity/{id}/revert` is in the contract and is deliberately not
+built.** `ActivityLog::diff()` stores what changed, not what a record was —
+`summarise()` replaces long text with "1,240 characters" and an array with
+"6 item(s)", which is what keeps the log from outgrowing the content it
+describes. Reverting from that would write the summary into the record. What
+the screen offers instead is the undo that already exists: a `delete` row gets
+a Restore action wired to `POST api/{resource}/{id}/restore`, and every other
+row links to the record. The endpoint tells the panel which is which through
+`revertable` on the row, because only the server knows whether the record is
+still there under a `deleted_at`.
+
+**Two comparisons, not one, behind the four stat tiles.** Two are period counts
+and two are totals, and comparing them the same way would be wrong for one
+pair. The counts go against the same *days* of last month rather than the whole
+of it — on the 3rd, a month-against-month comparison shows every tile falling
+off a cliff for the first week of every month. The totals go against the state
+at the start of this month. Each tile carries `deltaOf` saying which it used,
+so the chip can name its own comparison instead of the panel guessing.
+`deltaPercent` is null, not 0, when there is nothing to divide by.
+
+**`GET api/activity` accepts `userId` and `withinDays` alongside the contract's
+`user`, `from` and `to`.** The panel's list controller sends a filter under the
+name of the field it filters on, and on a log row that field is `userId`; the
+date window is the same three-option control the enquiries screen uses. Two
+spellings in the controller is one less special case in `api.js`.
+
+**The panel's two new screens are written against `store.*`, like the other
+forty.** `store.summary()` is `GET api/dashboard/summary` and gained a mock
+that computes the same shape, with the same comparisons, from the seed. The
+activity log needed no new method at all: `activity` is already a seeded
+entity, so it is `table.create()` over `store.list('activity', …)` and every
+filter it declares is a query parameter the endpoint already reads.
+`store.revert()` is the one method the mock refuses — it splices rows out of an
+array, so by the time the log row is read the record is gone and an id is all
+there is; inventing a row from its id would put a stub in the collection and
+call it a restore.
+
+`GET api/search` has no `store` method for the same reason: the panel's global
+search is not a page script, it is `searchAll()` in `core/layout.js`, and that
+is what the endpoint replaces at 5.3. `SEARCH_SOURCES` there stays — which
+icon and which screen a collection maps to is presentation, and the API only
+answers with the collection's name.
+
+Verified live against SQLite: all three endpoints answer 401 unsigned-in and
+correctly signed in, through the real router and middleware; the date filters
+convert local days to the stored UTC, so an entry at 21:35 IST files under the
+right day; `withinDays=7` drops the one entry older than that; sorting is
+whitelisted to four columns and falls back to newest-first. Both screens render
+in a headless browser with no console errors, and the existing controllers —
+including the two that extend `ResourceController` — still answer after the
+autoload change. `node tools/seed-export.mjs` reproduces `database/seeds/`
+byte for byte.
+
 ## Phase 5 — Admin panel on PHP
 
 | # | Task | Status | Notes |
@@ -197,15 +262,27 @@ the hourly quota; three real submissions do.
 |---|---|---|---|
 | 6.1 | Layout components | done | 10 under `app/components/site/layout/` |
 | 6.2 | Block + card + form components | done | 34 components total. Pure: no database, no superglobals, safe with zero props |
-| 6.3 | Pages + controllers + models | doing | `app/models/` done — 16 files, read-only, published-only. Pages and controllers still to write |
+| 6.3 | Pages + controllers + models | doing | `app/models/` done — 16 files, read-only, published-only. Assets copied to `assets/` in 4.5. Pages and controllers still to write |
 | 6.4 | Settings-driven contact details, redirects | todo | Kills the repo-wide find-and-replace |
 
-Two things 6.3 must handle. `html/` is blocked by `.htaccess`, so the CSS, JS
-and images the components reference need copying to the root `assets/`. And the
-contact, careers, job and blog-listing page bodies have no functions in
-`build-pages.mjs` at all — they are inline template literals, so those regions
-(`ct-tiles`, `ct-aside`, `ct-map`, `cr-toolbar`, the blog sidebar) have no
-component and the page templates carry them.
+The first of those is done. `html/` is blocked by `.htaccess`, so the eleven
+files in `html/assets/` were copied to `assets/` — flat, not under `css/` and
+`js/`, because that is the path the components already reference
+(`assets/website.css`, `assets/pages.js`, `assets/logo-teresa.png`). Byte
+identical, and nothing inside the CSS or JS points at a relative asset, so
+there was nothing to rewrite. `html/` stays the frozen design reference:
+**from here on the served copy is `assets/`, and a change made in `html/assets/`
+alone changes nothing.**
+
+What is left for 6.3: the contact, careers, job and blog-listing page bodies
+have no functions in `build-pages.mjs` at all — they are inline template
+literals, so those regions (`ct-tiles`, `ct-aside`, `ct-map`, `cr-toolbar`, the
+blog sidebar) have no component and the page templates carry them.
+
+One thing 6.4 will have to fix, found while checking the dashboard's setup
+checklist: `settings.general.logo` and its two neighbours are seeded as
+`../../assets/logo-teresa.png`, which is a path relative to `html/admin/`. It
+resolves from the panel and from nowhere else.
 
 Section headings, a banner's `lead` and an FAQ's `answer` are echoed as raw
 markup, because every heading in this design carries `<strong>` on its

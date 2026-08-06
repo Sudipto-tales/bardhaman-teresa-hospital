@@ -275,6 +275,25 @@
             return clone(row);
         },
 
+        /**
+         * revert('testimonials', 'tst-009') — undo a delete from its log row.
+         *
+         * POST /api/{resource}/{id}/restore on the real backend, where a
+         * delete only sets deleted_at and the record is still there to bring
+         * back. This mock splices rows out of an array, so by the time the log
+         * row is read the record is gone and an id is all there is to go on.
+         * Refusing is the honest answer; inventing a row from its id would put
+         * a stub into the collection and call it a restore.
+         */
+        async revert(entity, id) {
+            await lag();
+            const err = new Error('Restoring from the log needs the backend — this preview deletes for good.');
+            err.code = 'NOT_SUPPORTED';
+            err.entity = entity;
+            err.id = id;
+            throw err;
+        },
+
         async reorder(entity, idsInOrder) {
             await lag();
             const rows = read(entity);
@@ -325,6 +344,159 @@
 
             write(entity, rows);
             return { succeeded, failed };
+        },
+
+        /* ----- cross-entity reads -----
+           The dashboard asks one question that spans eight tables, and no
+           amount of list() calls is that question. GET /api/dashboard/summary
+           answers it in one request; this computes the same shape from the
+           seed so the screen is written once. Every field below exists on the
+           real response — see api/controllers/DashboardController.php. */
+
+        /**
+         * summary() → {stats, attention, recentEnquiries, recentActivity, setup}
+         *
+         * The comparisons are deliberately the same ones the server makes:
+         * month-to-date against the same days of last month for the two
+         * counts, and against the state at the start of the month for the two
+         * totals. A mock that compared differently would make the tiles change
+         * meaning on the day the backend is plugged in.
+         */
+        async summary() {
+            await lag();
+
+            const now = new Date();
+            const start = new Date(now.getFullYear(), now.getMonth(), 1);
+            const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const prevEnd = new Date(prevStart.getTime() + (now - start));
+            const at = (row, key) => new Date(row[key] || 0);
+            const within = (row, key, from, to) => at(row, key) >= from && (!to || at(row, key) < to);
+
+            const enquiries = read('enquiries').filter((r) => r.status !== 'spam');
+            const posts = read('posts');
+            const jobs = read('jobs');
+            const media = read('media');
+
+            /* The design seed labels its sources for a human ('Contact form'),
+               the database stores them as keys ('contact'). Matched loosely so
+               both answer the same. */
+            const isAppointment = (r) => /appoint/i.test(String(r.source || ''));
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const openOn = (job, when) => job.status === 'published'
+                && (!job.closesAt || new Date(job.closesAt) >= when);
+
+            const tile = (key, label, value, previous, deltaOf) => ({
+                key, label, value, previous,
+                delta: value - previous,
+                /* Null, not 0 — "+100%" against a month with no enquiries at
+                   all says less than "first this month". */
+                deltaPercent: previous === 0 ? null : Math.round(((value - previous) / previous) * 100),
+                deltaOf,
+            });
+
+            const stats = [
+                tile('enquiries', 'Enquiries this month',
+                    enquiries.filter((r) => within(r, 'receivedAt', start)).length,
+                    enquiries.filter((r) => within(r, 'receivedAt', prevStart, prevEnd)).length,
+                    'the same days last month'),
+                tile('appointmentRequests', 'Appointment requests',
+                    enquiries.filter((r) => isAppointment(r) && within(r, 'receivedAt', start)).length,
+                    enquiries.filter((r) => isAppointment(r) && within(r, 'receivedAt', prevStart, prevEnd)).length,
+                    'the same days last month'),
+                tile('publishedPosts', 'Published posts',
+                    posts.filter((r) => r.status === 'published').length,
+                    posts.filter((r) => r.status === 'published' && r.publishedAt && at(r, 'publishedAt') < start).length,
+                    'the start of the month'),
+                tile('activeVacancies', 'Active vacancies',
+                    jobs.filter((j) => openOn(j, today)).length,
+                    jobs.filter((j) => openOn(j, start) && at(j, 'postedAt') < start).length,
+                    'the start of the month'),
+            ];
+
+            /* Only what has something in it. A card listing four zeroes is
+               four lines of nothing on the first screen of the morning. */
+            const attention = [];
+            const weekAgo = new Date(now.getTime() - 7 * 86400000);
+            const staleBy = {};
+
+            ['doctors', 'departments', 'posts', 'facilities', 'lab-tests', 'testimonials', 'faqs', 'jobs', 'leadership']
+                .forEach((entity) => {
+                    if (!available(entity)) return;
+                    const n = read(entity).filter((r) => r.status === 'draft'
+                        && (!r.updatedAt || at(r, 'updatedAt') < weekAgo)).length;
+                    if (n) staleBy[entity] = n;
+                });
+
+            const staleTotal = Object.values(staleBy).reduce((a, b) => a + b, 0);
+
+            if (staleTotal) {
+                attention.push({
+                    key: 'staleDrafts',
+                    label: `${staleTotal} draft${staleTotal === 1 ? '' : 's'} untouched for over a week`,
+                    count: staleTotal,
+                    breakdown: Object.entries(staleBy).map(([entity, count]) => ({ entity, count })),
+                });
+            }
+
+            const unanswered = enquiries.filter((r) => r.status === 'new').length;
+            if (unanswered) {
+                attention.push({
+                    key: 'unansweredEnquiries',
+                    label: `${unanswered} enquir${unanswered === 1 ? 'y' : 'ies'} with no reply`,
+                    count: unanswered, entity: 'enquiries', query: { status: 'new' },
+                });
+            }
+
+            const weekOut = new Date(today.getTime() + 7 * 86400000);
+            const closing = jobs.filter((j) => j.status === 'published' && j.closesAt
+                && at(j, 'closesAt') >= today && at(j, 'closesAt') <= weekOut).length;
+            if (closing) {
+                attention.push({
+                    key: 'closingVacancies',
+                    label: `${closing} vacanc${closing === 1 ? 'y closes' : 'ies close'} this week`,
+                    count: closing, entity: 'jobs', query: { closingWithinDays: 7 },
+                });
+            }
+
+            const noAlt = media.filter((m) => !String(m.alt || '').trim()).length;
+            if (noAlt) {
+                attention.push({
+                    key: 'mediaMissingAlt',
+                    label: `${noAlt} image${noAlt === 1 ? '' : 's'} with no alt text`,
+                    count: noAlt, entity: 'media',
+                });
+            }
+
+            const settings = JSON.parse(getItem(PREFIX + 'settings') || 'null')
+                || (root.TMH_SEED && root.TMH_SEED.settings) || {};
+            const published = (entity) => available(entity)
+                && read(entity).some((r) => r.status === 'published');
+
+            const steps = [
+                {
+                    key: 'settings',
+                    label: 'Fill in the hospital\'s name and contact details',
+                    href: 'settings-general.html',
+                    done: !!(settings.general && String(settings.general.name || '').trim())
+                        && !!(settings.contact && (settings.contact.phones || []).length),
+                },
+                { key: 'departments', label: 'Publish your departments', href: 'departments.html', done: published('departments') },
+                { key: 'doctors', label: 'Publish your consultants', href: 'doctors.html', done: published('doctors') },
+            ];
+
+            return clone({
+                stats,
+                attention,
+                recentEnquiries: enquiries
+                    .slice()
+                    .sort((a, b) => at(b, 'receivedAt') - at(a, 'receivedAt'))
+                    .slice(0, 5),
+                recentActivity: read('activity')
+                    .slice()
+                    .sort((a, b) => at(b, 'at') - at(a, 'at'))
+                    .slice(0, 8),
+                setup: { complete: steps.every((s) => s.done), steps },
+            });
         },
 
         /* ----- singletons (settings, page content) ----- */

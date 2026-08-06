@@ -237,6 +237,7 @@ hr {
 .mt-2 { margin-top: var(--s2); }
 .mt-4 { margin-top: var(--s4); }
 .mt-6 { margin-top: var(--s6); }
+.mb-2 { margin-bottom: var(--s2); }
 .mb-4 { margin-bottom: var(--s4); }
 
 .text-sm {

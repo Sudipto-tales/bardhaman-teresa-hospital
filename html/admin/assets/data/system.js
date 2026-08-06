@@ -55,14 +55,14 @@
     ];
 
     w.TMH_SEED.activity = [
-        { id: 'act-001', userId: 'usr-002', action: 'update', entity: 'posts', entityId: 'blog-post', summary: 'Edited “The six hours after chest pain”', ip: '103.21.44.10', at: '2026-08-05T08:12:00Z', order: 1 },
-        { id: 'act-002', userId: 'usr-001', action: 'publish', entity: 'doctors', entityId: 'dr-imran-haque', summary: 'Published Dr. Imran Haque', ip: '103.21.44.2', at: '2026-08-05T07:40:00Z', order: 2 },
-        { id: 'act-003', userId: 'usr-002', action: 'create', entity: 'jobs', entityId: 'physiotherapist', summary: 'Created vacancy “Physiotherapist — Inpatient”', ip: '103.21.44.10', at: '2026-08-03T11:20:00Z', order: 3 },
-        { id: 'act-004', userId: 'usr-001', action: 'update', entity: 'settings', entityId: 'contact', summary: 'Changed the emergency number', ip: '103.21.44.2', at: '2026-08-02T16:05:00Z', order: 4 },
-        { id: 'act-005', userId: 'usr-004', action: 'update', entity: 'enquiries', entityId: 'enq-003', summary: 'Replied to Amitava Sen', ip: '103.21.44.31', at: '2026-08-03T09:40:00Z', order: 5 },
-        { id: 'act-006', userId: 'usr-002', action: 'delete', entity: 'testimonials', entityId: 'tst-009', summary: 'Deleted a testimonial', ip: '103.21.44.10', at: '2026-08-01T14:22:00Z', order: 6 },
-        { id: 'act-007', userId: 'usr-003', action: 'login', entity: 'auth', entityId: '', summary: 'Signed in', ip: '49.37.12.88', at: '2026-08-04T18:20:00Z', order: 7 },
-        { id: 'act-008', userId: 'usr-001', action: 'update', entity: 'departments', entityId: 'cardiology', summary: 'Updated the cardiology counters', ip: '103.21.44.2', at: '2026-07-29T11:20:00Z', order: 8 },
+        { id: 'act-001', userId: 'usr-002', userName: 'Riya Sarkar', action: 'update', entity: 'posts', entityId: 'blog-post', summary: 'Edited “The six hours after chest pain”', ip: '103.21.44.10', at: '2026-08-05T08:12:00Z', order: 1 },
+        { id: 'act-002', userId: 'usr-001', userName: 'Admin Desk', action: 'publish', entity: 'doctors', entityId: 'dr-imran-haque', summary: 'Published Dr. Imran Haque', ip: '103.21.44.2', at: '2026-08-05T07:40:00Z', order: 2 },
+        { id: 'act-003', userId: 'usr-002', userName: 'Riya Sarkar', action: 'create', entity: 'jobs', entityId: 'physiotherapist', summary: 'Created vacancy “Physiotherapist — Inpatient”', ip: '103.21.44.10', at: '2026-08-03T11:20:00Z', order: 3 },
+        { id: 'act-004', userId: 'usr-001', userName: 'Admin Desk', action: 'update', entity: 'settings', entityId: 'contact', summary: 'Changed the emergency number', ip: '103.21.44.2', at: '2026-08-02T16:05:00Z', order: 4 },
+        { id: 'act-005', userId: 'usr-004', userName: 'Billing Team', action: 'update', entity: 'enquiries', entityId: 'enq-003', summary: 'Replied to Amitava Sen', ip: '103.21.44.31', at: '2026-08-03T09:40:00Z', order: 5 },
+        { id: 'act-006', userId: 'usr-002', userName: 'Riya Sarkar', action: 'delete', entity: 'testimonials', entityId: 'tst-009', summary: 'Deleted a testimonial', ip: '103.21.44.10', at: '2026-08-01T14:22:00Z', order: 6 },
+        { id: 'act-007', userId: 'usr-003', userName: 'Dr. Jonathon Ronan', action: 'login', entity: 'auth', entityId: '', summary: 'Signed in', ip: '49.37.12.88', at: '2026-08-04T18:20:00Z', order: 7 },
+        { id: 'act-008', userId: 'usr-001', userName: 'Admin Desk', action: 'update', entity: 'departments', entityId: 'cardiology', summary: 'Updated the cardiology counters', ip: '103.21.44.2', at: '2026-07-29T11:20:00Z', order: 8 },
     ];
 
     /* Replaces navBar() and megaMenu() in tools/build-pages.mjs:29-81 and the
