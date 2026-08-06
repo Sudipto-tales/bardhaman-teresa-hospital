@@ -3,6 +3,10 @@
 One set of rules, applied by every screen. If a module deviates, it is documented
 in [`03-page-specs.md`](03-page-specs.md).
 
+**One module is exempt entirely.** `appointments` is read-only — no create, no
+update, no delete, no bulk, no reorder. The site takes no bookings, so there is
+nothing to confirm or cancel. Nothing below applies to it.
+
 ## Status model
 
 ```

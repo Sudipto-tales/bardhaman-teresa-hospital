@@ -81,6 +81,7 @@ const PAGES = [
     ['settings-social',           'settings-social',        'Social Links',        'form'],
     ['settings-integrations',     'settings-integrations',  'Integrations',        'form'],
     ['settings-theme',            'settings-theme',         'Theme & Branding',    'form'],
+    ['settings-popups',           'settings-popups',        'Popups & Cookie Bar', 'form'],
 
     ['users',                     'users',              'Users & Roles',           'listform'],
     ['user-form',                 'users',              'Panel user',              'form'],
@@ -107,7 +108,7 @@ const head = (title) => `    <meta charset="UTF-8">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Baloo+2:wght@600;700;800&family=Noto+Sans+Bengali:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="assets/css/tokens.css">

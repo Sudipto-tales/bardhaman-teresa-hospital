@@ -29,7 +29,7 @@
                 { day: 'Fri', from: '16:00', to: '19:00', location: 'OPD 2' },
             ],
             consultationFee: 800, rating: 4.9, reviewCount: 412,
-            isLeadership: true, order: 1, status: 'published',
+            isLeadership: true, appointmentEnabled: true, order: 1, status: 'published',
             metaTitle: 'Dr. Jonathon Ronan — Head of Cardiology',
             metaDescription: 'Interventional cardiologist with 22 years of experience, leading the cath lab and heart-failure clinic at Teresa Memorial Hospital.',
             updatedAt: '2026-07-28T09:12:00Z',
@@ -45,7 +45,7 @@
                 { day: 'Thu', from: '11:00', to: '14:00', location: 'OPD 3' },
             ],
             consultationFee: 700, rating: 4.8, reviewCount: 288,
-            isLeadership: false, order: 2, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 2, status: 'published',
             updatedAt: '2026-07-22T14:40:00Z',
         },
         {
@@ -59,7 +59,7 @@
                 { day: 'Thu', from: '09:00', to: '12:00', location: 'OPD 5' },
             ],
             consultationFee: 800, rating: 4.9, reviewCount: 505,
-            isLeadership: true, order: 3, status: 'published',
+            isLeadership: true, appointmentEnabled: true, order: 3, status: 'published',
             updatedAt: '2026-07-30T08:02:00Z',
         },
         {
@@ -70,7 +70,7 @@
             bio: '<p>Fellowship-trained in arthroplasty, running the rapid-recovery knee pathway.</p>',
             schedule: [{ day: 'Wed', from: '15:00', to: '18:00', location: 'OPD 5' }],
             consultationFee: 600, rating: 4.7, reviewCount: 176,
-            isLeadership: false, order: 4, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 4, status: 'published',
             updatedAt: '2026-06-19T10:15:00Z',
         },
         {
@@ -84,7 +84,7 @@
                 { day: 'Sat', from: '10:00', to: '13:00', location: 'Maternity OPD' },
             ],
             consultationFee: 700, rating: 4.9, reviewCount: 623,
-            isLeadership: true, order: 5, status: 'published',
+            isLeadership: true, appointmentEnabled: true, order: 5, status: 'published',
             updatedAt: '2026-07-11T12:30:00Z',
         },
         {
@@ -95,7 +95,7 @@
             bio: '<p>Runs the outpatient diet clinic and the inpatient therapeutic diet review.</p>',
             schedule: [{ day: 'Mon', from: '14:00', to: '17:00', location: 'Diet clinic' }],
             consultationFee: 400, rating: 4.8, reviewCount: 134,
-            isLeadership: false, order: 6, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 6, status: 'published',
             updatedAt: '2026-05-30T09:00:00Z',
         },
         {
@@ -106,7 +106,7 @@
             bio: '<p>On the 24/7 stroke rota. Minimally invasive spine surgery.</p>',
             schedule: [{ day: 'Thu', from: '10:00', to: '13:00', location: 'OPD 7' }],
             consultationFee: 900, rating: 4.7, reviewCount: 98,
-            isLeadership: false, order: 7, status: 'published',
+            isLeadership: false, appointmentEnabled: false, order: 7, status: 'published',
             updatedAt: '2026-07-02T16:20:00Z',
         },
         {
@@ -117,7 +117,7 @@
             bio: '<p>Oversees the twelve-station dialysis unit.</p>',
             schedule: [{ day: 'Fri', from: '10:00', to: '13:00', location: 'OPD 4' }],
             consultationFee: 700, rating: 4.8, reviewCount: 141,
-            isLeadership: false, order: 8, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 8, status: 'published',
             updatedAt: '2026-06-28T11:45:00Z',
         },
         {
@@ -128,7 +128,7 @@
             bio: '<p>Emergency and elective general surgery, with a day-case hernia list.</p>',
             schedule: [{ day: 'Mon', from: '11:00', to: '14:00', location: 'OPD 1' }],
             consultationFee: 600, rating: 4.6, reviewCount: 210,
-            isLeadership: false, order: 9, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 9, status: 'published',
             updatedAt: '2026-07-19T13:05:00Z',
         },
         {
@@ -139,7 +139,7 @@
             bio: '<p>Neonatal and infant surgery, working alongside the nursery team.</p>',
             schedule: [{ day: 'Wed', from: '10:00', to: '12:00', location: 'OPD 6' }],
             consultationFee: 600, rating: 4.9, reviewCount: 76,
-            isLeadership: false, order: 10, status: 'draft',
+            isLeadership: false, appointmentEnabled: true, order: 10, status: 'draft',
             updatedAt: '2026-08-01T07:30:00Z',
         },
         {
@@ -150,7 +150,7 @@
             bio: '<p>Phacoemulsification list twice a week, plus the diabetic retinopathy screening clinic.</p>',
             schedule: [{ day: 'Tue', from: '09:00', to: '12:00', location: 'Eye OPD' }],
             consultationFee: 500, rating: 4.8, reviewCount: 302,
-            isLeadership: false, order: 11, status: 'published',
+            isLeadership: false, appointmentEnabled: true, order: 11, status: 'published',
             updatedAt: '2026-07-15T15:10:00Z',
         },
         {
@@ -161,7 +161,7 @@
             bio: '<p>Runs the dental clinic and the maxillofacial trauma service.</p>',
             schedule: [{ day: 'Sat', from: '11:00', to: '14:00', location: 'Dental OPD' }],
             consultationFee: 400, rating: 4.7, reviewCount: 88,
-            isLeadership: false, order: 12, status: 'hidden',
+            isLeadership: false, appointmentEnabled: false, order: 12, status: 'hidden',
             updatedAt: '2026-04-09T10:00:00Z',
         },
     ];

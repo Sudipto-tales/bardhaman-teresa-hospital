@@ -286,6 +286,24 @@
                             </div>
 
                             <div class="ct-field">
+                                <label for="ctDoctor">Doctor <span class="ct-optional">optional</span></label>
+                                <select id="ctDoctor" name="doctor">
+                                    <option value="">No preference</option>
+                                    <option value="dr-jonathon-ronan" data-dept="cardiology">Dr. Jonathon Ronan &mdash; Head of Cardiology</option>
+                                    <option value="dr-victor-james" data-dept="orthopedics">Dr. Victor James &mdash; Head of Orthopedics</option>
+                                    <option value="dr-philips-rownd" data-dept="prenatal-care">Dr. Philips Rownd &mdash; Gynaecologist & Obstetrician</option>
+                                    <option value="dr-anita-sharma" data-dept="cardiology">Dr. Anita Sharma &mdash; Interventional Cardiologist</option>
+                                    <option value="dr-rahul-dey" data-dept="orthopedics">Dr. Rahul Dey &mdash; Joint Replacement Surgeon</option>
+                                    <option value="dr-jane-ronan" data-dept="nutrition">Dr. Jane Ronan &mdash; Pediatric Nutritionist</option>
+                                    <option value="dr-debjani-roy" data-dept="nephrology">Dr. Debjani Roy &mdash; Consultant Nephrologist</option>
+                                    <option value="dr-arindam-basu" data-dept="general-surgery">Dr. Arindam Basu &mdash; General & Laparoscopic Surgeon</option>
+                                    <option value="dr-meera-chatterjee" data-dept="pediatric-surgery">Dr. Meera Chatterjee &mdash; Pediatric Surgeon</option>
+                                    <option value="dr-imran-haque" data-dept="ophthalmology">Dr. Imran Haque &mdash; Consultant Ophthalmologist</option>
+                                </select>
+                                <small class="ct-help">Doctors not listed here do not take booked appointments.</small>
+                            </div>
+
+                            <div class="ct-field">
                                 <label for="ctDate">Preferred date</label>
                                 <input type="date" id="ctDate" name="date">
                             </div>
@@ -493,6 +511,9 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
     <script src="assets/website.js"></script>
     <script src="assets/pages.js"></script>
+    <!-- panel-controlled overlays; popups.js inserts nothing when they are off -->
+    <script src="assets/popups-config.js"></script>
+    <script src="assets/popups.js"></script>
 </body>
 
 </html>

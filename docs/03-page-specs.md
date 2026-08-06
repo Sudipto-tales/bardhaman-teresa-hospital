@@ -52,8 +52,8 @@ Date-range selector in the page header. Charts re-render on theme change.
 - Stat strip: total, published, drafts, departments covered.
 - Toolbar: search (name / speciality), department filter, status filter chips,
   sort (name, experience, order), view toggle (table ⇄ cards), bulk select.
-- Table: photo + name, role, qualification, experience, departments, status, row
-  actions (Edit, Duplicate, View on site, Delete).
+- Table: photo + name, role, qualification, experience, departments, appointments
+  (Yes/No), status, row actions (Edit, Duplicate, View on site, Delete).
 - Bulk actions: publish, hide, delete.
 - Drag handle when sorted by `order`.
 - Empty: "No doctors yet" + Add doctor. Filtered-empty is a different message
@@ -62,7 +62,8 @@ Date-range selector in the page header. Charts re-render on theme change.
 ### 6. `doctor-form.html` — reference form screen
 Sections: Identity (name, role, qualification, experience, photo) · Assignment
 (departments, speciality, registration no, languages) · Profile (bio rich text,
-schedule repeater, fee) · Visibility (leadership toggle, order, status) · SEO.
+schedule repeater, fee) · Visibility (leadership toggle, **appointments-available
+toggle**, order, status) · SEO.
 Sticky action bar: Cancel · Save draft · Publish (label becomes Update when
 editing a published record).
 Live preview card in the right rail showing how the doctor renders on a
@@ -188,6 +189,15 @@ List with a stage filter, plus an optional kanban view by stage. Row click opens
 a drawer: applicant details, CV download, cover note, stage selector, rating,
 internal notes. Bulk: move stage, reject with template.
 
+The stage pipeline is kept, but it is a convenience for whoever reads the
+inbox — nothing about it reaches the public site. What matters on submit is the
+other half: the application is written to the database **and** mailed to HR with
+the CV attached, and the applicant gets an acknowledgement. See
+[`07-api-contract.md`](07-api-contract.md) `POST /api/public/application`.
+
+CV download hits `GET /api/applications/{id}/cv`, an authenticated stream — CVs
+are stored outside the web root and never served from a public path.
+
 ---
 
 ## Growth
@@ -203,9 +213,22 @@ send). Right: contact card (click-to-call, click-to-mail), assignment, status,
 priority, department, internal notes, and a related-enquiries list matched on
 email or phone.
 
-### 30. `appointments.html`
-Table plus an optional day view. Row actions: confirm (asks for the slot),
-reschedule, cancel (asks for a reason). Confirming toasts "Patient notified".
+### 30. `appointments.html` — read-only
+
+The hospital takes no bookings online, so this screen writes nothing. It is an
+archive of what was collected, kept because the records still have to be
+readable.
+
+Table plus an optional day view, both read-only. An info banner at the top says
+so and points at the doctor list. Row actions are Open and Call patient; the
+drawer shows the request and offers the phone number, nothing else. No status
+changes, no delete, no bulk bar, and no sidebar badge — a count would be nagging
+about work the panel gives no way to do.
+
+What replaced the workflow: a doctor card on the public site links to the
+contact page with that doctor preselected when the doctor's **Appointments
+available** toggle is on, and to nothing at all when it is off. The desk calls
+back. See §2 and §20 in [`02-content-model.md`](02-content-model.md).
 
 ### 31. `seo.html`
 Top: global defaults (title pattern, default description, default OG image,
@@ -239,6 +262,23 @@ All five follow the same shape: sectioned form, sticky Save bar, dirty-guard.
   connection button on SMTP that toasts the result.
 - `settings-theme.html` — colour pickers with a live swatch strip and a contrast
   warning if a brand colour fails AA against white.
+
+### 43. `settings-popups.html`
+The two overlays the site shows uninvited, on one screen, because whoever
+switches one off usually wants to see the state of the other.
+
+- **Cookie bar** — enabled, message, accept label, decline label (empty means no
+  decline button), policy link, remember-for days. Consent is a first-party
+  cookie, not `localStorage`: it must survive a visitor who blocks storage APIs.
+- **Ads popup** — enabled, title, body, image, link + label, start and end date,
+  frequency (once per visit / day / week / month / every load for testing) and
+  whether the visitor may close it.
+- A live preview of both cards, and a warning banner when the ads popup is on
+  but its end date has passed — an expired campaign is not broken, it has
+  stopped, and saying so beats leaving someone to wonder.
+
+Off means *not rendered at all*, not rendered-and-hidden: a hidden overlay still
+costs a screen-reader user a tab stop.
 
 ### 39. `users.html`
 Tabs: Users and Roles. User table: avatar + name, email, role, last active, 2FA,

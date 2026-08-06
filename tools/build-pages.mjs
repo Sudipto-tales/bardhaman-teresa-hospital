@@ -254,7 +254,10 @@ const FOOTER = `    <!-- ============ PRE-FOOTER ============ -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
     <script src="assets/website.js"></script>
-    <script src="assets/pages.js"></script>`;
+    <script src="assets/pages.js"></script>
+    <!-- panel-controlled overlays; popups.js inserts nothing when they are off -->
+    <script src="assets/popups-config.js"></script>
+    <script src="assets/popups.js"></script>`;
 
 /* `scripts` appends page-specific <script> tags after the shared ones.
    Order is safe either way — they are classic, non-deferred scripts, so
@@ -497,6 +500,20 @@ ${items.map((c) => `                        <li><i class="fa-solid fa-check"></i
             </div>
         </section>`;
 
+/* The site takes no bookings. A doctor who accepts appointments gets a link
+   to the contact form with themselves preselected — assets/pages.js reads the
+   ?doctor= slug — and the desk calls back. A doctor who does not gets no link,
+   because offering one and then refusing is worse than saying so. */
+const apptLink = (d) => (d.appt === false || !d.slug ? '' : `                            <a class="pg-doc__appt" href="contact.html?doctor=${d.slug}#book">
+                                <i class="fa-solid fa-calendar-check"></i> Book an appointment</a>
+`);
+
+/* A doctor's own department, not one inferred from the team strips — those
+   list guests as well as owners, so deriving from them files an
+   interventional cardiologist under nephrology. Used to prefill the contact
+   form's department select, which the visitor can still change. */
+const primaryDept = (d) => d.dept || '';
+
 const team = ({ section, eyebrow, title, docs, alt = false }) => `        <section class="pg-section${alt ? ' pg-section--alt' : ''}" data-section="${section}">
             <div class="pg-wrap">
                 <div class="section-head section-head--center">
@@ -513,7 +530,7 @@ ${docs.map((d) => `                    <article class="pg-doc">
                             <h4>${d.name}</h4>
                             <p>${d.role}</p>
                             <span class="pg-doc__qual">${d.qual}</span>
-                        </div>
+${apptLink(d)}                        </div>
                     </article>`).join('\n')}
                 </div>
             </div>
@@ -1025,6 +1042,15 @@ const contactPage = () => page({
 ${DEPARTMENTS.map((d) => `                                    <option value="${d.slug}">${d.name}</option>`).join('\n')}
                                     <option value="other">Not sure / other</option>
                                 </select>
+                            </div>
+
+                            <div class="ct-field">
+                                <label for="ctDoctor">Doctor <span class="ct-optional">optional</span></label>
+                                <select id="ctDoctor" name="doctor">
+                                    <option value="">No preference</option>
+${ROSTER.filter((d) => d.appt !== false && d.slug).map((d) => `                                    <option value="${d.slug}"${primaryDept(d) ? ` data-dept="${primaryDept(d)}"` : ''}>${d.name} &mdash; ${d.role}</option>`).join('\n')}
+                                </select>
+                                <small class="ct-help">Doctors not listed here do not take booked appointments.</small>
                             </div>
 
                             <div class="ct-field">

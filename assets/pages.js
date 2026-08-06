@@ -250,6 +250,8 @@
 
         const note = $('#formNote', form);
 
+        preselectDoctor(form);
+
         form.addEventListener('submit', (e) => {
             if (!form.reportValidity()) return;
 
@@ -261,6 +263,35 @@
                 setTimeout(() => note.classList.remove('is-visible'), 6000);
             }
         });
+    };
+
+    /* ---------------------------------------------------------
+       "Book an appointment" on a doctor card lands here as
+       contact.html?doctor=dr-anita-sharma#book. Fill the doctor
+       in, and the department with it — someone who picked a
+       cardiologist should not then have to say "cardiology".
+
+       An unknown slug is ignored rather than guessed at: a stale
+       link should leave the form usable, not half-filled with
+       something the visitor did not choose.
+       --------------------------------------------------------- */
+    const preselectDoctor = (form) => {
+        const slug = new URLSearchParams(window.location.search).get('doctor');
+        if (!slug) return;
+
+        const select = $('#ctDoctor', form);
+        if (!select) return;
+
+        const option = Array.from(select.options).find((o) => o.value === slug);
+        if (!option) return;
+
+        select.value = slug;
+
+        const dept = option.dataset.dept;
+        const deptSelect = $('#ctDept', form);
+        if (dept && deptSelect && Array.from(deptSelect.options).some((o) => o.value === dept)) {
+            deptSelect.value = dept;
+        }
     };
 
     /* ---------------------------------------------------------

@@ -37,7 +37,7 @@ CAREERS
 
 GROWTH
   Enquiries                enquiries.html        → enquiry-view.html
-  Appointments             appointments.html
+  Appointments             appointments.html     (read-only)
   SEO Manager              seo.html
   Navigation               navigation.html
   Redirects                redirects.html
@@ -48,6 +48,7 @@ SYSTEM
   Social Links             settings-social.html
   Integrations             settings-integrations.html
   Theme & Branding         settings-theme.html
+  Popups & Cookie Bar      settings-popups.html
   Users & Roles            users.html            → user-form.html
   Activity Log             activity-log.html
   My Profile               profile.html
@@ -61,11 +62,13 @@ Outside the sidebar: `login.html`, `forgot-password.html` (no chrome).
 - **PAGES** = singleton screens that edit one specific public page. No list, no
   add button — you land straight in a sectioned form.
 - **GROWTH** = inbound (enquiries, appointments) plus outbound discoverability
-  (SEO, navigation, redirects).
+  (SEO, navigation, redirects). Appointments is read-only: the site takes no
+  bookings, so the screen is an archive rather than a queue — see
+  [`03-page-specs.md`](03-page-specs.md) §30.
 - **SYSTEM** = configuration that touches the whole site, split by concern so no
   single settings screen becomes a 40-field wall. The current mockup's one
   `site-settings` page mixed identity, appearance and integrations — split here
-  into five.
+  into six.
 
 ## URL scheme
 
@@ -90,7 +93,7 @@ Rules:
 Phase 2 keeps the same shape (`/admin/doctors`, `/admin/doctors/d-004/edit`), so
 no page JS needs rewriting when routing moves server-side.
 
-## Page map — 42 screens
+## Page map — 43 screens
 
 | # | File | Type | Group |
 |---|---|---|---|
@@ -123,7 +126,7 @@ no page JS needs rewriting when routing moves server-side.
 | 27 | `applications.html` | list + drawer | Careers |
 | 28 | `enquiries.html` | list | Growth |
 | 29 | `enquiry-view.html` | detail | Growth |
-| 30 | `appointments.html` | list | Growth |
+| 30 | `appointments.html` | list, read-only | Growth |
 | 31 | `seo.html` | form + table | Growth |
 | 32 | `navigation.html` | tree editor | Growth |
 | 33 | `redirects.html` | list + modal form | Growth |
@@ -136,8 +139,9 @@ no page JS needs rewriting when routing moves server-side.
 | 40 | `user-form.html` | form + permission matrix | System |
 | 41 | `activity-log.html` | list | System |
 | 42 | `profile.html` | form | System |
+| 43 | `settings-popups.html` | form | System |
 
-Six screen *types* cover all 42. Each type is built once in
+Six screen *types* cover all 43. Each type is built once in
 `assets/css/components.css` + `assets/js/core/`, then composed:
 
 1. **list** — toolbar, table, pagination, row actions

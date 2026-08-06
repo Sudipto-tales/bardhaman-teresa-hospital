@@ -37,8 +37,8 @@ expensive to fix later.
 
 **Phase 2 — Backend**
 
-Stack decision (PHP+MySQL / Node+SQLite / Node+Mongo) happens after design
-sign-off. `assets/js/core/store.js` is the single seam: it is deleted and
+Stack decided: **PHP on the Vayu framework**, SQLite in development, MySQL in
+production. `assets/js/core/store.js` is the single seam: it is deleted and
 replaced with `fetch` calls against the endpoints in
 [`07-api-contract.md`](07-api-contract.md). No page JS changes.
 
@@ -55,7 +55,7 @@ that the rendered site is unchanged, then switch.
 
 ## What "done" means for Phase 1
 
-- All 42 screens exist and are reachable from the sidebar. No dead links.
+- All 43 screens exist and are reachable from the sidebar. No dead links.
 - The doctors module works end to end: add → toast → row appears → reload →
   persists → edit → delete → confirm → toast with Undo.
 - Every other module renders real mock data with the same list/form pattern.
@@ -75,7 +75,7 @@ that the rendered site is unchanged, then switch.
 
 | File | Contents |
 |---|---|
-| `01-information-architecture.md` | Sidebar tree, 42-screen page map, URL scheme |
+| `01-information-architecture.md` | Sidebar tree, 43-screen page map, URL scheme |
 | `02-content-model.md` | Every entity, its fields, and which site file it replaces |
 | `03-page-specs.md` | Per screen: purpose, widgets, actions, empty states |
 | `04-crud-flows.md` | List → add → edit → delete → publish, with state rules |

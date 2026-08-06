@@ -4032,3 +4032,206 @@ body {
     background: none !important;
     box-shadow: none !important;
 }
+
+/* =========================================================
+   POPUPS
+   The cookie bar and the ads card. Both are inserted by
+   assets/popups.js only when the panel has them switched on,
+   so neither selector below matches on most page loads.
+
+   Above everything else the site draws — 1250 is the mobile
+   dock, and a consent notice the dock covers is not a notice.
+   ========================================================= */
+.pop-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease);
+}
+
+.pop-btn:hover {
+    transform: translateY(-2px);
+}
+
+.pop-btn--solid {
+    background: var(--action);
+    color: #fff;
+}
+
+.pop-btn--solid:hover {
+    background: var(--action-hover);
+}
+
+.pop-btn--ghost {
+    border-color: var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+}
+
+.pop-btn--ghost:hover {
+    color: var(--ink);
+}
+
+/* ---------- cookie bar ---------- */
+
+.pop-cookie {
+    position: fixed;
+    left: clamp(12px, 3vw, 28px);
+    bottom: clamp(12px, 3vw, 28px);
+    z-index: 1300;
+    display: grid;
+    gap: 14px;
+    width: min(380px, calc(100vw - 24px));
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    background: var(--surface);
+    box-shadow: var(--sh-lg);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+
+.pop-cookie.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+.pop-cookie__text {
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+
+.pop-cookie__text a {
+    color: var(--action);
+    text-decoration: underline;
+}
+
+.pop-cookie__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* The dock owns the bottom edge on phones, so the bar sits above it
+   rather than fighting it for the same 80px. */
+@media (max-width: 640px) {
+    .pop-cookie {
+        left: 12px;
+        right: 12px;
+        bottom: 92px;
+        width: auto;
+    }
+}
+
+/* ---------- ads popup ---------- */
+
+.pop-ad {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity .3s var(--ease);
+}
+
+.pop-ad.is-in {
+    opacity: 1;
+}
+
+.pop-ad__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(12, 31, 62, .62);
+    backdrop-filter: blur(3px);
+}
+
+.pop-ad__card {
+    position: relative;
+    width: min(420px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    border-radius: var(--r-card);
+    background: var(--surface);
+    box-shadow: var(--sh-lg);
+    transform: scale(.94);
+    transition: transform .35s var(--ease);
+}
+
+.pop-ad.is-in .pop-ad__card {
+    transform: none;
+}
+
+.pop-ad__x {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .9);
+    color: var(--ink);
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .3s var(--ease);
+}
+
+.pop-ad__x:hover {
+    background: #fff;
+}
+
+.pop-ad__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.pop-ad__body {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+    padding: 24px;
+}
+
+.pop-ad__title {
+    font-family: var(--font-head);
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+}
+
+.pop-ad__text {
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    color: var(--ink-soft);
+}
+
+/* Someone who has asked for less motion has asked for less of this
+   in particular — a card that scales up over the page they wanted. */
+@media (prefers-reduced-motion: reduce) {
+
+    .pop-cookie,
+    .pop-ad,
+    .pop-ad__card,
+    .pop-btn {
+        transition: none;
+        transform: none;
+    }
+}

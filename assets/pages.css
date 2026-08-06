@@ -650,6 +650,24 @@
     color: var(--ink-mute);
 }
 
+/* Only on doctors who take appointments. Its absence is the message for the
+   rest — no link, no half-promise. */
+.pg-doc__appt {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--action);
+    transition: gap .3s var(--ease);
+}
+
+.pg-doc__appt:hover {
+    gap: 11px;
+    text-decoration: underline;
+}
+
 /* ---------------------------------------------------------
    8. CTA STRIP
    --------------------------------------------------------- */
@@ -848,6 +866,19 @@
     letter-spacing: .08em;
     text-transform: uppercase;
     color: var(--ink-soft);
+}
+
+.ct-optional {
+    margin-left: 6px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: none;
+    color: var(--ink-mute);
+}
+
+.ct-help {
+    font-size: var(--fs-xs);
+    color: var(--ink-mute);
 }
 
 .ct-field input,

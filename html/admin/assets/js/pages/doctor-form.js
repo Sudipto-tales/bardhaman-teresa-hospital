@@ -64,6 +64,7 @@
             departments: [],
             schedule: [],
             isLeadership: false,
+            appointmentEnabled: true,
         };
     }
 

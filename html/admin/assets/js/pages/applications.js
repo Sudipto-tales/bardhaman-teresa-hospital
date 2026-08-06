@@ -135,11 +135,18 @@
         list.load();
     }
 
-    function downloadCv() {
-        /* No file storage in Phase 1 — say so rather than serving a broken
-           link the reviewer will assume works. */
-        toast.warning('CVs are not stored yet', {
-            body: 'Phase 2 serves them from /api/applications/{id}/cv.',
+    /* The applicant's CV arrives with the application: it is attached to the
+       mail HR receives and stored server-side, streamed back through
+       /api/applications/{id}/cv rather than served from a public path. Until
+       that endpoint exists the seed rows carry a placeholder, and saying so is
+       better than handing the reviewer a link that quietly does nothing. */
+    function downloadCv(row) {
+        if (row && row.cvUrl && row.cvUrl !== '#') {
+            window.open(row.cvUrl, '_blank', 'noopener');
+            return;
+        }
+        toast.warning('No file stored for this application', {
+            body: `Phase 2 serves ${(row && row.cvFile) || 'the CV'} from /api/applications/${(row && row.id) || '{id}'}/cv.`,
         });
     }
 
@@ -165,6 +172,9 @@
                         <dl class="kv">
                             <dt>Experience</dt><dd>${U.esc(row.experience || '—')}</dd>
                             <dt>Currently at</dt><dd>${U.esc(row.currentEmployer || '—')}</dd>
+                            <dt>CV</dt><dd>${row.cvFile
+                                ? `<button type="button" class="btn btn--link btn--sm" data-cv>${U.esc(row.cvFile)}</button>`
+                                : '<span class="muted">Not attached</span>'}</dd>
                         </dl>
                     </div>
 
@@ -216,7 +226,10 @@
                         list.load();
                     }));
 
-                panel.querySelector('[data-cv]').addEventListener('click', downloadCv);
+                /* Two of them — the filename in the Background block and the
+                   footer button. Both do the same thing. */
+                panel.querySelectorAll('[data-cv]').forEach((b) =>
+                    b.addEventListener('click', () => downloadCv(row)));
             },
         });
     }

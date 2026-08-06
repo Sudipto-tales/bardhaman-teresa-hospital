@@ -22,13 +22,19 @@ export const IMG = {
     stress: (w = 1600) => U('1498551172505-8ee7ad69f235', w),
 };
 
+/* `slug` is the doctor's stable key — it is what the "Book an appointment"
+   link passes to the contact page so the form lands preselected.
+   `appt: false` means the hospital does not take appointments for this
+   doctor at all, and the card carries no link. The site never books
+   anybody; the desk calls back. Mirrors the Appointments-available toggle
+   on the admin doctor form. */
 export const DOCS = {
-    ronan: { name: 'Dr. Jonathon Ronan', role: 'Head of Cardiology', qual: 'MD, DM (Cardiology) · 22 yrs', img: U('1622253692010-333f2da6031d', 500) },
-    anita: { name: 'Dr. Anita Sharma', role: 'Interventional Cardiologist', qual: 'MD, DNB (Cardiology) · 14 yrs', img: U('1559839734-2b71ea197ec2', 500) },
-    victor: { name: 'Dr. Victor James', role: 'Head of Orthopedics', qual: 'MS (Ortho), FRCS · 25 yrs', img: U('1612349317150-e413f6a5b16d', 500) },
-    rahul: { name: 'Dr. Rahul Dey', role: 'Joint Replacement Surgeon', qual: 'MS (Ortho), Fellowship Arthroplasty · 12 yrs', img: U('1581056771107-24ca5f033842', 500) },
-    philips: { name: 'Dr. Philips Rownd', role: 'Gynaecologist & Obstetrician', qual: 'MS (OBG), FICOG · 18 yrs', img: U('1537368910025-702800faa86b', 500) },
-    jane: { name: 'Dr. Jane Ronan', role: 'Pediatric Nutritionist', qual: 'MSc, RD (Clinical Nutrition) · 11 yrs', img: U('1594824436998-d40d9b4b0870', 500) },
+    ronan: { slug: 'dr-jonathon-ronan', dept: 'cardiology', name: 'Dr. Jonathon Ronan', role: 'Head of Cardiology', qual: 'MD, DM (Cardiology) · 22 yrs', img: U('1622253692010-333f2da6031d', 500) },
+    anita: { slug: 'dr-anita-sharma', dept: 'cardiology', name: 'Dr. Anita Sharma', role: 'Interventional Cardiologist', qual: 'MD, DNB (Cardiology) · 14 yrs', img: U('1559839734-2b71ea197ec2', 500) },
+    victor: { slug: 'dr-victor-james', dept: 'orthopedics', name: 'Dr. Victor James', role: 'Head of Orthopedics', qual: 'MS (Ortho), FRCS · 25 yrs', img: U('1612349317150-e413f6a5b16d', 500) },
+    rahul: { slug: 'dr-rahul-dey', dept: 'orthopedics', name: 'Dr. Rahul Dey', role: 'Joint Replacement Surgeon', qual: 'MS (Ortho), Fellowship Arthroplasty · 12 yrs', img: U('1581056771107-24ca5f033842', 500) },
+    philips: { slug: 'dr-philips-rownd', dept: 'prenatal-care', name: 'Dr. Philips Rownd', role: 'Gynaecologist & Obstetrician', qual: 'MS (OBG), FICOG · 18 yrs', img: U('1537368910025-702800faa86b', 500) },
+    jane: { slug: 'dr-jane-ronan', dept: 'nutrition', name: 'Dr. Jane Ronan', role: 'Pediatric Nutritionist', qual: 'MSc, RD (Clinical Nutrition) · 11 yrs', img: U('1594824436998-d40d9b4b0870', 500) },
 };
 
 /* The roster the /doctors page renders in full. Reuses the six
@@ -41,12 +47,15 @@ export const ROSTER = [
     DOCS.anita,
     DOCS.rahul,
     DOCS.jane,
-    { name: 'Dr. Sourav Mitra', role: 'Consultant Neurosurgeon', qual: 'MCh (Neurosurgery) · 16 yrs', img: DOCS.ronan.img },
-    { name: 'Dr. Debjani Roy', role: 'Consultant Nephrologist', qual: 'MD, DM (Nephrology) · 13 yrs', img: DOCS.anita.img },
-    { name: 'Dr. Arindam Basu', role: 'General & Laparoscopic Surgeon', qual: 'MS (General Surgery) · 19 yrs', img: DOCS.victor.img },
-    { name: 'Dr. Meera Chatterjee', role: 'Pediatric Surgeon', qual: 'MCh (Pediatric Surgery) · 10 yrs', img: DOCS.jane.img },
-    { name: 'Dr. Imran Haque', role: 'Consultant Ophthalmologist', qual: 'MS (Ophthalmology) · 15 yrs', img: DOCS.rahul.img },
-    { name: 'Dr. Sneha Pal', role: 'Dental & Maxillofacial Surgeon', qual: 'BDS, MDS · 9 yrs', img: DOCS.philips.img },
+    /* Two of them take no appointments — theatre-only lists — so their cards
+       render without the link. A site that offers to book everybody and then
+       turns half of them away is worse than one that says so up front. */
+    { slug: 'dr-sourav-mitra', dept: 'neuro-surgery', name: 'Dr. Sourav Mitra', role: 'Consultant Neurosurgeon', qual: 'MCh (Neurosurgery) · 16 yrs', img: DOCS.ronan.img, appt: false },
+    { slug: 'dr-debjani-roy', dept: 'nephrology', name: 'Dr. Debjani Roy', role: 'Consultant Nephrologist', qual: 'MD, DM (Nephrology) · 13 yrs', img: DOCS.anita.img },
+    { slug: 'dr-arindam-basu', dept: 'general-surgery', name: 'Dr. Arindam Basu', role: 'General & Laparoscopic Surgeon', qual: 'MS (General Surgery) · 19 yrs', img: DOCS.victor.img },
+    { slug: 'dr-meera-chatterjee', dept: 'pediatric-surgery', name: 'Dr. Meera Chatterjee', role: 'Pediatric Surgeon', qual: 'MCh (Pediatric Surgery) · 10 yrs', img: DOCS.jane.img },
+    { slug: 'dr-imran-haque', dept: 'ophthalmology', name: 'Dr. Imran Haque', role: 'Consultant Ophthalmologist', qual: 'MS (Ophthalmology) · 15 yrs', img: DOCS.rahul.img },
+    { slug: 'dr-sneha-pal', dept: 'dental-care', name: 'Dr. Sneha Pal', role: 'Dental & Maxillofacial Surgeon', qual: 'BDS, MDS · 9 yrs', img: DOCS.philips.img, appt: false },
 ];
 
 /* ---------------------------------------------------------

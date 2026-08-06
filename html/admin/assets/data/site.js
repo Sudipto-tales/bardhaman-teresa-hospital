@@ -115,6 +115,28 @@
             bannerStyle: 'Photo with overlay',
         },
 
+        /* The two things the site pops up at a visitor. Both are off-by-default
+           in shape but seeded on, so the screen has something to show. */
+        popups: {
+            cookieEnabled: true,
+            cookieMessage: 'We use cookies to remember your language and theme, and to count visits. Nothing here identifies you.',
+            cookieAcceptLabel: 'Got it',
+            cookieDeclineLabel: 'No thanks',
+            cookiePolicyUrl: 'contact.html',
+            cookieRemember: 180,
+
+            adsEnabled: true,
+            adsTitle: 'Free Cardiac Screening Camp',
+            adsBody: 'ECG, blood pressure and a consultant review — no charge, 12–14 September, OPD block.',
+            adsImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=900&auto=format&fit=crop',
+            adsLink: 'contact.html',
+            adsLinkLabel: 'Book a slot',
+            adsStart: '2026-08-01',
+            adsEnd: '2026-09-14',
+            adsFrequency: 'days:7',
+            adsDismissible: true,
+        },
+
         seo: {
             titlePattern: '%page% — Teresa Memorial Hospital',
             defaultDescription: 'Teresa Memorial Hospital — multi-speciality care, expert doctors, 24/7 emergency services and advanced lab facilities in Bardhaman.',

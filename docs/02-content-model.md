@@ -17,7 +17,10 @@ Shared conventions:
 
 ---
 
-## 1. Settings (singleton, split across 5 screens)
+## 1. Settings (singleton, split across 6 screens)
+
+The sixth group, **popups**, is documented at §22b because it describes site
+behaviour rather than site identity.
 
 One record. Splitting is a UI concern only — the API returns one object.
 
@@ -116,6 +119,7 @@ social row in `FOOTER`.
 | `consultationFee` | number | |
 | `rating` / `reviewCount` | number | |
 | `isLeadership` | bool | Also surface on the About page leadership strip |
+| `appointmentEnabled` | bool, default true | On: the doctor card carries a "Book an appointment" link to `contact.html?doctor=<id>`, which preselects them. Off: no link. The site never books anyone — the desk calls back. See §20. |
 | `order` | number | |
 | `status` | enum | |
 | `seo` | group (see §14) | |
@@ -365,8 +369,23 @@ Attached to Doctor, Department, Post and Site page. Also editable in bulk on
 
 ## 18. Application — `applications.html`
 
-`{id, jobId, name, email, phone, experience, currentEmployer, cvUrl, coverNote,
-stage (new|shortlisted|interview|offered|rejected), rating, notes[], appliedAt}`
+`{id, jobId, name, email, phone, experience, currentEmployer, cvFile, cvUrl,
+coverNote, stage (new|shortlisted|interview|offered|rejected), rating, notes[],
+appliedAt, notifiedAt}`
+
+Submitting is the part that matters, and it does three things: write the row,
+mail HR with the applicant's details **and the CV attached**, and acknowledge to
+the applicant. `notifiedAt` records the mail; a row whose mail failed keeps the
+row and is retried from the panel, because losing an application because SMTP
+was down is not an acceptable failure.
+
+`cvFile` is the original filename, for display. `cvUrl` is the authenticated
+stream `GET /api/applications/{id}/cv` — the file itself lives outside the web
+root and is never reachable by URL guessing.
+
+The `stage` pipeline is retained but affects nothing outside the panel. Nobody
+on the public site can see it, so it costs nothing to keep and saves whoever
+reads the inbox from tracking candidates elsewhere.
 
 ---
 
@@ -378,13 +397,24 @@ stage (new|shortlisted|interview|offered|rejected), rating, notes[], appliedAt}`
 
 **Replaces:** the contact form on `contact.html` (currently posts nowhere).
 
-## 20. Appointment request — `appointments.html`
+## 20. Appointment request — `appointments.html` (read-only)
 
 `{id, patientName, phone, email, departmentId, doctorId, preferredDate,
 preferredSlot, reason, status (pending|confirmed|cancelled|completed),
-confirmedAt, createdAt}`
+confirmedSlot, cancelReason, confirmedAt, createdAt}`
 
-**Replaces:** the booking form at `contact.html:242`.
+**The hospital does not take bookings online, so nothing writes this entity.**
+There is no create endpoint and no status-change endpoint; the screen reads and
+the panel offers a phone number. The records that exist are kept because they
+still have to be readable.
+
+What the site does instead: the contact page keeps its request form, which
+lands as an **Enquiry** with `source = appointment` (§19). A doctor card links
+to that form with `?doctor=<id>` when `appointmentEnabled` is on, and carries no
+link when it is off — offering a booking and then refusing it is worse than
+saying so.
+
+**Replaces:** nothing. The booking form at `contact.html` now feeds §19.
 
 ---
 
@@ -398,6 +428,34 @@ status (active|suspended|invited)}`
 `{id, name, description, permissions{module: [view, create, edit, delete, publish]}}`
 
 Modules match the sidebar groups. Phase 1 displays the matrix; it is not enforced.
+
+## 22b. Popups (singleton) — `settings-popups.html`
+
+The sixth settings group. One record, two unrelated widgets.
+
+| Field | Type | Notes |
+|---|---|---|
+| `cookieEnabled` | bool | |
+| `cookieMessage` | textarea | |
+| `cookieAcceptLabel` / `cookieDeclineLabel` | text | An empty decline label offers no decline button |
+| `cookiePolicyUrl` | text | |
+| `cookieRemember` | number | Days the consent cookie lasts. Default 180 |
+| `adsEnabled` | bool | |
+| `adsTitle` / `adsBody` | text / textarea | |
+| `adsImage` | media | Optional — the card renders without one |
+| `adsLink` / `adsLinkLabel` | text | |
+| `adsStart` / `adsEnd` | date | Outside the window the popup does not render, so a campaign stops on its own |
+| `adsFrequency` | enum | `session` \| `days:N` \| `always` (testing) |
+| `adsDismissible` | bool | Off means it can only be dismissed by following the link |
+
+Consent and the seen-mark are first-party cookies rather than `localStorage`:
+the consent decision must survive a visitor who blocks storage APIs. The
+seen-mark is keyed on the campaign's title and start date, so editing the popup
+shows the new one to everybody instead of it being swallowed by the old
+campaign's cookie.
+
+**Replaces:** nothing — new. Rendered by `assets/popups.js`, configured in Phase
+1 by `assets/popups-config.js` and in Phase 2 by this record.
 
 ## 23. Activity log — `activity-log.html`
 

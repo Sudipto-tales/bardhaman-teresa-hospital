@@ -4,8 +4,9 @@ Written now so the mock layer in `assets/js/core/store.js` matches the real thin
 in shape. When the backend lands, `store.js` is deleted and its methods become
 `fetch` calls. No page JS changes.
 
-The stack (PHP+MySQL / Node+SQLite / Node+Mongo) is not decided yet — this
-contract is stack-agnostic.
+The stack is decided: **PHP on the Vayu framework**, SQLite in development and
+MySQL in production. The contract below is unchanged by that — it was written
+stack-agnostic and stays that way, because the panel only ever sees JSON.
 
 ## Conventions
 
@@ -54,8 +55,13 @@ POST   /api/auth/reset          {token, password}                → 204
 
 Applied uniformly to: `doctors`, `leadership`, `departments`, `facilities`,
 `lab-tests`, `posts`, `categories`, `testimonials`, `faqs`, `jobs`,
-`applications`, `enquiries`, `appointments`, `redirects`, `nav-items`, `counters`,
-`users`, `roles`.
+`applications`, `enquiries`, `redirects`, `nav-items`, `counters`, `users`,
+`roles`.
+
+`appointments` is the one exception: **`GET` only.** No POST, PATCH, DELETE,
+reorder or bulk. The site does not take bookings, so there is nothing to write —
+see §20 of [`02-content-model.md`](02-content-model.md). A write endpoint here
+would be an invitation to rebuild the workflow that was deliberately removed.
 
 ```
 GET    /api/{resource}?q=&status=&sort=&page=&pageSize=&<filters>
@@ -80,15 +86,15 @@ Per-resource filters:
 | `posts` | `category`, `author`, `tag`, `from`, `to`, `featured` |
 | `jobs` | `dept`, `type`, `closingWithinDays` |
 | `enquiries` | `source`, `assignedTo`, `priority`, `from`, `to` |
-| `appointments` | `department`, `doctor`, `date` |
+| `appointments` | `department`, `doctor`, `date` — read-only |
 | `counters` | `scope`, `department` |
 | `nav-items` | `location` |
 
 ## Settings (singleton)
 
 ```
-GET    /api/settings                     → all five groups in one object
-PATCH  /api/settings/{group}             group ∈ general|contact|social|integrations|theme
+GET    /api/settings                     → all six groups in one object
+PATCH  /api/settings/{group}             group ∈ general|contact|social|integrations|theme|popups
 POST   /api/settings/integrations/test-smtp   → {ok, message}
 ```
 
@@ -124,10 +130,21 @@ GET    /api/applications/{id}/cv                          → file stream
 ## Public intake (called by the website, not the panel)
 
 ```
-POST   /api/public/enquiry       {name, email, phone, subject, message, source, recaptcha}
-POST   /api/public/appointment   {patientName, phone, department, doctor, preferredDate, slot, reason}
+POST   /api/public/enquiry       {name, email, phone, subject, message, source,
+                                  department, doctor, preferredDate, slot, recaptcha}
 POST   /api/public/application   multipart — job application + CV
 ```
+
+There is no `POST /api/public/appointment`. The contact page's request form
+posts an **enquiry** with `source = appointment`, carrying the department,
+doctor and preferred slot the visitor chose. The desk calls back; the site never
+confirms anything it cannot honour.
+
+`POST /api/public/application` does three things in order, and the order is the
+point: write the row, then mail HR with the applicant's details and the CV
+attached, then acknowledge to the applicant. A failed send leaves the row
+intact with `notifiedAt` null, retryable from the panel — losing an application
+because SMTP was down is not an acceptable failure.
 
 Rate-limited, reCAPTCHA-verified, honeypot field. These are the endpoints that
 make the site's existing forms actually deliver.
@@ -135,7 +152,8 @@ make the site's existing forms actually deliver.
 ## Public read (if the site fetches at runtime)
 
 ```
-GET    /api/public/settings
+GET    /api/public/settings           includes the popups group — the cookie
+                                      bar and ads popup read it
 GET    /api/public/departments        GET /api/public/departments/{slug}
 GET    /api/public/doctors            GET /api/public/posts?category=&page=
 GET    /api/public/posts/{slug}       GET /api/public/jobs

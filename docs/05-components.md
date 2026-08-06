@@ -1,7 +1,7 @@
 # Component Specifications
 
 Everything here is built once in `html/admin/assets/js/core/` +
-`assets/css/components.css` and reused by all 42 screens. Page JS never
+`assets/css/components.css` and reused by all 43 screens. Page JS never
 reimplements one of these.
 
 ---

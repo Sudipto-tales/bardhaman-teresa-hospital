@@ -101,6 +101,14 @@
                         : '<span class="muted">—</span>'),
                 },
                 {
+                    /* The site takes no bookings — this only decides whether the
+                       doctor card carries a link to the contact page. */
+                    label: 'Appt', sort: 'appointmentEnabled', width: '8%',
+                    render: (r) => (r.appointmentEnabled === false
+                        ? '<span class="tag off">No</span>'
+                        : '<span class="tag ok">Yes</span>'),
+                },
+                {
                     label: 'Status', sort: 'status', width: '10%',
                     render: (r) => U.statusTag(r.status),
                 },
@@ -167,7 +175,8 @@
 
         const cards = [
             ['fa-user-doctor', 'red', rows.length, 'Doctors on record', `${rows.filter((r) => r.isLeadership).length} on the leadership strip`],
-            ['fa-circle-check', 'navy', rows.filter((r) => r.status === 'published').length, 'Published', 'Visible on the website'],
+            ['fa-circle-check', 'navy', rows.filter((r) => r.status === 'published').length, 'Published',
+                `${rows.filter((r) => r.appointmentEnabled !== false).length} accept appointments`],
             ['fa-pen-ruler', 'blue', rows.filter((r) => r.status !== 'published').length, 'Drafts & hidden', 'Not shown to visitors'],
             ['fa-hospital', 'magenta', `${covered.size}/${departments.length}`, 'Departments covered', covered.size < departments.length ? 'Some have no consultant listed' : 'Every department has a consultant'],
         ];

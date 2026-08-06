@@ -76,10 +76,9 @@ window.TMH_NAV = [
                 key: 'enquiries', label: 'Enquiries', icon: 'fa-envelope-open-text', href: 'enquiries.html',
                 badge: () => window.TMH_NAV_COUNT('enquiries', (e) => e.status === 'new'),
             },
-            {
-                key: 'appointments', label: 'Appointments', icon: 'fa-calendar-check', href: 'appointments.html',
-                badge: () => window.TMH_NAV_COUNT('appointments', (a) => a.status === 'pending'),
-            },
+            /* No badge: the screen is read-only, so a count would be nagging
+               the user about work the panel gives them no way to do. */
+            { key: 'appointments', label: 'Appointments', icon: 'fa-calendar-check', href: 'appointments.html' },
             { key: 'seo', label: 'SEO Manager', icon: 'fa-magnifying-glass-chart', href: 'seo.html' },
             { key: 'navigation', label: 'Navigation', icon: 'fa-sitemap', href: 'navigation.html' },
             { key: 'redirects', label: 'Redirects', icon: 'fa-right-left', href: 'redirects.html' },
@@ -93,6 +92,7 @@ window.TMH_NAV = [
             { key: 'settings-social', label: 'Social Links', icon: 'fa-share-nodes', href: 'settings-social.html' },
             { key: 'settings-integrations', label: 'Integrations', icon: 'fa-plug', href: 'settings-integrations.html' },
             { key: 'settings-theme', label: 'Theme & Branding', icon: 'fa-palette', href: 'settings-theme.html' },
+            { key: 'settings-popups', label: 'Popups & Cookie Bar', icon: 'fa-rectangle-ad', href: 'settings-popups.html' },
             { key: 'users', label: 'Users & Roles', icon: 'fa-user-shield', href: 'users.html' },
             { key: 'activity-log', label: 'Activity Log', icon: 'fa-clock-rotate-left', href: 'activity-log.html' },
             { key: 'profile', label: 'My Profile', icon: 'fa-circle-user', href: 'profile.html' },
