@@ -50,6 +50,44 @@ if (!function_exists('json_column')) {
     }
 }
 
+if (!function_exists('iso_datetime')) {
+    /**
+     * A stored 'Y-m-d H:i:s' (UTC) as the ISO 8601 the API contract promises.
+     *
+     * The panel parses every timestamp with `new Date(...)`, which reads a
+     * bare 'Y-m-d H:i:s' as local time in some browsers and rejects it in
+     * others. The trailing Z is the whole difference between "saved a minute
+     * ago" and "saved five and a half hours from now".
+     */
+    function iso_datetime(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return str_replace(' ', 'T', substr($value, 0, 19)) . 'Z';
+    }
+}
+
+if (!function_exists('user_display_name')) {
+    /**
+     * The name behind an `updated_by` column, cached for the request.
+     *
+     * Every row of every list carries one, and a page of twenty records is
+     * usually two or three distinct editors.
+     */
+    function user_display_name(mixed $id): ?string
+    {
+        static $cache = [];
+
+        if (!$id) {
+            return null;
+        }
+
+        return $cache[$id] ??= (db_scalar('SELECT name FROM users WHERE id = ?', [$id]) ?: null);
+    }
+}
+
 if (!function_exists('view_data')) {
     function view_data(array $data = [], array $extras = []): array
     {

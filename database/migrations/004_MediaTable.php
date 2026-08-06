@@ -11,7 +11,7 @@
  * on one screen and one confirm dialog.
  *
  * `url` is what every other table stores and every template renders. `path` is
- * where an uploaded file sits under storage/uploads/, and is null for anything
+ * where an uploaded file sits under assets/uploads/, and is null for anything
  * hosted elsewhere — the seeded library is a set of external image URLs, and a
  * table that could only describe uploads would have nothing to say about them.
  * Deleting a row only removes a file from disk when `path` is set.

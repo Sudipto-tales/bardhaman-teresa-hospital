@@ -20,10 +20,14 @@ composer.phar
 
 # Uploads and CVs. Never committed — a CV is a named person's phone
 # number and employment history, and .gitkeep is enough to keep the
-# directories in the tree.
+# directories in the tree. assets/uploads/ keeps its .htaccess: the rule
+# that stops an upload being executed has to ship with the directory.
 /storage/uploads/*
 /storage/cv/*
 !/storage/**/.gitkeep
+/assets/uploads/*
+!/assets/uploads/.gitkeep
+!/assets/uploads/.htaccess
 
 # Logs and runtime files
 /logs/

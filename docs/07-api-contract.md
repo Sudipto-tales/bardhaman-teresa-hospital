@@ -93,9 +93,9 @@ Per-resource filters:
 ## Settings (singleton)
 
 ```
-GET    /api/settings                     → all six groups in one object
-PATCH  /api/settings/{group}             group ∈ general|contact|social|integrations|theme|popups
-POST   /api/settings/integrations/test-smtp   → {ok, message}
+GET    /api/settings                     → every group in one object
+PATCH  /api/settings/{group}             group ∈ general|contact|social|integrations|theme|popups|seo
+POST   /api/settings/integrations/test-smtp   → {ok, message, config}
 ```
 
 ## Site pages
@@ -114,8 +114,14 @@ GET    /api/media?folder=&type=&unused=&missingAlt=&q=
 POST   /api/media            multipart/form-data   → 201 {data}
 PATCH  /api/media/{id}       {alt, caption, folder}
 DELETE /api/media/{id}?force=false                 → 409 lists usedBy
+POST   /api/media/{id}/restore                     → {data}
 GET    /api/media/{id}/usage                       → {usedBy: [{entity, id, label}]}
 ```
+
+`usedBy` is on every row of the list too — the panel's prototype worked it out
+client-side by loading every entity that can hold an image, which against a real
+database would be eight list requests to render one screen. A delete is soft, so
+the Undo on its toast is `restore`; the file on disk is kept either way.
 
 ## Enquiries & applications (workflow)
 

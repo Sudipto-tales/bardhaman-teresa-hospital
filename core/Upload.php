@@ -6,12 +6,19 @@
  * Two destinations with deliberately different rules:
  *
  *   media  — images for the gallery and every media picker in the panel.
- *            Public. Lands under storage/uploads/<year>/<month>/ and is served
- *            by URL.
+ *            Public. Lands under assets/uploads/<year>/<month>/ and is served
+ *            by URL, beside the site's other images.
  *   cv     — job applicants' CVs. Not public, not served by URL, and never
  *            reachable by guessing one; storage/cv/ is denied by .htaccess and
  *            the file only comes back through an authenticated endpoint. A CV
  *            is a named person's address, phone number and work history.
+ *
+ * Media used to be written to storage/uploads/, which cannot work: storage/ is
+ * denied wholesale by both the root .htaccess and its own, precisely so that a
+ * CV can never be reached by URL. An image that has to be public does not
+ * belong in the directory whose rule is "nothing here is served" — one
+ * exception in that rule is how a CV eventually leaks. assets/uploads/ carries
+ * its own .htaccess refusing anything executable.
  *
  * The stored name is random in both cases. Keeping the browser's filename
  * invites a collision at best and a path-traversal attempt at worst, and the
@@ -24,7 +31,7 @@ class Upload
 
     private const RULES = [
         self::MEDIA => [
-            'dir' => 'storage/uploads',
+            'dir' => 'assets/uploads',
             'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif'],
             'mimes' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/avif'],
         ],
@@ -144,14 +151,23 @@ class Upload
     public static function delete(string $relativePath): bool
     {
         $path = realpath(__BASEDIR__ . '/' . ltrim($relativePath, '/'));
-        $storage = realpath(__BASEDIR__ . '/storage');
 
-        /* Never delete outside storage/, whatever the caller passed. */
-        if (!$path || !$storage || !str_starts_with($path, $storage)) {
-            return false;
+        if (!$path) {
+            return true;
         }
 
-        return !file_exists($path) || unlink($path);
+        /* Never delete outside the two upload directories, whatever the caller
+           passed. A media row's `path` is written by store() and nothing else,
+           but this is the guard that holds if that ever stops being true. */
+        foreach (['storage', 'assets/uploads'] as $allowed) {
+            $root = realpath(__BASEDIR__ . '/' . $allowed);
+
+            if ($root && str_starts_with($path, $root)) {
+                return !file_exists($path) || unlink($path);
+            }
+        }
+
+        return false;
     }
 
     private static function detectMime(string $path): ?string

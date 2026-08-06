@@ -1,7 +1,7 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 4.3 — the purpose-built controllers the route table already
-points at: Settings, Media, Page, Enquiry. `AuthController` is done.
+**Next action:** 4.4 — `PublicIntakeController` (enquiry + application) and the
+authenticated CV stream at `GET api/applications/{id}/cv`.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -82,9 +82,54 @@ repository contains a hash.
 |---|---|---|---|
 | 4.1 | `config/resources.php` registry | done | 18 resources. `php tools/check-resources.php` walks all 350 references against the live schema |
 | 4.2 | Generic `ResourceController` | done | All 18 resources verified over HTTP: list, filter, search, sort, paginate, create, patch, delete, restore, reorder, bulk |
-| 4.3 | Auth / Settings / Media / Page / Popup controllers | doing | `AuthController` done. Settings, Media, Page, Enquiry still to write — `api/gateway.php` already routes to them |
+| 4.3 | Auth / Settings / Media / Page / Enquiry controllers | done | All five. Popups are a settings group, not a controller of their own |
 | 4.4 | PublicIntake + application CV stream | todo | |
 | 4.5 | Activity log + dashboard | todo | |
+
+Four decisions taken in 4.3.
+
+**Uploaded media moved to `assets/uploads/`.** `storage/` is denied wholesale by
+two `.htaccess` files so that a CV can never be reached by URL, and media that
+must be public cannot live behind that rule — one exception in it is how a CV
+eventually leaks. The directory carries its own `.htaccess` refusing anything
+executable. Full reasoning in [`01-vayu-notes.md`](01-vayu-notes.md) §6.
+
+**SMTP reads the environment first and `settings.integrations` second.** A
+secret belongs in `.env`, not in a table a panel user can read — but the panel
+has an SMTP screen, and a screen whose fields do nothing is worse than no
+screen. `.env.example` ships host, port and encryption filled in and the
+credentials empty, which is the split this is built around. `test-smtp` answers
+200 with `ok: false` and the server's own words when a send fails: the request
+worked, SMTP is what did not, and a 500 would make the panel report something
+unrelated.
+
+**A reply is recorded before it is sent.** A desk that typed an answer has
+answered whether or not the mail server was reachable, so the row is written
+first and the stored entry carries `emailed`. An enquiry with no address is a
+phone enquiry — the reply is still recorded, there is simply nothing to send.
+
+**`POST api/media/{id}/restore` was added to the route table.** Not in the
+contract's media block, but every delete toast offers Undo, and media is not a
+generic resource so it cannot borrow `POST api/{resource}/{id}/restore`.
+
+Two extractions, so the new controllers and the generic one cannot drift:
+`core/SeoMeta.php` (the polymorphic meta table, which the fixed pages need and
+have no registry entry to reach through) and `core/MediaUsage.php` (the
+back-reference scan). `ResourceController::readSeo`/`writeSeo` now delegate,
+and its `resource()`, `find()`, `row()` and `userId()` are protected so
+`EnquiryController` answers with the same record shape as `GET
+api/enquiries/{id}`.
+
+Verified live against SQLite: all six settings groups read back grouped and a
+PATCH writes only the keys it was sent; a page PATCH merges section `data`
+rather than replacing it, refuses an unknown section key, a slug change and a
+stale `updatedAt`; section reorder renumbers and refuses a key the page does
+not have; media filters, uploads, serves the file over HTTP, rejects a PHP file
+renamed `.png` by its own bytes, blocks a delete with `HAS_DEPENDENTS` and
+restores; reply and note append, move status, assign, and log the failed send
+without losing the reply. `storage/` still answers 403, every new route answers
+401 unsigned-in, and the generic controller's SEO round-trip still works after
+the extraction.
 
 ## Phase 5 — Admin panel on PHP
 

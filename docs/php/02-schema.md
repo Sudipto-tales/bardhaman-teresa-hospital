@@ -131,9 +131,13 @@ already does for free. It lives in `settings` under `group_name = 'popups'`.
 The content model lists it as a read-only back-reference, and it is what makes
 deleting a file safe — the confirm dialog names every record using it. A stored
 copy would be wrong the moment any record pointing at a file is edited by
-something that forgets to update it. `MediaController` derives it on demand,
-which is the only version that cannot go stale, and it is needed on exactly one
-screen and one dialog.
+something that forgets to update it. `core/MediaUsage.php` derives it on
+demand, which is the only version that cannot go stale, and it is needed on
+exactly one screen and one dialog.
+
+It matches by *file*, not by string: the gallery holds a portrait at 1600px and
+the site asks for a 500px rendition of the same photo, so comparing URLs as
+text would report every seeded image as unused and offer to delete it.
 
 ---
 

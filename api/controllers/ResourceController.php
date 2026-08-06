@@ -25,7 +25,15 @@
  */
 class ResourceController extends ApiController
 {
-    private array $resource;
+    /**
+     * Protected, not private, so a purpose-built controller for one of these
+     * resources can answer in exactly the shape the generic one does.
+     * EnquiryController's reply and note endpoints return an enquiry, and an
+     * enquiry that came back from /api/enquiries/{id}/reply with different
+     * field names from /api/enquiries/{id} would be a second contract to keep
+     * in step.
+     */
+    protected array $resource;
 
     /** The one message that turns a 422 into a 409. */
     private const TAKEN = 'Already in use';
@@ -415,7 +423,7 @@ class ResourceController extends ApiController
        Resolving the resource
        --------------------------------------------------------- */
 
-    private function resource(): array
+    protected function resource(): array
     {
         if (isset($this->resource)) {
             return $this->resource;
@@ -443,7 +451,7 @@ class ResourceController extends ApiController
         return ApiRequest::query($key, $default);
     }
 
-    private function userId(): ?int
+    protected function userId(): ?int
     {
         $user = Auth::user();
         return isset($user['id']) ? (int) $user['id'] : null;
@@ -453,7 +461,7 @@ class ResourceController extends ApiController
        Reading
        --------------------------------------------------------- */
 
-    private function find(array $r, string $id, bool $liveOnly): ?array
+    protected function find(array $r, string $id, bool $liveOnly): ?array
     {
         $sql = 'SELECT * FROM ' . $r['table'] . ' WHERE ' . $r['key'] . ' = ?';
 
@@ -606,7 +614,7 @@ class ResourceController extends ApiController
         return $out;
     }
 
-    private function row(array $r, array $dbRow, ?array $joins = null, ?array $seo = null): array
+    protected function row(array $r, array $dbRow, ?array $joins = null, ?array $seo = null): array
     {
         $id = (int) $dbRow['id'];
         $joins ??= $this->readJoins($r, [$id]);
@@ -676,11 +684,7 @@ class ResourceController extends ApiController
     /** 'Y-m-d H:i:s' in UTC → the ISO 8601 the panel reads. */
     private function iso(?string $value): ?string
     {
-        if (!$value) {
-            return null;
-        }
-
-        return str_replace(' ', 'T', substr($value, 0, 19)) . 'Z';
+        return iso_datetime($value);
     }
 
     /**
@@ -714,13 +718,7 @@ class ResourceController extends ApiController
 
     private function userName(mixed $id): ?string
     {
-        static $cache = [];
-
-        if (!$id) {
-            return null;
-        }
-
-        return $cache[$id] ??= (db_scalar('SELECT name FROM users WHERE id = ?', [$id]) ?: null);
+        return user_display_name($id);
     }
 
     /**
@@ -764,36 +762,12 @@ class ResourceController extends ApiController
     /**
      * SEO lives in its own polymorphic table but the form edits it as two more
      * fields on the record, so it is merged in on the way out and split off on
-     * the way in.
+     * the way in. Both halves are in core/SeoMeta.php, because the fixed pages
+     * carry the same fields and have no registry entry to reach them through.
      */
     private function readSeo(array $r, array $ids): array
     {
-        if (!$r['seo'] || !$ids) {
-            return [];
-        }
-
-        $in = implode(',', array_fill(0, count($ids), '?'));
-
-        $rows = db_fetch_all(
-            'SELECT entity_id, meta_title, meta_description, og_image, canonical, noindex, keywords'
-            . ' FROM seo_meta WHERE entity_type = ? AND entity_id IN (' . $in . ')',
-            array_merge([$r['seo']], $ids)
-        );
-
-        $out = [];
-
-        foreach ($rows as $row) {
-            $out[(int) $row['entity_id']] = [
-                'metaTitle' => $row['meta_title'],
-                'metaDescription' => $row['meta_description'],
-                'ogImage' => $row['og_image'],
-                'canonical' => $row['canonical'],
-                'noindex' => (bool) $row['noindex'],
-                'keywords' => $row['keywords'],
-            ];
-        }
-
-        return $out;
+        return $r['seo'] ? SeoMeta::read($r['seo'], $ids) : [];
     }
 
     /* ---------------------------------------------------------
@@ -1209,57 +1183,9 @@ class ResourceController extends ApiController
 
     private function writeSeo(array $r, int $id, array $body): void
     {
-        if (!$r['seo']) {
-            return;
+        if ($r['seo']) {
+            SeoMeta::write($r['seo'], $id, $body);
         }
-
-        $map = [
-            'metaTitle' => 'meta_title',
-            'metaDescription' => 'meta_description',
-            'ogImage' => 'og_image',
-            'canonical' => 'canonical',
-            'noindex' => 'noindex',
-            'keywords' => 'keywords',
-        ];
-
-        $columns = [];
-
-        foreach ($map as $name => $column) {
-            if (array_key_exists($name, $body)) {
-                $columns[$column] = $name === 'noindex'
-                    ? (filter_var($body[$name], FILTER_VALIDATE_BOOL) ? 1 : 0)
-                    : ($body[$name] === '' ? null : $body[$name]);
-            }
-        }
-
-        if (!$columns) {
-            return;
-        }
-
-        $exists = db_scalar(
-            'SELECT id FROM seo_meta WHERE entity_type = ? AND entity_id = ?',
-            [$r['seo'], $id]
-        );
-
-        if ($exists) {
-            $set = implode(', ', array_map(static fn ($c) => $c . ' = ?', array_keys($columns)));
-            db_execute(
-                'UPDATE seo_meta SET ' . $set . ', updated_at = ? WHERE id = ?',
-                array_merge(array_values($columns), [now_iso(), $exists])
-            );
-            return;
-        }
-
-        $columns['entity_type'] = $r['seo'];
-        $columns['entity_id'] = $id;
-        $columns['created_at'] = now_iso();
-        $columns['updated_at'] = now_iso();
-
-        db_execute(
-            'INSERT INTO seo_meta (' . implode(', ', array_keys($columns)) . ') VALUES ('
-            . implode(', ', array_fill(0, count($columns), '?')) . ')',
-            array_values($columns)
-        );
     }
 
     private function describe(array $r, ?array $dbRow): string

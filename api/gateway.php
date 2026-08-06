@@ -63,6 +63,10 @@ class ApiGatewayProvider extends RouteProvider
             'GET:api/media' => ['MediaController', 'index', 'session'],
             'POST:api/media' => ['MediaController', 'store', 'session'],
             'GET:api/media/{id}/usage' => ['MediaController', 'usage', 'session'],
+            /* Not in the contract's media block, but the delete toast offers
+               Undo like every other one, and media is not a generic resource,
+               so it cannot borrow POST api/{resource}/{id}/restore. */
+            'POST:api/media/{id}/restore' => ['MediaController', 'restore', 'session'],
             'PATCH:api/media/{id}' => ['MediaController', 'update', 'session'],
             'DELETE:api/media/{id}' => ['MediaController', 'destroy', 'session'],
 

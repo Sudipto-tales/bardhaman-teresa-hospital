@@ -113,8 +113,18 @@ Two kinds with deliberately different rules:
 
 | Kind | Destination | Accepts | Served |
 |---|---|---|---|
-| `media` | `storage/uploads/<year>/<month>/` | images | by URL |
+| `media` | `assets/uploads/<year>/<month>/` | images | by URL |
 | `cv` | `storage/cv/` | pdf, doc, docx, odt, rtf | only through an authenticated endpoint |
+
+**Corrected in 4.3.** Media was originally written to `storage/uploads/`, which
+cannot work: `storage/` is denied wholesale by the root `.htaccess` and again
+by its own, precisely so that no CV can ever be reached by URL. An image that
+has to be public does not belong in the directory whose rule is "nothing here
+is served" — one exception in that rule is how a CV eventually leaks. So public
+uploads live in `assets/uploads/`, beside the site's other images, and that
+directory carries its own `.htaccess` refusing anything executable: `Upload`
+already accepts images only, by extension and by the file's own bytes, and this
+is the second lock if that ever loosens.
 
 Both get a random stored filename — the browser's filename is kept in the
 database for display, but using it on disk invites a collision at best and a
