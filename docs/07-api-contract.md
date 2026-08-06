@@ -131,7 +131,12 @@ POST   /api/enquiries/{id}/note     {body}
 PATCH  /api/enquiries/{id}          {status, assignedTo, priority}
 PATCH  /api/applications/{id}       {stage, rating}
 GET    /api/applications/{id}/cv                          → file stream
+GET    /api/applications/{id}/cv?file=cover-letter        → file stream
 ```
+
+An application record carries `cvUrl` and `coverLetterUrl` — the routes above,
+or null where no file was stored. They are what the panel's download button
+opens; a stream is not a column, so the record has to name it.
 
 ## Public intake (called by the website, not the panel)
 
@@ -154,6 +159,20 @@ because SMTP was down is not an acceptable failure.
 
 Rate-limited, reCAPTCHA-verified, honeypot field. These are the endpoints that
 make the site's existing forms actually deliver.
+
+Four details of that, decided when they were built:
+
+- The CSRF token comes from the page that rendered the form, not from a
+  session the visitor does not have.
+- A filled honeypot is answered with a success and writes nothing. Telling a
+  bot it was caught is telling it what to change.
+- The rate limit is checked on arrival and counted only once a row exists, so
+  an applicant who picks the wrong file twice is not locked out for an hour.
+- reCAPTCHA passes when no secret is configured, and when Google cannot be
+  reached. Losing a patient's message costs more than accepting a spam one.
+
+`preferredDate`/`slot` are also accepted as `date`/`time`, which is what the
+site's own form calls them.
 
 ## Public read (if the site fetches at runtime)
 

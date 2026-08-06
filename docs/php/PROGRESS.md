@@ -1,7 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 4.4 — `PublicIntakeController` (enquiry + application) and the
-authenticated CV stream at `GET api/applications/{id}/cv`.
+**Next action:** 4.5 — the activity log screen and `GET api/dashboard/summary`,
+`GET api/activity`, `GET api/search`. `html/admin/assets/js/pages/activity-log.js`
+is still the "screen not built yet" placeholder.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -83,10 +84,10 @@ repository contains a hash.
 | 4.1 | `config/resources.php` registry | done | 18 resources. `php tools/check-resources.php` walks all 350 references against the live schema |
 | 4.2 | Generic `ResourceController` | done | All 18 resources verified over HTTP: list, filter, search, sort, paginate, create, patch, delete, restore, reorder, bulk |
 | 4.3 | Auth / Settings / Media / Page / Enquiry controllers | done | All five. Popups are a settings group, not a controller of their own |
-| 4.4 | PublicIntake + application CV stream | todo | |
-| 4.5 | Activity log + dashboard | todo | |
+| 4.4 | PublicIntake + application CV stream | done | Both intake endpoints and the authenticated file stream. Phase 7 is now only the site-side wiring |
+| 4.5 | Activity log + dashboard | todo | Also renders the `view` action the CV stream records |
 
-Four decisions taken in 4.3.
+### 4.3
 
 **Uploaded media moved to `assets/uploads/`.** `storage/` is denied wholesale by
 two `.htaccess` files so that a CV can never be reached by URL, and media that
@@ -131,6 +132,56 @@ without losing the reply. `storage/` still answers 403, every new route answers
 401 unsigned-in, and the generic controller's SEO round-trip still works after
 the extraction.
 
+### 4.4
+
+**Four columns and a JSON blob were added to `applications`, and one to
+`enquiries`.** The form components written in 6.2 ask for more than the schema
+had room for. `location` and the three `cover_letter_*` columns mirror the CV's
+exactly — a cover letter names the same person a CV does, so it gets the same
+directory, the same rules and the same authenticated endpoint. The optional
+half of the form — qualification, notice period, CTC, availability, portfolio
+link, how they heard about the role — goes into `details`, one JSON column,
+because nothing queries any of it and it is all read at the same moment by the
+same person. `enquiries.preferred_slot` stores the time of day the visitor
+said would suit; it is not a booking, and nothing in this application confirms
+one. The two migrations were edited in place rather than given an `ALTER`
+successor: nothing has been deployed, the schema is one file per entity by
+design, and `migrate:fresh` is the documented way to pick this up.
+
+**The rate limiter counts submissions that land, not requests that arrive.**
+`RateLimit::attempt()` counts every call, which reads well until an applicant
+picks the wrong file twice and is locked out of the careers page for an hour.
+So the limit is checked before and recorded after the row exists. What is worth
+limiting is what costs something — a row, a stored file, two mails; a refused
+submission writes nothing.
+
+**reCAPTCHA passes when Google cannot be reached**, and passes entirely when no
+secret is configured. Failing closed would let a network problem at the
+hospital's end silently stop every contact form and every job application. For
+a hospital, losing a patient's message costs more than accepting a spam one,
+and the honeypot and the limiter do not depend on anything outside this server.
+
+**An unknown slug never loses a submission.** A stale `?doctor=` link, a
+department that has since been renamed, a job title that matches no posting —
+all are recorded as sent, against no reference. The visitor did nothing wrong,
+and `applications.job_title` is denormalised for exactly this.
+
+`ApplicationController` extends the generic one to add `cvUrl` to the record
+through a new `decorate()` seam, because the panel's download button reads that
+field and a route is not a column. That keeps
+`html/admin/assets/js/pages/applications.js` untouched, which is the promise in
+[`06-decisions.md`](06-decisions.md) §1. The honeypot, the `source` marker and
+the vacancy's slug were added to the two form components as hidden fields.
+
+Verified live against SQLite: an appointment request posted in the form's own
+field names lands with its department, doctor, date and slot resolved and its
+subject derived; a filled honeypot gets a cheerful 201 and writes nothing; a
+missing token is 419; an application stores both files under random names,
+records the failed HR mail in `notify_error` without losing the row, and streams
+each file back with `Content-Disposition: attachment` and `no-store`, byte for
+byte, only to a signed-in caller. Two failed validations in a row do not burn
+the hourly quota; three real submissions do.
+
 ## Phase 5 — Admin panel on PHP
 
 | # | Task | Status | Notes |
@@ -164,8 +215,8 @@ emphasised half. A controller must never pass visitor input into those.
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 7.1 | Enquiry endpoint + notification | todo | |
-| 7.2 | Application: CV upload, HR mail, applicant ack | todo | Row first, mail second — a failed send must not lose the application |
+| 7.1 | Enquiry endpoint + notification | done in 4.4 | Only the site-side `fetch` is left, with 6.3 |
+| 7.2 | Application: CV upload, HR mail, applicant ack | done in 4.4 | Row first, mail second — a failed send must not lose the application |
 | 7.3 | Doctor appointment link behaviour | todo | |
 | 7.4 | Cookie bar + ads popup from the database | todo | |
 

@@ -11,6 +11,8 @@
  * Props
  *   action              string
  *   csrf                string  Token; the hidden input is omitted without one
+ *   source              string  What the enquiry is filed as. This form is the
+ *                               appointment request, so that is the default
  *   departments         array of {slug, name}
  *   doctors             array of {slug, name, role, department}
  *   selectedDepartment  string  Prefills the select
@@ -75,6 +77,19 @@ $times = $times ?? [
 <?php if (!empty($csrf)): ?>
                             <input type="hidden" name="_token" value="<?= e($csrf) ?>">
 <?php endif; ?>
+                            <input type="hidden" name="source" value="<?= e($source ?? 'appointment') ?>">
+
+                            <!-- The honeypot. Off-screen rather than
+                                 display:none, which some bots check for, and
+                                 out of the tab order and the accessibility
+                                 tree so nobody using this form ever meets it.
+                                 Anything typed here is a bot, and the server
+                                 answers a filled one with a cheerful success. -->
+                            <div class="ct-hp" aria-hidden="true"
+                                 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+                                <label for="ctWebsite">Website</label>
+                                <input type="text" id="ctWebsite" name="website" tabindex="-1" autocomplete="off">
+                            </div>
 <?= App::component('site/form/field', ['type' => 'text', 'id' => 'ctName', 'name' => 'name', 'label' => 'Full name', 'required' => true, 'autocomplete' => 'name']) ?>
 
 <?= App::component('site/form/field', ['type' => 'tel', 'id' => 'ctPhone', 'name' => 'phone', 'label' => 'Phone', 'required' => true, 'autocomplete' => 'tel']) ?>

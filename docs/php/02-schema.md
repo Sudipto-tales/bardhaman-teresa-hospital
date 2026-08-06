@@ -63,6 +63,7 @@ across rows**, and a real table when it is queried.
 | JSON | Table |
 |---|---|
 | A doctor's `schedule` | `department_doctors` |
+| An application's `details` | |
 | A department's `chips`, `intro_body`, `checks`, `procedures`, `conditions`, `badge`, CTAs | `post_tags` |
 | A job's `responsibilities`, `requirements`, `benefits`, `nice_to_have` | `page_sections` |
 | A lab package's `includes` | `counters` (department stats) |
@@ -113,8 +114,8 @@ page, not the page.
 | `redirects` | 16 | What keeps `/doctors.html` alive after the conversion |
 | `seo_meta` | 14 | Polymorphic, so `seo.html` is one query and not a four-way union |
 | `jobs` | 17 | Closed by `status = hidden`, never deleted |
-| `applications` | 18 | CV outside the web root; row written before the mail is attempted |
-| `enquiries` | 19 | Also holds appointment requests, `source = appointment` |
+| `applications` | 18 | CV and cover-letter file outside the web root; `details` JSON holds the optional half of the form; row written before the mail is attempted |
+| `enquiries` | 19 | Also holds appointment requests, `source = appointment`, with the `preferred_slot` the visitor asked for |
 | `appointments` | 20 | **Read-only.** Nothing in this application writes it |
 | `activity_log` | 23 | `diff` holds only the fields that moved |
 | `rate_limits` | — | Contact form, application form, login |

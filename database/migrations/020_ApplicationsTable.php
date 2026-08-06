@@ -17,6 +17,17 @@
  * The row is written before the mail is attempted, so a dead SMTP server
  * costs a notification and never an application.
  *
+ * `details` holds the optional half of the form — qualification, notice
+ * period, current and expected CTC, availability, portfolio link, where they
+ * heard about the role. Eight nullable columns for scalars nothing ever
+ * queries, all read together as "the rest of the application", is what the
+ * JSON-column rule in docs/php/02-schema.md exists to prevent. They are
+ * carried in the mail to HR, which is where somebody actually reads them.
+ *
+ * The cover letter can arrive as text in `cover_note` or as a file, and the
+ * file columns mirror the CV's exactly — same directory, same rules, same
+ * authenticated endpoint. A cover letter names the same person the CV does.
+ *
  * `stage` is the panel's own pipeline. Nothing on the public site can see it,
  * so it costs nothing to keep and saves whoever reads the inbox from tracking
  * candidates somewhere else.
@@ -35,10 +46,15 @@ class ApplicationsTable extends Migration
             'phone VARCHAR(40)',
             'experience VARCHAR(120)',
             'current_employer VARCHAR(191)',
+            'location VARCHAR(160)',
             'cv_file VARCHAR(255)',
             'cv_path VARCHAR(255)',
             'cv_size INT',
             'cover_note TEXT',
+            'cover_letter_file VARCHAR(255)',
+            'cover_letter_path VARCHAR(255)',
+            'cover_letter_size INT',
+            $this->json('details'),
             /* new | shortlisted | interview | offered | rejected */
             "stage VARCHAR(20) NOT NULL DEFAULT 'new'",
             'rating INT',

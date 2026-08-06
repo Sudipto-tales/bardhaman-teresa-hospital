@@ -427,8 +427,12 @@ return [
             'phone' => ['type' => 'string', 'readonly' => true],
             'experience' => ['type' => 'string', 'readonly' => true],
             'currentEmployer' => ['type' => 'string', 'readonly' => true],
+            'location' => ['type' => 'string', 'readonly' => true],
             'cvFile' => ['type' => 'string', 'readonly' => true],
             'coverNote' => ['type' => 'text', 'readonly' => true],
+            'coverLetterFile' => ['type' => 'string', 'readonly' => true],
+            /* The optional half of the form, as the applicant filled it in. */
+            'details' => ['type' => 'json', 'readonly' => true],
             'appliedAt' => ['type' => 'datetime', 'readonly' => true],
             'notifiedAt' => ['type' => 'datetime', 'readonly' => true],
             /* The pipeline. Nothing on the public site can see it. */
@@ -464,6 +468,9 @@ return [
             'departmentId' => ['type' => 'ref', 'target' => 'departments', 'readonly' => true],
             'doctorId' => ['type' => 'ref', 'target' => 'doctors', 'readonly' => true],
             'preferredDate' => ['type' => 'date', 'readonly' => true],
+            /* What the visitor said would suit them. Not a booking — see
+               docs/02-content-model.md §20. */
+            'preferredSlot' => ['type' => 'string', 'readonly' => true],
             'receivedAt' => ['type' => 'datetime', 'readonly' => true],
             'assignedTo' => ['type' => 'ref', 'target' => 'users'],
             'priority' => ['type' => 'string', 'default' => 'normal'],

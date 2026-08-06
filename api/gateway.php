@@ -70,7 +70,14 @@ class ApiGatewayProvider extends RouteProvider
             'PATCH:api/media/{id}' => ['MediaController', 'update', 'session'],
             'DELETE:api/media/{id}' => ['MediaController', 'destroy', 'session'],
 
+            /* Applications go to their own controller for one reason: the
+               record carries `cvUrl`, which is a route and not a column, and
+               the panel's download button reads it. Everything else about
+               these three verbs is ResourceController's, inherited. */
             'GET:api/applications/{id}/cv' => ['ApplicationController', 'cv', 'session'],
+            'GET:api/applications' => ['ApplicationController', 'index', 'session'],
+            'GET:api/applications/{id}' => ['ApplicationController', 'show', 'session'],
+            'PATCH:api/applications/{id}' => ['ApplicationController', 'update', 'session'],
 
             'POST:api/enquiries/{id}/reply' => ['EnquiryController', 'reply', 'session'],
             'POST:api/enquiries/{id}/note' => ['EnquiryController', 'note', 'session'],

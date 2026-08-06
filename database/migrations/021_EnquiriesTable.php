@@ -30,6 +30,10 @@ class EnquiriesTable extends Migration
             'department_id INT',
             'doctor_id INT',
             'preferred_date DATE',
+            /* Morning, afternoon or evening — never a booked slot. The desk
+               calls back to agree a time; this is only what the visitor said
+               would suit them (§20). */
+            'preferred_slot VARCHAR(40)',
             'assigned_to INT',
             /* new | replied | closed | spam */
             "status VARCHAR(20) NOT NULL DEFAULT 'new'",

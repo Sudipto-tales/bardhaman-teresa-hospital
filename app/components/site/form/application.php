@@ -12,6 +12,9 @@
  *   action      string
  *   csrf        string
  *   position    string  The role, prefilled into the read-only field
+ *   jobSlug     string  The vacancy's own key. The position field is a title
+ *                       and titles repeat; this is what the endpoint files the
+ *                       application against
  *   applyEmail  string  Omit it and the mailto panel is not rendered
  *   eyebrow, heading, lead   `heading` is markup
  *   noticeOptions, sourceOptions  array
@@ -43,6 +46,18 @@ $sourceOptions = $sourceOptions ?? [
 <?php if (!empty($csrf)): ?>
                         <input type="hidden" name="_token" value="<?= e($csrf) ?>">
 <?php endif; ?>
+<?php if (($jobSlug ?? '') !== ''): ?>
+                        <input type="hidden" name="job" value="<?= e($jobSlug) ?>">
+<?php endif; ?>
+
+                        <!-- The honeypot. Off-screen rather than display:none,
+                             out of the tab order and hidden from assistive
+                             technology, so only a bot ever fills it in. -->
+                        <div class="ct-hp" aria-hidden="true"
+                             style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+                            <label for="apWebsite">Website</label>
+                            <input type="text" id="apWebsite" name="website" tabindex="-1" autocomplete="off">
+                        </div>
 <?= App::component('site/form/field', ['type' => 'text', 'id' => 'apName', 'name' => 'name', 'label' => 'Full name', 'required' => true, 'autocomplete' => 'name']) ?>
 
 <?= App::component('site/form/field', ['type' => 'tel', 'id' => 'apPhone', 'name' => 'phone', 'label' => 'Phone', 'required' => true, 'autocomplete' => 'tel']) ?>

@@ -117,7 +117,7 @@ class MediaController extends ApiController
         }
 
         $body = $this->body();
-        $publicId = $this->nextPublicId();
+        $publicId = next_public_id('media', 'med');
         $userId = $this->userId();
 
         db_execute(
@@ -346,29 +346,6 @@ class MediaController extends ApiController
             static fn ($row) => ['name' => (string) $row['name'], 'count' => (int) $row['n']],
             $rows
         );
-    }
-
-    /**
-     * med-001, med-002, …
-     *
-     * Continues the seeded numbering rather than starting a second scheme, and
-     * counts from the highest existing number — including deleted rows, so a
-     * restored file never finds its id taken.
-     */
-    private function nextPublicId(): string
-    {
-        $existing = db_fetch_all("SELECT public_id FROM media WHERE public_id LIKE 'med-%'");
-        $highest = 0;
-
-        foreach ($existing as $row) {
-            $n = (int) substr((string) $row['public_id'], 4);
-
-            if ($n > $highest) {
-                $highest = $n;
-            }
-        }
-
-        return 'med-' . str_pad((string) ($highest + 1), 3, '0', STR_PAD_LEFT);
     }
 
     private function userId(): ?int

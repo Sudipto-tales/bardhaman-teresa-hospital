@@ -654,7 +654,21 @@ class ResourceController extends ApiController
             $out['deletedAt'] = $this->iso($dbRow['deleted_at']);
         }
 
-        return $out;
+        return $this->decorate($r, $out, $dbRow);
+    }
+
+    /**
+     * The one seam in an otherwise data-driven row.
+     *
+     * A field that is neither a column nor a join cannot be expressed in
+     * config/resources.php — `cvUrl` is the route that streams a file, built
+     * from the record's own key. Rather than teach the registry about computed
+     * fields for the one resource that needs one, the subclass that already
+     * exists for that resource adds it here.
+     */
+    protected function decorate(array $r, array $row, array $dbRow): array
+    {
+        return $row;
     }
 
     private function cast(array $field, mixed $value): mixed

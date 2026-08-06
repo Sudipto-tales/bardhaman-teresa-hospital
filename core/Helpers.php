@@ -69,6 +69,40 @@ if (!function_exists('iso_datetime')) {
     }
 }
 
+if (!function_exists('next_public_id')) {
+    /**
+     * The next 'enq-004' style key for a table, continuing its numbering.
+     *
+     * The seeded rows use this scheme and the panel prints it as the record's
+     * id, so a second scheme alongside it would be two kinds of reference to
+     * the same kind of thing. Counts from the highest existing number rather
+     * than the row count, including soft-deleted rows — a restored record must
+     * never find its id taken.
+     *
+     * Two requests can still compute the same number. The unique index is what
+     * settles that; callers retry.
+     */
+    function next_public_id(string $table, string $prefix, string $column = 'public_id'): string
+    {
+        $rows = db_fetch_all(
+            "SELECT {$column} AS k FROM {$table} WHERE {$column} LIKE ?",
+            [$prefix . '-%']
+        );
+
+        $highest = 0;
+
+        foreach ($rows as $row) {
+            $n = (int) substr((string) $row['k'], strlen($prefix) + 1);
+
+            if ($n > $highest) {
+                $highest = $n;
+            }
+        }
+
+        return $prefix . '-' . str_pad((string) ($highest + 1), 3, '0', STR_PAD_LEFT);
+    }
+}
+
 if (!function_exists('user_display_name')) {
     /**
      * The name behind an `updated_by` column, cached for the request.
