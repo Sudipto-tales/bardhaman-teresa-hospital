@@ -41,3 +41,6 @@ Thumbs.db
 *.tmp
 *.temp
 *.bak
+
+# Worktrees and local agent state
+/.claude/

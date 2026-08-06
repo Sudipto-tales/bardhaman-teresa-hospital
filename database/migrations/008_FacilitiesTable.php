@@ -10,9 +10,9 @@ class FacilitiesTable extends Migration
         $this->create('facilities', [
             $this->id(),
             'slug VARCHAR(191) NOT NULL',
-            'icon VARCHAR(80) NOT NULL',
+            'icon VARCHAR(80)',
             'title VARCHAR(191) NOT NULL',
-            'text TEXT NOT NULL',
+            'text TEXT',
             'image VARCHAR(500)',
             'sort_order INT NOT NULL DEFAULT 0',
             "status VARCHAR(20) NOT NULL DEFAULT 'draft'",

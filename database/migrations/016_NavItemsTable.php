@@ -18,7 +18,7 @@ class NavItemsTable extends Migration
             /* header | mega | footer-1..4 | dock | mobile */
             'location VARCHAR(40) NOT NULL',
             'label VARCHAR(160) NOT NULL',
-            'href VARCHAR(500) NOT NULL',
+            'href VARCHAR(500)',
             'icon VARCHAR(80)',
             'target VARCHAR(20)',
             'parent_id INT',

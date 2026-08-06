@@ -161,7 +161,32 @@ class RouteManager
             $controller->setRouteParams($params);
         }
 
-        $controller->{$action}();
+        /**
+         * An uncaught throwable in an API handler is worse than it looks. PHP
+         * prints its message and stack trace as HTML and leaves the status at
+         * 200, so the caller gets a success carrying a page of file paths and
+         * SQL. The panel then tries to parse it as JSON and reports something
+         * unrelated.
+         *
+         * Every failure that reaches here leaves as a 500 in the contract's
+         * envelope, with the detail in the error log where it belongs.
+         */
+        try {
+            $controller->{$action}();
+        } catch (Throwable $e) {
+            error_log('[api] ' . $e::class . ': ' . $e->getMessage()
+                . ' in ' . $e->getFile() . ':' . $e->getLine());
+
+            if (class_exists('Api')) {
+                Api::serverError(
+                    defined('APP_DEBUG') && APP_DEBUG
+                        ? $e::class . ': ' . $e->getMessage()
+                        : 'Something went wrong'
+                );
+            }
+
+            ApiResponse::error('Server Error', 500);
+        }
     }
 
     /**
@@ -184,12 +209,15 @@ class RouteManager
 
         switch ($middleware) {
             case 'session':
+                /* The contract's envelope, not the framework's: the panel
+                   switches on error.code, and a refusal it cannot classify is
+                   a refusal it reports as something else. */
                 if (!Auth::isAuthenticated()) {
-                    ApiResponse::error('Sign in to continue', 401);
+                    Api::unauthenticated();
                 }
 
                 if (!Csrf::verifyRequest()) {
-                    ApiResponse::error('Your session expired — reload the page and try again', 419);
+                    Api::fail(419, 'CSRF_EXPIRED', 'Your session expired — reload the page and try again');
                 }
                 break;
 

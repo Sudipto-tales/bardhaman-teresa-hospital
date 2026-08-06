@@ -1,10 +1,17 @@
 <?php
 
 if (!function_exists('now_iso')) {
-    /** Timestamp for a database column. One format everywhere, so sorting works. */
+    /**
+     * Timestamp for a database column. One format everywhere, so sorting works.
+     *
+     * UTC, not local time. APP_TIMEZONE is Asia/Kolkata, and it is what the
+     * site displays in — but a stored local timestamp is ambiguous the moment
+     * the setting changes, and the seeded rows were converted to UTC on the
+     * way in. Store UTC, convert on display.
+     */
     function now_iso(): string
     {
-        return date('Y-m-d H:i:s');
+        return gmdate('Y-m-d H:i:s');
     }
 }
 

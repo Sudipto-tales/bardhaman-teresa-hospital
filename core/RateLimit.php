@@ -22,7 +22,7 @@ class RateLimit
     public static function tooMany(string $action, int $limit, int $seconds = 3600, ?string $key = null): bool
     {
         $key = $key ?? self::clientIp();
-        $windowStart = date('Y-m-d H:i:s', time() - $seconds);
+        $windowStart = gmdate('Y-m-d H:i:s', time() - $seconds);
 
         self::prune();
 
@@ -38,8 +38,26 @@ class RateLimit
     {
         db_execute(
             'INSERT INTO rate_limits (action, client_key, created_at) VALUES (?, ?, ?)',
-            [$action, $key ?? self::clientIp(), date('Y-m-d H:i:s')]
+            [$action, $key ?? self::clientIp(), now_iso()]
         );
+    }
+
+    /**
+     * Check and record in one call. Returns false when the caller is over the
+     * limit and should be refused.
+     *
+     * This exists because tooMany() and hit() are two calls and forgetting the
+     * second is the classic way to ship a limiter that counts nothing.
+     */
+    public static function attempt(string $action, int $limit, int $seconds = 3600, ?string $key = null): bool
+    {
+        if (self::tooMany($action, $limit, $seconds, $key)) {
+            return false;
+        }
+
+        self::hit($action, $key);
+
+        return true;
     }
 
     /** Wipes an action's history for this client — call after a successful login. */
@@ -62,7 +80,7 @@ class RateLimit
             return;
         }
 
-        db_execute('DELETE FROM rate_limits WHERE created_at < ?', [date('Y-m-d H:i:s', time() - 86400)]);
+        db_execute('DELETE FROM rate_limits WHERE created_at < ?', [gmdate('Y-m-d H:i:s', time() - 86400)]);
     }
 
     /**

@@ -18,7 +18,7 @@ class LeadershipTable extends Migration
             $this->id(),
             'slug VARCHAR(191) NOT NULL',
             'name VARCHAR(160) NOT NULL',
-            'title VARCHAR(191) NOT NULL',
+            'title VARCHAR(191)',
             'photo VARCHAR(500)',
             /* board | management | clinical-leadership */
             "category VARCHAR(40) NOT NULL DEFAULT 'management'",

@@ -13,7 +13,7 @@ class TestimonialsTable extends Migration
         $this->create('testimonials', [
             $this->id(),
             'public_id VARCHAR(64) NOT NULL',
-            'text TEXT NOT NULL',
+            'text TEXT',
             'name VARCHAR(160) NOT NULL',
             'role VARCHAR(191)',
             'photo VARCHAR(500)',

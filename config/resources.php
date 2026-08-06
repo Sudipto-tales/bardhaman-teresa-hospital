@@ -86,9 +86,8 @@ return [
         ],
         'required' => ['name', 'role', 'qualification', 'photo'],
         'dependents' => [
-            ['table' => 'posts', 'column' => 'author_id', 'label' => 'article'],
-            ['table' => 'leadership', 'column' => 'linked_doctor_id', 'label' => 'leadership entry'],
-            ['table' => 'department_doctors', 'column' => 'doctor_id', 'label' => 'department team'],
+            ['table' => 'posts', 'column' => 'author_id', 'label' => 'article', 'resource' => 'posts'],
+            ['table' => 'leadership', 'column' => 'linked_doctor_id', 'label' => 'leadership entry', 'resource' => 'leadership'],
         ],
     ],
 
@@ -149,11 +148,12 @@ return [
         'filters' => ['showInMenu' => ['type' => 'bool']],
         'required' => ['name', 'icon', 'titleStrong', 'lead'],
         'dependents' => [
-            ['table' => 'department_doctors', 'column' => 'department_id', 'label' => 'doctor'],
-            ['table' => 'testimonials', 'column' => 'department_id', 'label' => 'testimonial'],
-            ['table' => 'faqs', 'column' => 'department_id', 'label' => 'FAQ'],
-            ['table' => 'counters', 'column' => 'department_id', 'label' => 'counter'],
-            ['table' => 'enquiries', 'column' => 'department_id', 'label' => 'enquiry'],
+            ['table' => 'department_doctors', 'column' => 'department_id', 'label' => 'doctor',
+                'far' => 'doctor_id', 'farResource' => 'doctors'],
+            ['table' => 'testimonials', 'column' => 'department_id', 'label' => 'testimonial', 'resource' => 'testimonials'],
+            ['table' => 'faqs', 'column' => 'department_id', 'label' => 'FAQ', 'resource' => 'faqs'],
+            ['table' => 'counters', 'column' => 'department_id', 'label' => 'counter', 'resource' => 'counters'],
+            ['table' => 'enquiries', 'column' => 'department_id', 'label' => 'enquiry', 'resource' => 'enquiries'],
         ],
     ],
 
@@ -251,8 +251,9 @@ return [
         'filters' => ['type' => ['type' => 'string']],
         'required' => ['name'],
         'dependents' => [
-            ['table' => 'posts', 'column' => 'category_id', 'label' => 'article'],
-            ['table' => 'post_tags', 'column' => 'category_id', 'label' => 'tagged article'],
+            ['table' => 'posts', 'column' => 'category_id', 'label' => 'article', 'resource' => 'posts'],
+            ['table' => 'post_tags', 'column' => 'category_id', 'label' => 'tagged article',
+                'far' => 'post_id', 'farResource' => 'posts'],
         ],
     ],
 
@@ -343,7 +344,7 @@ return [
         'required' => ['label', 'href'],
         'status' => false,
         'dependents' => [
-            ['table' => 'nav_items', 'column' => 'parent_id', 'label' => 'child item'],
+            ['table' => 'nav_items', 'column' => 'parent_id', 'label' => 'child item', 'resource' => 'nav-items'],
         ],
     ],
 
@@ -400,7 +401,7 @@ return [
         ],
         'required' => ['title', 'dept', 'closesAt', 'summary'],
         'dependents' => [
-            ['table' => 'applications', 'column' => 'job_id', 'label' => 'application'],
+            ['table' => 'applications', 'column' => 'job_id', 'label' => 'application', 'resource' => 'applications'],
         ],
     ],
 
@@ -410,6 +411,8 @@ return [
      * and the only editable fields are the panel's own pipeline.
      */
     'applications' => [
+        'defaultSort' => 'appliedAt',
+        'defaultDir' => 'desc',
         'table' => 'applications',
         'key' => 'public_id',
         'label' => 'name',
@@ -443,6 +446,8 @@ return [
     ],
 
     'enquiries' => [
+        'defaultSort' => 'receivedAt',
+        'defaultDir' => 'desc',
         'table' => 'enquiries',
         'key' => 'public_id',
         'label' => 'name',
@@ -485,6 +490,8 @@ return [
      * See docs/02-content-model.md §20 and docs/07-api-contract.md.
      */
     'appointments' => [
+        'defaultSort' => 'preferredDate',
+        'defaultDir' => 'desc',
         'table' => 'appointments',
         'key' => 'public_id',
         'label' => 'patientName',
@@ -555,7 +562,7 @@ return [
         'required' => ['name'],
         'status' => false,
         'dependents' => [
-            ['table' => 'users', 'column' => 'role_id', 'label' => 'user'],
+            ['table' => 'users', 'column' => 'role_id', 'label' => 'user', 'resource' => 'users'],
         ],
     ],
 ];

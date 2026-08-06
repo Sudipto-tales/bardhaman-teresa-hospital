@@ -1,8 +1,7 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 4.2 — `api/controllers/ResourceController.php`, reading the
-registry and implementing the whole of `docs/07-api-contract.md`: list, get,
-create, patch, delete, restore, reorder, bulk.
+**Next action:** 4.3 — the purpose-built controllers the route table already
+points at: Settings, Media, Page, Enquiry. `AuthController` is done.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -82,8 +81,8 @@ repository contains a hash.
 | # | Task | Status | Notes |
 |---|---|---|---|
 | 4.1 | `config/resources.php` registry | done | 18 resources. `php tools/check-resources.php` walks all 350 references against the live schema |
-| 4.2 | Generic `ResourceController` | todo | |
-| 4.3 | Auth / Settings / Media / Page / Popup controllers | todo | |
+| 4.2 | Generic `ResourceController` | done | All 18 resources verified over HTTP: list, filter, search, sort, paginate, create, patch, delete, restore, reorder, bulk |
+| 4.3 | Auth / Settings / Media / Page / Popup controllers | doing | `AuthController` done. Settings, Media, Page, Enquiry still to write — `api/gateway.php` already routes to them |
 | 4.4 | PublicIntake + application CV stream | todo | |
 | 4.5 | Activity log + dashboard | todo | |
 

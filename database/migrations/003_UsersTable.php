@@ -19,7 +19,7 @@ class UsersTable extends Migration
             'public_id VARCHAR(64) NOT NULL',
             'name VARCHAR(160) NOT NULL',
             'email VARCHAR(191) NOT NULL',
-            'password VARCHAR(255) NOT NULL',
+            'password VARCHAR(255)',
             'avatar VARCHAR(255)',
             'role_id INT',
             'phone VARCHAR(40)',

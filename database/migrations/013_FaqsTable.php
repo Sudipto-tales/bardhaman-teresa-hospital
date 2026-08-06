@@ -14,7 +14,7 @@ class FaqsTable extends Migration
             $this->id(),
             'public_id VARCHAR(64) NOT NULL',
             'question VARCHAR(500) NOT NULL',
-            'answer TEXT NOT NULL',
+            'answer TEXT',
             /* home | contact | department */
             "faq_group VARCHAR(40) NOT NULL DEFAULT 'home'",
             'department_id INT',

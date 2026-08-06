@@ -53,6 +53,8 @@ class ResourceRegistry
         $resource['dependents'] = $resource['dependents'] ?? [];
         $resource['filters'] = self::filters($resource);
         $resource['seo'] = $resource['seo'] ?? null;
+        $resource['defaultSort'] = $resource['defaultSort'] ?? null;
+        $resource['defaultDir'] = $resource['defaultDir'] ?? null;
 
         return $resource;
     }
