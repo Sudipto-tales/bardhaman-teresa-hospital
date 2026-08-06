@@ -99,10 +99,21 @@ repository contains a hash.
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 6.1 | Layout components | todo | head, header, nav, mega menu, dock, footer |
-| 6.2 | Block + card + form components | todo | One per generator function in `build-pages.mjs` |
-| 6.3 | Pages + controllers + models | todo | |
+| 6.1 | Layout components | done | 10 under `app/components/site/layout/` |
+| 6.2 | Block + card + form components | done | 34 components total. Pure: no database, no superglobals, safe with zero props |
+| 6.3 | Pages + controllers + models | doing | `app/models/` done — 16 files, read-only, published-only. Pages and controllers still to write |
 | 6.4 | Settings-driven contact details, redirects | todo | Kills the repo-wide find-and-replace |
+
+Two things 6.3 must handle. `html/` is blocked by `.htaccess`, so the CSS, JS
+and images the components reference need copying to the root `assets/`. And the
+contact, careers, job and blog-listing page bodies have no functions in
+`build-pages.mjs` at all — they are inline template literals, so those regions
+(`ct-tiles`, `ct-aside`, `ct-map`, `cr-toolbar`, the blog sidebar) have no
+component and the page templates carry them.
+
+Section headings, a banner's `lead` and an FAQ's `answer` are echoed as raw
+markup, because every heading in this design carries `<strong>` on its
+emphasised half. A controller must never pass visitor input into those.
 
 ## Phase 7 — Forms, mail, popups
 
