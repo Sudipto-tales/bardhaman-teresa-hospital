@@ -43,12 +43,21 @@ abstract class Migration
         return $this->driver === 'sqlite';
     }
 
-    /** The auto-incrementing primary key. */
+    /**
+     * The auto-incrementing primary key.
+     *
+     * Signed, deliberately. MySQL refuses a foreign key whose column is INT
+     * when the column it references is INT UNSIGNED — so an unsigned primary
+     * key would mean every `*_id` column in every migration had to repeat
+     * UNSIGNED, and the one that forgot would fail on MySQL and pass on
+     * SQLite, which does not check. Two billion rows is not a limit this
+     * hospital will meet.
+     */
     protected function id(string $name = 'id'): string
     {
         return $this->isSqlite()
             ? "{$name} INTEGER PRIMARY KEY AUTOINCREMENT"
-            : "{$name} INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY";
+            : "{$name} INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
     }
 
     /**

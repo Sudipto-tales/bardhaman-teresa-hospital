@@ -53,6 +53,15 @@ class Auth
         return self::validateRememberToken();
     }
 
+    /**
+     * The role name is joined in rather than stored on the user, so renaming a
+     * role is one row. A user whose role was deleted still signs in — roles
+     * are displayed, not enforced (docs/php/06-decisions.md §2), so a missing
+     * one is a blank label and not a locked account.
+     */
+    private const SELECT = 'SELECT u.*, r.name AS role, r.public_id AS role_key
+        FROM users u LEFT JOIN roles r ON r.id = u.role_id';
+
     /** The signed-in user, or null. Never includes the password hash. */
     public static function user(): ?array
     {
@@ -60,12 +69,15 @@ class Auth
             return null;
         }
 
-        $user = db_fetch_one(
-            'SELECT id, name, email, role, avatar, phone, status, last_active_at FROM users WHERE id = ?',
-            [$_SESSION['user_id']]
-        );
+        $user = db_fetch_one(self::SELECT . ' WHERE u.id = ?', [$_SESSION['user_id']]);
 
-        return $user ?: null;
+        if (!$user) {
+            return null;
+        }
+
+        unset($user['password'], $user['remember_token'], $user['reset_token']);
+
+        return $user;
     }
 
     public static function id(): ?string
@@ -81,7 +93,7 @@ class Auth
     {
         self::start();
 
-        $user = db_fetch_one('SELECT * FROM users WHERE email = ?', [trim($email)]);
+        $user = db_fetch_one(self::SELECT . ' WHERE u.email = ?', [trim($email)]);
 
         /* One message for "no such account" and for "wrong password". Telling
            the two apart hands an attacker a list of who has an account. */
@@ -146,7 +158,7 @@ class Auth
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_role'] = $user['role'] ?? 'editor';
+        $_SESSION['user_role'] = $user['role'] ?? '';
         $_SESSION['logged_in'] = true;
         $_SESSION['last_activity'] = time();
     }
@@ -181,7 +193,7 @@ class Auth
 
         [$userId, $token] = $parts;
 
-        $user = db_fetch_one('SELECT * FROM users WHERE id = ?', [$userId]);
+        $user = db_fetch_one(self::SELECT . ' WHERE u.id = ?', [$userId]);
         if (!$user || empty($user['remember_token'])) {
             return false;
         }

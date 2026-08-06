@@ -1,7 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 3.1 — write one migration per table from
-`docs/02-content-model.md`, then run `php vayu migrate`.
+**Next action:** 3.2 — `tools/seed-export.mjs`, turning `site-data.mjs`,
+`html/assets/jobs.js` and `html/admin/assets/data/*.js` into
+`database/seeds/*.json`.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -37,7 +38,7 @@ Done on `design/html`, commit `3527910`.
 
 ## Phase 2 — Vayu scaffold and framework patches
 
-Done on `development`. Every patch and its reason is in
+Done on `development`, commit `a721018`. Every patch and its reason is in
 [`01-vayu-notes.md`](01-vayu-notes.md).
 
 | # | Task | Status | Notes |
@@ -61,7 +62,7 @@ reflection across eight cases.
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 3.1 | Migrations for every table | todo | Schema from `docs/02-content-model.md` |
+| 3.1 | Migrations for every table | done | 27 tables + `migrations`. Definitions and the JSON-column contract in [`02-schema.md`](02-schema.md) |
 | 3.2 | `tools/seed-export.mjs` | todo | Existing JS content → JSON; nothing retyped |
 | 3.3 | PHP seeder + verify row counts | todo | |
 

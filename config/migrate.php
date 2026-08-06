@@ -43,7 +43,7 @@ function migration_ensure_table(PDO $pdo): void
     $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
     $id = $driver === 'sqlite'
         ? 'id INTEGER PRIMARY KEY AUTOINCREMENT'
-        : 'id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY';
+        : 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 
     $pdo->exec("CREATE TABLE IF NOT EXISTS migrations (
         {$id},
