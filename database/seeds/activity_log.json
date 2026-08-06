@@ -1,0 +1,101 @@
+{
+  "table": "activity_log",
+  "key": null,
+  "refs": {
+    "user_id": [
+      "users",
+      "public_id"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "user_id": "usr-002",
+      "user_name": "Riya Sarkar",
+      "action": "update",
+      "entity": "posts",
+      "entity_id": "blog-post",
+      "summary": "Edited “The six hours after chest pain”",
+      "diff": null,
+      "ip": "103.21.44.10",
+      "created_at": "2026-08-05 08:12:00"
+    },
+    {
+      "user_id": "usr-001",
+      "user_name": "Admin Desk",
+      "action": "publish",
+      "entity": "doctors",
+      "entity_id": "dr-imran-haque",
+      "summary": "Published Dr. Imran Haque",
+      "diff": null,
+      "ip": "103.21.44.2",
+      "created_at": "2026-08-05 07:40:00"
+    },
+    {
+      "user_id": "usr-002",
+      "user_name": "Riya Sarkar",
+      "action": "create",
+      "entity": "jobs",
+      "entity_id": "physiotherapist",
+      "summary": "Created vacancy “Physiotherapist — Inpatient”",
+      "diff": null,
+      "ip": "103.21.44.10",
+      "created_at": "2026-08-03 11:20:00"
+    },
+    {
+      "user_id": "usr-001",
+      "user_name": "Admin Desk",
+      "action": "update",
+      "entity": "settings",
+      "entity_id": "contact",
+      "summary": "Changed the emergency number",
+      "diff": null,
+      "ip": "103.21.44.2",
+      "created_at": "2026-08-02 16:05:00"
+    },
+    {
+      "user_id": "usr-004",
+      "user_name": "Billing Team",
+      "action": "update",
+      "entity": "enquiries",
+      "entity_id": "enq-003",
+      "summary": "Replied to Amitava Sen",
+      "diff": null,
+      "ip": "103.21.44.31",
+      "created_at": "2026-08-03 09:40:00"
+    },
+    {
+      "user_id": "usr-002",
+      "user_name": "Riya Sarkar",
+      "action": "delete",
+      "entity": "testimonials",
+      "entity_id": "tst-009",
+      "summary": "Deleted a testimonial",
+      "diff": null,
+      "ip": "103.21.44.10",
+      "created_at": "2026-08-01 14:22:00"
+    },
+    {
+      "user_id": "usr-003",
+      "user_name": "Dr. Jonathon Ronan",
+      "action": "login",
+      "entity": "auth",
+      "entity_id": null,
+      "summary": "Signed in",
+      "diff": null,
+      "ip": "49.37.12.88",
+      "created_at": "2026-08-04 18:20:00"
+    },
+    {
+      "user_id": "usr-001",
+      "user_name": "Admin Desk",
+      "action": "update",
+      "entity": "departments",
+      "entity_id": "cardiology",
+      "summary": "Updated the cardiology counters",
+      "diff": null,
+      "ip": "103.21.44.2",
+      "created_at": "2026-07-29 11:20:00"
+    }
+  ]
+}

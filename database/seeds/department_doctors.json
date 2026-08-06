@@ -1,0 +1,77 @@
+{
+  "table": "department_doctors",
+  "key": null,
+  "refs": {
+    "department_id": [
+      "departments",
+      "slug"
+    ],
+    "doctor_id": [
+      "doctors",
+      "slug"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "department_id": "cardiology",
+      "doctor_id": "dr-jonathon-ronan",
+      "sort_order": 0
+    },
+    {
+      "department_id": "cardiology",
+      "doctor_id": "dr-anita-sharma",
+      "sort_order": 0
+    },
+    {
+      "department_id": "orthopedics",
+      "doctor_id": "dr-victor-james",
+      "sort_order": 0
+    },
+    {
+      "department_id": "orthopedics",
+      "doctor_id": "dr-rahul-dey",
+      "sort_order": 0
+    },
+    {
+      "department_id": "prenatal-care",
+      "doctor_id": "dr-philips-rownd",
+      "sort_order": 0
+    },
+    {
+      "department_id": "nutrition",
+      "doctor_id": "dr-jane-ronan",
+      "sort_order": 0
+    },
+    {
+      "department_id": "neuro-surgery",
+      "doctor_id": "dr-sourav-mitra",
+      "sort_order": 0
+    },
+    {
+      "department_id": "nephrology",
+      "doctor_id": "dr-debjani-roy",
+      "sort_order": 0
+    },
+    {
+      "department_id": "general-surgery",
+      "doctor_id": "dr-arindam-basu",
+      "sort_order": 0
+    },
+    {
+      "department_id": "pediatric-surgery",
+      "doctor_id": "dr-meera-chatterjee",
+      "sort_order": 0
+    },
+    {
+      "department_id": "ophthalmology",
+      "doctor_id": "dr-imran-haque",
+      "sort_order": 0
+    },
+    {
+      "department_id": "dental-care",
+      "doctor_id": "dr-sneha-pal",
+      "sort_order": 0
+    }
+  ]
+}

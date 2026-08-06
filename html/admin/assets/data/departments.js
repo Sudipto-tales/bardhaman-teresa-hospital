@@ -160,7 +160,7 @@
             'Pathology, microbiology, histopathology and imaging under one roof.', 10, 'published'),
         stub('nutrition', 'Nutrition', 'fa-apple-whole', '1 Doctor Available',
             'Therapeutic diets cooked on site and an outpatient diet clinic.', 11, 'published'),
-        stub('facilities', 'Physiotherapy', 'fa-person-walking', 'New',
+        stub('physiotherapy', 'Physiotherapy', 'fa-person-walking', 'New',
             'Inpatient rounds and outpatient rehabilitation courses.', 12, 'draft'),
     ];
 }(window));

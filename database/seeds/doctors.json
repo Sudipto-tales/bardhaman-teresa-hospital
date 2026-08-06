@@ -1,0 +1,417 @@
+{
+  "table": "doctors",
+  "key": "slug",
+  "refs": {},
+  "json": [
+    "languages",
+    "schedule"
+  ],
+  "rows": [
+    {
+      "slug": "dr-jonathon-ronan",
+      "name": "Dr. Jonathon Ronan",
+      "role": "Head of Cardiology",
+      "qualification": "MD, DM (Cardiology)",
+      "experience_years": 22,
+      "photo": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Interventional cardiology",
+      "registration_no": "WBMC-41220",
+      "languages": [
+        "Bangla",
+        "English",
+        "Hindi"
+      ],
+      "bio": "<p>Runs the cath lab and the heart-failure clinic. Trained in Kolkata and Vellore, and has been with Teresa Memorial since the lab was commissioned in 2011.</p>",
+      "schedule": [
+        {
+          "day": "Mon",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "OPD 2"
+        },
+        {
+          "day": "Wed",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "OPD 2"
+        },
+        {
+          "day": "Fri",
+          "from": "16:00",
+          "to": "19:00",
+          "location": "OPD 2"
+        }
+      ],
+      "consultation_fee": 800,
+      "rating": 4.9,
+      "review_count": 412,
+      "is_leadership": 1,
+      "appointment_enabled": 1,
+      "sort_order": 1,
+      "status": "published",
+      "updated_at": "2026-07-28 09:12:00"
+    },
+    {
+      "slug": "dr-anita-sharma",
+      "name": "Dr. Anita Sharma",
+      "role": "Interventional Cardiologist",
+      "qualification": "MD, DNB (Cardiology)",
+      "experience_years": 14,
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Angioplasty and structural heart",
+      "registration_no": "WBMC-52901",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Second on call for the primary angioplasty rota. Special interest in women and heart disease.</p>",
+      "schedule": [
+        {
+          "day": "Tue",
+          "from": "11:00",
+          "to": "14:00",
+          "location": "OPD 3"
+        },
+        {
+          "day": "Thu",
+          "from": "11:00",
+          "to": "14:00",
+          "location": "OPD 3"
+        }
+      ],
+      "consultation_fee": 700,
+      "rating": 4.8,
+      "review_count": 288,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 2,
+      "status": "published",
+      "updated_at": "2026-07-22 14:40:00"
+    },
+    {
+      "slug": "dr-victor-james",
+      "name": "Dr. Victor James",
+      "role": "Head of Orthopedics",
+      "qualification": "MS (Ortho), FRCS",
+      "experience_years": 25,
+      "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Trauma and joint replacement",
+      "registration_no": "WBMC-33810",
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "bio": "<p>Set up the joint replacement programme in 2014. Over 3,000 primary replacements performed.</p>",
+      "schedule": [
+        {
+          "day": "Mon",
+          "from": "09:00",
+          "to": "12:00",
+          "location": "OPD 5"
+        },
+        {
+          "day": "Thu",
+          "from": "09:00",
+          "to": "12:00",
+          "location": "OPD 5"
+        }
+      ],
+      "consultation_fee": 800,
+      "rating": 4.9,
+      "review_count": 505,
+      "is_leadership": 1,
+      "appointment_enabled": 1,
+      "sort_order": 3,
+      "status": "published",
+      "updated_at": "2026-07-30 08:02:00"
+    },
+    {
+      "slug": "dr-rahul-dey",
+      "name": "Dr. Rahul Dey",
+      "role": "Joint Replacement Surgeon",
+      "qualification": "MS (Ortho), Fellowship Arthroplasty",
+      "experience_years": 12,
+      "photo": "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Knee and hip arthroplasty",
+      "registration_no": "WBMC-61144",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Fellowship-trained in arthroplasty, running the rapid-recovery knee pathway.</p>",
+      "schedule": [
+        {
+          "day": "Wed",
+          "from": "15:00",
+          "to": "18:00",
+          "location": "OPD 5"
+        }
+      ],
+      "consultation_fee": 600,
+      "rating": 4.7,
+      "review_count": 176,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 4,
+      "status": "published",
+      "updated_at": "2026-06-19 10:15:00"
+    },
+    {
+      "slug": "dr-philips-rownd",
+      "name": "Dr. Philips Rownd",
+      "role": "Gynaecologist & Obstetrician",
+      "qualification": "MS (OBG), FICOG",
+      "experience_years": 18,
+      "photo": "https://images.unsplash.com/photo-1537368910025-702800faa86b?q=80&w=500&auto=format&fit=crop",
+      "speciality": "High-risk obstetrics",
+      "registration_no": "WBMC-47702",
+      "languages": [
+        "Bangla",
+        "English",
+        "Hindi"
+      ],
+      "bio": "<p>Leads the maternity block and the high-risk antenatal clinic.</p>",
+      "schedule": [
+        {
+          "day": "Tue",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "Maternity OPD"
+        },
+        {
+          "day": "Sat",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "Maternity OPD"
+        }
+      ],
+      "consultation_fee": 700,
+      "rating": 4.9,
+      "review_count": 623,
+      "is_leadership": 1,
+      "appointment_enabled": 1,
+      "sort_order": 5,
+      "status": "published",
+      "updated_at": "2026-07-11 12:30:00"
+    },
+    {
+      "slug": "dr-jane-ronan",
+      "name": "Dr. Jane Ronan",
+      "role": "Pediatric Nutritionist",
+      "qualification": "MSc, RD (Clinical Nutrition)",
+      "experience_years": 11,
+      "photo": "https://images.unsplash.com/photo-1594824436998-d40d9b4b0870?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Paediatric and renal diets",
+      "registration_no": "RD-2201",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Runs the outpatient diet clinic and the inpatient therapeutic diet review.</p>",
+      "schedule": [
+        {
+          "day": "Mon",
+          "from": "14:00",
+          "to": "17:00",
+          "location": "Diet clinic"
+        }
+      ],
+      "consultation_fee": 400,
+      "rating": 4.8,
+      "review_count": 134,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 6,
+      "status": "published",
+      "updated_at": "2026-05-30 09:00:00"
+    },
+    {
+      "slug": "dr-sourav-mitra",
+      "name": "Dr. Sourav Mitra",
+      "role": "Consultant Neurosurgeon",
+      "qualification": "MCh (Neurosurgery)",
+      "experience_years": 16,
+      "photo": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Skull base and spine",
+      "registration_no": "WBMC-50018",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>On the 24/7 stroke rota. Minimally invasive spine surgery.</p>",
+      "schedule": [
+        {
+          "day": "Thu",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "OPD 7"
+        }
+      ],
+      "consultation_fee": 900,
+      "rating": 4.7,
+      "review_count": 98,
+      "is_leadership": 0,
+      "appointment_enabled": 0,
+      "sort_order": 7,
+      "status": "published",
+      "updated_at": "2026-07-02 16:20:00"
+    },
+    {
+      "slug": "dr-debjani-roy",
+      "name": "Dr. Debjani Roy",
+      "role": "Consultant Nephrologist",
+      "qualification": "MD, DM (Nephrology)",
+      "experience_years": 13,
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Dialysis and transplant follow-up",
+      "registration_no": "WBMC-55317",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Oversees the twelve-station dialysis unit.</p>",
+      "schedule": [
+        {
+          "day": "Fri",
+          "from": "10:00",
+          "to": "13:00",
+          "location": "OPD 4"
+        }
+      ],
+      "consultation_fee": 700,
+      "rating": 4.8,
+      "review_count": 141,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 8,
+      "status": "published",
+      "updated_at": "2026-06-28 11:45:00"
+    },
+    {
+      "slug": "dr-arindam-basu",
+      "name": "Dr. Arindam Basu",
+      "role": "General & Laparoscopic Surgeon",
+      "qualification": "MS (General Surgery)",
+      "experience_years": 19,
+      "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Laparoscopic GI surgery",
+      "registration_no": "WBMC-39004",
+      "languages": [
+        "Bangla",
+        "English",
+        "Hindi"
+      ],
+      "bio": "<p>Emergency and elective general surgery, with a day-case hernia list.</p>",
+      "schedule": [
+        {
+          "day": "Mon",
+          "from": "11:00",
+          "to": "14:00",
+          "location": "OPD 1"
+        }
+      ],
+      "consultation_fee": 600,
+      "rating": 4.6,
+      "review_count": 210,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 9,
+      "status": "published",
+      "updated_at": "2026-07-19 13:05:00"
+    },
+    {
+      "slug": "dr-meera-chatterjee",
+      "name": "Dr. Meera Chatterjee",
+      "role": "Pediatric Surgeon",
+      "qualification": "MCh (Pediatric Surgery)",
+      "experience_years": 10,
+      "photo": "https://images.unsplash.com/photo-1594824436998-d40d9b4b0870?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Neonatal surgery",
+      "registration_no": "WBMC-62880",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Neonatal and infant surgery, working alongside the nursery team.</p>",
+      "schedule": [
+        {
+          "day": "Wed",
+          "from": "10:00",
+          "to": "12:00",
+          "location": "OPD 6"
+        }
+      ],
+      "consultation_fee": 600,
+      "rating": 4.9,
+      "review_count": 76,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 10,
+      "status": "draft",
+      "updated_at": "2026-08-01 07:30:00"
+    },
+    {
+      "slug": "dr-imran-haque",
+      "name": "Dr. Imran Haque",
+      "role": "Consultant Ophthalmologist",
+      "qualification": "MS (Ophthalmology)",
+      "experience_years": 15,
+      "photo": "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Cataract and retina",
+      "registration_no": "WBMC-48221",
+      "languages": [
+        "Bangla",
+        "English",
+        "Urdu"
+      ],
+      "bio": "<p>Phacoemulsification list twice a week, plus the diabetic retinopathy screening clinic.</p>",
+      "schedule": [
+        {
+          "day": "Tue",
+          "from": "09:00",
+          "to": "12:00",
+          "location": "Eye OPD"
+        }
+      ],
+      "consultation_fee": 500,
+      "rating": 4.8,
+      "review_count": 302,
+      "is_leadership": 0,
+      "appointment_enabled": 1,
+      "sort_order": 11,
+      "status": "published",
+      "updated_at": "2026-07-15 15:10:00"
+    },
+    {
+      "slug": "dr-sneha-pal",
+      "name": "Dr. Sneha Pal",
+      "role": "Dental & Maxillofacial Surgeon",
+      "qualification": "BDS, MDS",
+      "experience_years": 9,
+      "photo": "https://images.unsplash.com/photo-1537368910025-702800faa86b?q=80&w=500&auto=format&fit=crop",
+      "speciality": "Oral and maxillofacial surgery",
+      "registration_no": "WBDC-11902",
+      "languages": [
+        "Bangla",
+        "English"
+      ],
+      "bio": "<p>Runs the dental clinic and the maxillofacial trauma service.</p>",
+      "schedule": [
+        {
+          "day": "Sat",
+          "from": "11:00",
+          "to": "14:00",
+          "location": "Dental OPD"
+        }
+      ],
+      "consultation_fee": 400,
+      "rating": 4.7,
+      "review_count": 88,
+      "is_leadership": 0,
+      "appointment_enabled": 0,
+      "sort_order": 12,
+      "status": "hidden",
+      "updated_at": "2026-04-09 10:00:00"
+    }
+  ]
+}

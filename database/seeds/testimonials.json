@@ -1,0 +1,91 @@
+{
+  "table": "testimonials",
+  "key": "public_id",
+  "refs": {
+    "department_id": [
+      "departments",
+      "slug"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "public_id": "tst-001",
+      "text": "I was seen within twenty minutes of walking into emergency, and the doctor explained every step in Bangla before anything was signed.",
+      "name": "Anjali Das",
+      "role": "Patient — Cardiology",
+      "photo": "https://images.unsplash.com/photo-1594824436998-d40d9b4b0870?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "department_id": "cardiology",
+      "source": "website",
+      "featured": 1,
+      "sort_order": 1,
+      "status": "published"
+    },
+    {
+      "public_id": "tst-002",
+      "text": "My father spent eleven days in the ICU. Somebody from the team called us with an update every single evening, unprompted.",
+      "name": "Rakesh Sarkar",
+      "role": "Attendant — Critical Care",
+      "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "department_id": null,
+      "source": "manual",
+      "featured": 1,
+      "sort_order": 2,
+      "status": "published"
+    },
+    {
+      "public_id": "tst-003",
+      "text": "The maternity block staff stayed past their shift until my daughter was born. I have never been treated like that in a hospital.",
+      "name": "Farida Begum",
+      "role": "Patient — Maternity",
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=500&auto=format&fit=crop",
+      "rating": 5,
+      "department_id": "prenatal-care",
+      "source": "google",
+      "featured": 1,
+      "sort_order": 3,
+      "status": "published"
+    },
+    {
+      "public_id": "tst-004",
+      "text": "Knee replacement in March, walking unaided by May. The physio team called every week to check I was doing the exercises.",
+      "name": "Prabir Ghosh",
+      "role": "Patient — Orthopedics",
+      "photo": null,
+      "rating": 5,
+      "department_id": "orthopedics",
+      "source": "website",
+      "featured": 0,
+      "sort_order": 4,
+      "status": "published"
+    },
+    {
+      "public_id": "tst-005",
+      "text": "Billing desk came to the bed rather than making us queue downstairs. Small thing, but it mattered that day.",
+      "name": "Nasreen Khatun",
+      "role": "Attendant",
+      "photo": null,
+      "rating": 4,
+      "department_id": null,
+      "source": "website",
+      "featured": 0,
+      "sort_order": 5,
+      "status": "draft"
+    },
+    {
+      "public_id": "tst-006",
+      "text": "Waited over an hour past my appointment slot in the eye clinic. Staff were apologetic but nobody told me until I asked.",
+      "name": "Sujoy Mondal",
+      "role": "Patient — Ophthalmology",
+      "photo": null,
+      "rating": 3,
+      "department_id": "ophthalmology",
+      "source": "website",
+      "featured": 0,
+      "sort_order": 6,
+      "status": "draft"
+    }
+  ]
+}

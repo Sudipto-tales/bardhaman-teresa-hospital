@@ -1,0 +1,194 @@
+{
+  "table": "enquiries",
+  "key": "public_id",
+  "refs": {
+    "department_id": [
+      "departments",
+      "slug"
+    ],
+    "assigned_to": [
+      "users",
+      "public_id"
+    ]
+  },
+  "json": [
+    "replies",
+    "internal_notes"
+  ],
+  "rows": [
+    {
+      "public_id": "enq-001",
+      "name": "Sourav Das",
+      "email": "sourav.das@example.com",
+      "phone": "+91 98300 45612",
+      "subject": "Cardiac package pricing",
+      "message": "My father is 62 and has been advised a full cardiac screen. What does the package cover and is Swasthya Sathi accepted for it?",
+      "source": "contact",
+      "department_id": "cardiology",
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": "usr-002",
+      "status": "new",
+      "priority": "normal",
+      "replies": [],
+      "internal_notes": [],
+      "received_at": "2026-08-04 09:12:00"
+    },
+    {
+      "public_id": "enq-002",
+      "name": "Nikita Roy",
+      "email": "nikita.roy@example.com",
+      "phone": "+91 98311 22334",
+      "subject": "Appointment with Dr. Haque",
+      "message": "Trying to book a cataract consultation for my mother. Is Tuesday morning free next week?",
+      "source": "contact",
+      "department_id": "ophthalmology",
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": "usr-002",
+      "status": "replied",
+      "priority": "normal",
+      "replies": [
+        {
+          "by": "Riya Sarkar",
+          "at": "2026-08-03T11:02:00Z",
+          "body": "Tuesday 9.30am is free — I have held it for you. Please confirm and bring any previous eye reports."
+        }
+      ],
+      "internal_notes": [],
+      "received_at": "2026-08-03 18:40:00"
+    },
+    {
+      "public_id": "enq-003",
+      "name": "Amitava Sen",
+      "email": "amitava.sen@example.com",
+      "phone": "+91 90070 88990",
+      "subject": "Insurance empanelment",
+      "message": "Is Star Health accepted for a planned knee replacement?",
+      "source": "contact",
+      "department_id": "orthopedics",
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": "usr-004",
+      "status": "closed",
+      "priority": "normal",
+      "replies": [
+        {
+          "by": "Billing Team",
+          "at": "2026-08-03T09:40:00Z",
+          "body": "Yes, Star Health is on our TPA list. Please bring your card and a photo ID to the insurance desk for pre-authorisation."
+        }
+      ],
+      "internal_notes": [
+        {
+          "by": "Billing Team",
+          "at": "2026-08-03T09:41:00Z",
+          "body": "Pre-auth usually takes 48h for this TPA."
+        }
+      ],
+      "received_at": "2026-08-03 11:05:00"
+    },
+    {
+      "public_id": "enq-004",
+      "name": "Zara Ahmed",
+      "email": null,
+      "phone": "+91 88880 12345",
+      "subject": "Ambulance availability",
+      "message": "Needed an ALS ambulance to Kolkata at short notice — is that possible at night?",
+      "source": "phone",
+      "department_id": null,
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": "usr-001",
+      "status": "replied",
+      "priority": "high",
+      "replies": [
+        {
+          "by": "Emergency",
+          "at": "2026-08-02T22:30:00Z",
+          "body": "Two of our six vehicles are ALS with a paramedic on board, available around the clock. Call the emergency line directly."
+        }
+      ],
+      "internal_notes": [],
+      "received_at": "2026-08-02 22:17:00"
+    },
+    {
+      "public_id": "enq-005",
+      "name": "Prakash Ghosh",
+      "email": "prakash.g@example.com",
+      "phone": "+91 98765 43210",
+      "subject": "Health camp registration",
+      "message": "Our housing society would like to host a diabetes screening camp. Who do we speak to?",
+      "source": "landing",
+      "department_id": null,
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": null,
+      "status": "new",
+      "priority": "normal",
+      "replies": [],
+      "internal_notes": [],
+      "received_at": "2026-08-04 14:02:00"
+    },
+    {
+      "public_id": "enq-006",
+      "name": "Anonymous",
+      "email": "noreply@spam.example",
+      "phone": null,
+      "subject": "SEO services for your hospital",
+      "message": "We can rank you #1 on Google in 30 days, guaranteed…",
+      "source": "contact",
+      "department_id": null,
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": null,
+      "status": "spam",
+      "priority": "low",
+      "replies": [],
+      "internal_notes": [
+        {
+          "by": "Admin Desk",
+          "at": "2026-08-01T10:00:00Z",
+          "body": "Marked as spam."
+        }
+      ],
+      "received_at": "2026-08-01 09:55:00"
+    },
+    {
+      "public_id": "enq-007",
+      "name": "Debarati Nath",
+      "email": "debarati.n@example.com",
+      "phone": "+91 91234 56789",
+      "subject": "Maternity package",
+      "message": "What is included in the normal delivery package, and does it change for a caesarean?",
+      "source": "chat",
+      "department_id": "prenatal-care",
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": null,
+      "status": "new",
+      "priority": "normal",
+      "replies": [],
+      "internal_notes": [],
+      "received_at": "2026-08-05 07:40:00"
+    },
+    {
+      "public_id": "enq-008",
+      "name": "Sourav Das",
+      "email": "sourav.das@example.com",
+      "phone": "+91 98300 45612",
+      "subject": "Reports from the cardiac screen",
+      "message": "The screen was done on the 2nd. When can we collect the reports, and can they be emailed?",
+      "source": "contact",
+      "department_id": "cardiology",
+      "doctor_id": null,
+      "preferred_date": null,
+      "assigned_to": "usr-002",
+      "status": "new",
+      "priority": "high",
+      "replies": [],
+      "internal_notes": [],
+      "received_at": "2026-08-05 05:30:00"
+    }
+  ]
+}

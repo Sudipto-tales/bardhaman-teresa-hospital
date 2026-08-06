@@ -1,0 +1,468 @@
+{
+  "table": "page_sections",
+  "key": null,
+  "refs": {
+    "page_id": [
+      "pages",
+      "slug"
+    ]
+  },
+  "json": [
+    "data"
+  ],
+  "rows": [
+    {
+      "page_id": "home",
+      "section_key": "hero",
+      "label": "Hero banner",
+      "enabled": 1,
+      "sort_order": 1,
+      "data": {
+        "eyebrow": "Bardhaman · Since 1994",
+        "title": "Compassionate care,",
+        "titleStrong": "every single day",
+        "lead": "A 210-bed multi-speciality hospital with a 24/7 emergency, twelve departments and a laboratory that reports the same day.",
+        "primaryLabel": "Book an appointment",
+        "primaryHref": "contact.html#book",
+        "ghostLabel": "Call emergency",
+        "ghostHref": "tel:+913423259999",
+        "image": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "about",
+      "label": "About strip",
+      "enabled": 1,
+      "sort_order": 2,
+      "data": {
+        "title": "Care that starts before the paperwork",
+        "body": "Emergency treatment begins before any payment discussion. The billing desk comes to you, not the other way round.",
+        "image": ""
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "care",
+      "label": "Why choose us",
+      "enabled": 1,
+      "sort_order": 3,
+      "data": {
+        "title": "Why families come back"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "services",
+      "label": "Services grid",
+      "enabled": 1,
+      "sort_order": 4,
+      "data": {
+        "title": "What we do",
+        "lead": "Twelve departments under one roof."
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "specialities",
+      "label": "Specialities",
+      "enabled": 1,
+      "sort_order": 5,
+      "data": {
+        "title": "Our specialities"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "why-us",
+      "label": "Numbers band",
+      "enabled": 1,
+      "sort_order": 6,
+      "data": {
+        "title": "The hospital in numbers"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "doctors",
+      "label": "Doctors strip",
+      "enabled": 1,
+      "sort_order": 7,
+      "data": {
+        "title": "Meet the consultants",
+        "limit": 6
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "lab-tests",
+      "label": "Lab tests block",
+      "enabled": 1,
+      "sort_order": 8,
+      "data": {
+        "title": "Popular tests",
+        "lead": "Home collection across Bardhaman town.",
+        "limit": 6
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "testimonials",
+      "label": "Testimonials",
+      "enabled": 1,
+      "sort_order": 9,
+      "data": {
+        "title": "What patients say"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "articles",
+      "label": "Latest articles",
+      "enabled": 1,
+      "sort_order": 10,
+      "data": {
+        "title": "From the blog",
+        "limit": 3
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "faq",
+      "label": "FAQ accordion",
+      "enabled": 1,
+      "sort_order": 11,
+      "data": {
+        "title": "Questions we are asked most",
+        "group": "Home"
+      }
+    },
+    {
+      "page_id": "home",
+      "section_key": "contact",
+      "label": "Contact band",
+      "enabled": 1,
+      "sort_order": 12,
+      "data": {
+        "title": "Come and see us"
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "story",
+      "label": "Our story",
+      "enabled": 1,
+      "sort_order": 1,
+      "data": {
+        "title": "Forty beds, one promise",
+        "body": "<p>The hospital opened in 1994 with forty beds and a promise that nobody would be turned away at the door for want of a deposit. Thirty-two years later the promise has not changed; the building has.</p>",
+        "image": "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1000&auto=format&fit=crop"
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "purpose",
+      "label": "Mission, vision, values",
+      "enabled": 1,
+      "sort_order": 2,
+      "data": {
+        "pillars": [
+          {
+            "icon": "fa-shield-halved",
+            "title": "Our Mission",
+            "text": "To care for our patients and their families at the moment it matters most, without asking first what they can pay."
+          },
+          {
+            "icon": "fa-eye",
+            "title": "Our Vision",
+            "text": "A district where nobody has to travel to Kolkata for treatment that should already be available at home."
+          },
+          {
+            "icon": "fa-heart",
+            "title": "Our Values",
+            "text": "Excellence, collaboration, accountability, respect and engagement — audited monthly, not framed on a wall."
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "values",
+      "label": "Values grid",
+      "enabled": 1,
+      "sort_order": 3,
+      "data": {
+        "title": "What we hold ourselves to",
+        "values": [
+          {
+            "icon": "fa-hand-holding-heart",
+            "title": "Care Before Paperwork",
+            "text": "Emergency treatment starts before any payment discussion. The billing desk comes to you, not the other way round."
+          },
+          {
+            "icon": "fa-eye",
+            "title": "Plain Answers",
+            "text": "Diagnosis, options and costs explained in the language you are most comfortable in, before anything is signed."
+          },
+          {
+            "icon": "fa-users",
+            "title": "One Team, One File",
+            "text": "Departments share a single record, so nobody has to repeat their history at every desk."
+          },
+          {
+            "icon": "fa-shield-halved",
+            "title": "Safety Audited",
+            "text": "Infection rates, surgical outcomes and complaint response times are reviewed every month."
+          },
+          {
+            "icon": "fa-clock",
+            "title": "Time Respected",
+            "text": "Appointment slots are real. If we are running late, you are told when you arrive — not after an hour."
+          },
+          {
+            "icon": "fa-scale-balanced",
+            "title": "The Same Standard",
+            "text": "General ward or private room, the clinical protocol does not change."
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "milestones",
+      "label": "Milestones",
+      "enabled": 1,
+      "sort_order": 4,
+      "data": {
+        "title": "Thirty-two years, one building at a time",
+        "milestones": [
+          {
+            "year": "1994",
+            "text": "Doors open with 40 beds"
+          },
+          {
+            "year": "2001",
+            "text": "First operating theatre"
+          },
+          {
+            "year": "2006",
+            "text": "Intensive care unit added"
+          },
+          {
+            "year": "2011",
+            "text": "Cath lab commissioned"
+          },
+          {
+            "year": "2014",
+            "text": "Dialysis unit opens"
+          },
+          {
+            "year": "2017",
+            "text": "Maternity block completed"
+          },
+          {
+            "year": "2019",
+            "text": "NABL-standard laboratory"
+          },
+          {
+            "year": "2021",
+            "text": "Neonatal nursery upgraded"
+          },
+          {
+            "year": "2023",
+            "text": "Modular theatres rebuilt"
+          },
+          {
+            "year": "2024",
+            "text": "Digital records go live"
+          },
+          {
+            "year": "2025",
+            "text": "Fourth theatre added"
+          },
+          {
+            "year": "2026",
+            "text": "210 beds across 20 units"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "leadership",
+      "label": "Leadership strip",
+      "enabled": 1,
+      "sort_order": 5,
+      "data": {
+        "title": "Who runs the hospital",
+        "category": "all"
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "in-practice",
+      "label": "Proof mosaic",
+      "enabled": 1,
+      "sort_order": 6,
+      "data": {
+        "title": "In practice",
+        "photoA": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=900&auto=format&fit=crop",
+        "photoB": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=900&auto=format&fit=crop",
+        "rating": "4.8"
+      }
+    },
+    {
+      "page_id": "about",
+      "section_key": "careers-cta",
+      "label": "Careers call to action",
+      "enabled": 1,
+      "sort_order": 7,
+      "data": {
+        "title": "Work with us",
+        "body": "Two hundred and forty staff. The medical director knows your name and takes your call."
+      }
+    },
+    {
+      "page_id": "contact",
+      "section_key": "reach-us",
+      "label": "Reach us",
+      "enabled": 1,
+      "sort_order": 1,
+      "data": {
+        "title": "How to reach us",
+        "lead": "Numbers and addresses come from Contact Details in Settings."
+      }
+    },
+    {
+      "page_id": "contact",
+      "section_key": "appointment",
+      "label": "Appointment form",
+      "enabled": 1,
+      "sort_order": 2,
+      "data": {
+        "title": "Book an appointment",
+        "lead": "We call back within two working hours.",
+        "askDepartment": true,
+        "askDoctor": true,
+        "askDate": true,
+        "askReason": true,
+        "confirmation": "Thank you — the front desk will call you back within two working hours to confirm the slot."
+      }
+    },
+    {
+      "page_id": "contact",
+      "section_key": "location",
+      "label": "Map and directions",
+      "enabled": 1,
+      "sort_order": 3,
+      "data": {
+        "title": "Find us"
+      }
+    },
+    {
+      "page_id": "contact",
+      "section_key": "cta",
+      "label": "Emergency call to action",
+      "enabled": 1,
+      "sort_order": 4,
+      "data": {
+        "title": "In an emergency, do not wait",
+        "body": "Come straight to the emergency entrance on GT Road, or call the emergency line."
+      }
+    },
+    {
+      "page_id": "careers",
+      "section_key": "why-us",
+      "label": "Why work here",
+      "enabled": 1,
+      "sort_order": 1,
+      "data": {
+        "title": "Why people stay",
+        "checks": [
+          {
+            "text": "Salaries benchmarked twice a year"
+          },
+          {
+            "text": "Fully funded course fees for nursing staff"
+          },
+          {
+            "text": "Rotating shifts published a month ahead"
+          },
+          {
+            "text": "Subsidised treatment for staff families"
+          },
+          {
+            "text": "Crèche on site for the maternity block"
+          },
+          {
+            "text": "No unpaid overtime — logged and settled monthly"
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "careers",
+      "section_key": "what-we-offer",
+      "label": "What we offer",
+      "enabled": 1,
+      "sort_order": 2,
+      "data": {
+        "title": "What we offer",
+        "benefits": [
+          {
+            "icon": "fa-graduation-cap",
+            "title": "Paid To Keep Learning",
+            "text": "Course fees, exam leave and conference travel are funded for every clinical grade, not just consultants."
+          },
+          {
+            "icon": "fa-calendar-check",
+            "title": "Rosters You Can Plan Around",
+            "text": "Shifts are published four weeks ahead. Swaps are approved in a day, not argued over for a week."
+          },
+          {
+            "icon": "fa-hand-holding-medical",
+            "title": "Care For Your Family",
+            "text": "Staff, spouses, children and parents are treated here at heavily subsidised rates."
+          },
+          {
+            "icon": "fa-arrow-trend-up",
+            "title": "A Real Ladder",
+            "text": "Two thirds of our senior nursing posts were filled from inside. Every vacancy is advertised internally first."
+          },
+          {
+            "icon": "fa-scale-balanced",
+            "title": "Paid Properly",
+            "text": "Bands are reviewed against district and Kolkata rates twice a year. Overtime is logged and settled monthly."
+          },
+          {
+            "icon": "fa-people-group",
+            "title": "A Small Enough Place",
+            "text": "Two hundred and forty staff. The medical director knows your name and takes your call."
+          }
+        ]
+      }
+    },
+    {
+      "page_id": "careers",
+      "section_key": "openings",
+      "label": "Open roles",
+      "enabled": 1,
+      "sort_order": 3,
+      "data": {
+        "title": "Open roles",
+        "emptyMessage": "Nothing open right now. Send a CV anyway — we keep them on file for six months."
+      }
+    },
+    {
+      "page_id": "careers",
+      "section_key": "contact-hr",
+      "label": "Contact HR",
+      "enabled": 1,
+      "sort_order": 4,
+      "data": {
+        "title": "Talk to HR",
+        "email": "careers@teresamemorial.org"
+      }
+    }
+  ]
+}

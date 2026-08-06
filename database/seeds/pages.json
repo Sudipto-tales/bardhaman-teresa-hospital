@@ -1,0 +1,64 @@
+{
+  "table": "pages",
+  "key": "slug",
+  "refs": {},
+  "json": [],
+  "rows": [
+    {
+      "slug": "home",
+      "title": "Home",
+      "path": "website.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "path": "about.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "path": "contact.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "careers",
+      "title": "Careers",
+      "path": "careers.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "departments",
+      "title": "Departments",
+      "path": "departments.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "doctors",
+      "title": "Doctors",
+      "path": "doctors.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "facilities",
+      "title": "Facilities",
+      "path": "facilities.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    },
+    {
+      "slug": "blog",
+      "title": "Blog",
+      "path": "blog.html",
+      "status": "published",
+      "updated_at": "2026-08-04 18:29:00"
+    }
+  ]
+}

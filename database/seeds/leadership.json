@@ -1,0 +1,73 @@
+{
+  "table": "leadership",
+  "key": "slug",
+  "refs": {
+    "linked_doctor_id": [
+      "doctors",
+      "slug"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "slug": "medical-director",
+      "name": "Dr. Jonathon Ronan",
+      "title": "Medical Director",
+      "photo": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=500&auto=format&fit=crop",
+      "category": "management",
+      "message": "<p>We measure ourselves on the things families actually notice — how long you wait, whether anyone explained the plan, and whether the bill matched what you were told.</p>",
+      "linked_doctor_id": "dr-jonathon-ronan",
+      "sort_order": 1,
+      "status": "published",
+      "updated_at": "2026-07-14 10:00:00"
+    },
+    {
+      "slug": "chairman",
+      "name": "Debashish Teresa",
+      "title": "Chairman, Board of Trustees",
+      "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
+      "category": "board",
+      "message": "<p>The hospital was opened in 1994 with forty beds and one promise: nobody is turned away at the door for want of a deposit.</p>",
+      "linked_doctor_id": null,
+      "sort_order": 2,
+      "status": "published",
+      "updated_at": "2026-06-02 10:00:00"
+    },
+    {
+      "slug": "nursing-head",
+      "name": "Sister Maria Fernandes",
+      "title": "Head of Nursing",
+      "photo": "https://images.unsplash.com/photo-1594824436998-d40d9b4b0870?q=80&w=500&auto=format&fit=crop",
+      "category": "clinical-leadership",
+      "message": null,
+      "linked_doctor_id": null,
+      "sort_order": 3,
+      "status": "published",
+      "updated_at": "2026-05-18 10:00:00"
+    },
+    {
+      "slug": "operations-head",
+      "name": "Sanjay Bhattacharya",
+      "title": "Chief Operating Officer",
+      "photo": "https://images.unsplash.com/photo-1537368910025-702800faa86b?q=80&w=500&auto=format&fit=crop",
+      "category": "management",
+      "message": null,
+      "linked_doctor_id": null,
+      "sort_order": 4,
+      "status": "published",
+      "updated_at": "2026-05-18 10:00:00"
+    },
+    {
+      "slug": "quality-head",
+      "name": "Dr. Victor James",
+      "title": "Head of Clinical Quality",
+      "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
+      "category": "clinical-leadership",
+      "message": null,
+      "linked_doctor_id": "dr-victor-james",
+      "sort_order": 5,
+      "status": "draft",
+      "updated_at": "2026-08-01 10:00:00"
+    }
+  ]
+}

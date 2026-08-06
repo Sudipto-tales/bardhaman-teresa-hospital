@@ -1,0 +1,133 @@
+{
+  "table": "roles",
+  "key": "public_id",
+  "refs": {},
+  "json": [
+    "permissions"
+  ],
+  "rows": [
+    {
+      "public_id": "role-super",
+      "name": "Super Admin",
+      "description": "Everything, including users and settings.",
+      "permissions": {
+        "content": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ],
+        "pages": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ],
+        "careers": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ],
+        "growth": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ],
+        "system": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ]
+      },
+      "sort_order": 1
+    },
+    {
+      "public_id": "role-editor",
+      "name": "Content Editor",
+      "description": "Writes and publishes website content. No settings, no users.",
+      "permissions": {
+        "content": [
+          "view",
+          "create",
+          "edit",
+          "publish"
+        ],
+        "pages": [
+          "view",
+          "edit",
+          "publish"
+        ],
+        "careers": [
+          "view"
+        ],
+        "growth": [
+          "view",
+          "edit"
+        ],
+        "system": []
+      },
+      "sort_order": 2
+    },
+    {
+      "public_id": "role-doctor",
+      "name": "Doctor",
+      "description": "Edits their own profile and schedule only.",
+      "permissions": {
+        "content": [
+          "view",
+          "edit"
+        ],
+        "pages": [],
+        "careers": [],
+        "growth": [
+          "view"
+        ],
+        "system": []
+      },
+      "sort_order": 3
+    },
+    {
+      "public_id": "role-accounts",
+      "name": "Accounts",
+      "description": "Enquiries and appointments, for billing questions.",
+      "permissions": {
+        "content": [],
+        "pages": [],
+        "careers": [],
+        "growth": [
+          "view",
+          "edit"
+        ],
+        "system": []
+      },
+      "sort_order": 4
+    },
+    {
+      "public_id": "role-hr",
+      "name": "HR",
+      "description": "Vacancies and applications.",
+      "permissions": {
+        "content": [],
+        "pages": [],
+        "careers": [
+          "view",
+          "create",
+          "edit",
+          "delete",
+          "publish"
+        ],
+        "growth": [],
+        "system": []
+      },
+      "sort_order": 5
+    }
+  ]
+}

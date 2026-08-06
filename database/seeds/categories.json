@@ -1,0 +1,92 @@
+{
+  "table": "categories",
+  "key": "slug",
+  "refs": {},
+  "json": [],
+  "rows": [
+    {
+      "slug": "cardiology",
+      "name": "Cardiology",
+      "type": "category",
+      "description": "Heart health and emergency cardiac care",
+      "sort_order": 1
+    },
+    {
+      "slug": "maternity",
+      "name": "Maternity",
+      "type": "category",
+      "description": "Pregnancy, birth and the weeks after",
+      "sort_order": 2
+    },
+    {
+      "slug": "wellness",
+      "name": "Wellness",
+      "type": "category",
+      "description": "Everyday health and prevention",
+      "sort_order": 3
+    },
+    {
+      "slug": "nutrition",
+      "name": "Nutrition",
+      "type": "category",
+      "description": "Diet and therapeutic eating",
+      "sort_order": 4
+    },
+    {
+      "slug": "orthopedics",
+      "name": "Orthopedics",
+      "type": "category",
+      "description": "Bones, joints and recovery",
+      "sort_order": 5
+    },
+    {
+      "slug": "diagnostics",
+      "name": "Diagnostics",
+      "type": "category",
+      "description": "Tests, reports and what they mean",
+      "sort_order": 6
+    },
+    {
+      "slug": "pediatrics",
+      "name": "Pediatrics",
+      "type": "category",
+      "description": "Children’s health",
+      "sort_order": 7
+    },
+    {
+      "slug": "emergency",
+      "name": "Emergency",
+      "type": "category",
+      "description": "When to come straight in",
+      "sort_order": 8
+    },
+    {
+      "slug": "tag-heart-attack",
+      "name": "Heart Attack",
+      "type": "tag",
+      "description": null,
+      "sort_order": 9
+    },
+    {
+      "slug": "tag-prevention",
+      "name": "Prevention",
+      "type": "tag",
+      "description": null,
+      "sort_order": 10
+    },
+    {
+      "slug": "tag-recovery",
+      "name": "Recovery",
+      "type": "tag",
+      "description": null,
+      "sort_order": 11
+    },
+    {
+      "slug": "tag-first-aid",
+      "name": "First Aid",
+      "type": "tag",
+      "description": null,
+      "sort_order": 12
+    }
+  ]
+}

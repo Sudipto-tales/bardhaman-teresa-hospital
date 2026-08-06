@@ -137,6 +137,42 @@ screen and one dialog.
 
 ---
 
+## Seeding
+
+```
+node tools/seed-export.mjs     JS content sources → database/seeds/*.json
+php vayu seed                  JSON → rows
+```
+
+Nothing is retyped. Every row the database starts with already exists in this
+repo, in `tools/site-data.mjs` (what the static pages render), in
+`html/assets/jobs.js`, or in `html/admin/assets/data/*.js` (the admin
+prototype's seed). 372 rows across 26 tables.
+
+All the mapping — column names, merges, display label to stored value — is in
+the exporter, in JavaScript, next to the data. `database/Seeder.php` reads a
+file, resolves its foreign keys and inserts its rows; it knows nothing about
+the content. Each seed file carries its own `refs`, because the exporter has no
+database and writes foreign keys as the target's public key.
+
+Where two sources describe the same thing the richer one wins, and the
+exporter prints which at each run:
+
+| | |
+|---|---|
+| **departments** | The admin seed has all 12 records but only two filled in; `site-data.mjs` has 11 filled in, and those are what the 11 public pages render. Admin gives id, order, status, menu note and SEO; site-data gives the page content. |
+| **posts** | Admin outright — the only source with a body. |
+| **jobs** | The union. The two lists overlap in three of five ids each and neither contains the other, so taking either alone would drop vacancies one of the two currently shows. |
+| **counters** | 16 from the admin seed, plus 36 lifted out of the `stats[]` arrays on each department — which is what §13 says this table is for. |
+| **department_doctors** | From each doctor's own `departments` list, never from a department's `doctorIds` or site-data's `team[]`. Those two are display strips assembled from whatever doctor cards were handy; following them files an interventional cardiologist under nephrology. |
+
+Seeding is destructive: each table is emptied before it is filled, because a
+seeder that appends turns a second run into duplicate content.
+
+Seeded accounts get one password, generated per run and printed once. No hash
+is committed — a hash in the repository is a hash that reaches a production
+box.
+
 ## SQLite and MySQL
 
 One set of migrations runs on both. `config/migration.php` supplies the four

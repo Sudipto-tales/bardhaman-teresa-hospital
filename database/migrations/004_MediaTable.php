@@ -10,8 +10,11 @@
  * which is the only version that cannot go stale — and it is only ever needed
  * on one screen and one confirm dialog.
  *
- * `path` is relative to storage/uploads/. The public URL is derived from it,
- * so moving the upload directory does not rewrite every row.
+ * `url` is what every other table stores and every template renders. `path` is
+ * where an uploaded file sits under storage/uploads/, and is null for anything
+ * hosted elsewhere — the seeded library is a set of external image URLs, and a
+ * table that could only describe uploads would have nothing to say about them.
+ * Deleting a row only removes a file from disk when `path` is set.
  */
 class MediaTable extends Migration
 {
@@ -20,7 +23,8 @@ class MediaTable extends Migration
         $this->create('media', [
             $this->id(),
             'public_id VARCHAR(64) NOT NULL',
-            'path VARCHAR(255) NOT NULL',
+            'url VARCHAR(500) NOT NULL',
+            'path VARCHAR(255)',
             'filename VARCHAR(255) NOT NULL',
             'mime VARCHAR(120)',
             'alt VARCHAR(255)',

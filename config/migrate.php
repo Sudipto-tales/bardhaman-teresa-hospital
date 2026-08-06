@@ -106,6 +106,15 @@ function migration_reset(PDO $pdo, callable $out): void
     $pdo->exec('DROP TABLE IF EXISTS migrations');
 }
 
+/**
+ * Runs any migration that defines its own seed(), then database/Seeder.php,
+ * which loads the JSON the exporter writes.
+ *
+ * Both exist because they answer different questions. A migration's seed() is
+ * for a row its own table cannot work without. The Seeder is for content, and
+ * content does not belong in a migration — it changes for editorial reasons,
+ * not schema ones.
+ */
 function migration_seed(PDO $pdo, callable $out): int
 {
     $count = 0;
@@ -128,6 +137,13 @@ function migration_seed(PDO $pdo, callable $out): int
         $migration->seed();
         $out('  + ' . basename($file, '.php'));
         $count++;
+    }
+
+    $seeder = __BASEDIR__ . '/database/Seeder.php';
+
+    if (is_file($seeder)) {
+        require_once $seeder;
+        $count += (new Seeder($pdo, $out))->run();
     }
 
     return $count;

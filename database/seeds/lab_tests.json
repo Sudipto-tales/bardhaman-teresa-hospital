@@ -1,0 +1,205 @@
+{
+  "table": "lab_tests",
+  "key": "slug",
+  "refs": {},
+  "json": [
+    "includes"
+  ],
+  "rows": [
+    {
+      "slug": "lab-001",
+      "name": "Complete Blood Count",
+      "category": "test",
+      "icon": "fa-droplet",
+      "description": "Haemoglobin, white cells and platelets.",
+      "includes": [],
+      "price": 350,
+      "discount_price": 299,
+      "prep_instructions": "No fasting needed",
+      "report_time": "Same day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 1,
+      "status": "published"
+    },
+    {
+      "slug": "lab-002",
+      "name": "Lipid Profile",
+      "category": "test",
+      "icon": "fa-heart-pulse",
+      "description": "Total, HDL, LDL cholesterol and triglycerides.",
+      "includes": [],
+      "price": 700,
+      "discount_price": 599,
+      "prep_instructions": "Fasting 12 hours",
+      "report_time": "Same day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 2,
+      "status": "published"
+    },
+    {
+      "slug": "lab-003",
+      "name": "HbA1c",
+      "category": "test",
+      "icon": "fa-vial",
+      "description": "Three-month average blood sugar.",
+      "includes": [],
+      "price": 550,
+      "discount_price": 0,
+      "prep_instructions": "No fasting needed",
+      "report_time": "Same day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 3,
+      "status": "published"
+    },
+    {
+      "slug": "lab-004",
+      "name": "Thyroid Profile (T3 T4 TSH)",
+      "category": "test",
+      "icon": "fa-flask",
+      "description": "Full thyroid function panel.",
+      "includes": [],
+      "price": 800,
+      "discount_price": 699,
+      "prep_instructions": "Morning sample preferred",
+      "report_time": "Next day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 4,
+      "status": "published"
+    },
+    {
+      "slug": "lab-005",
+      "name": "Liver Function Test",
+      "category": "test",
+      "icon": "fa-flask-vial",
+      "description": "Enzymes, bilirubin and proteins.",
+      "includes": [],
+      "price": 750,
+      "discount_price": 0,
+      "prep_instructions": "Fasting 8 hours",
+      "report_time": "Same day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 5,
+      "status": "published"
+    },
+    {
+      "slug": "lab-006",
+      "name": "Kidney Function Test",
+      "category": "test",
+      "icon": "fa-droplet",
+      "description": "Urea, creatinine and electrolytes.",
+      "includes": [],
+      "price": 750,
+      "discount_price": 0,
+      "prep_instructions": "No fasting needed",
+      "report_time": "Same day",
+      "home_collection": 1,
+      "featured": 1,
+      "sort_order": 6,
+      "status": "published"
+    },
+    {
+      "slug": "pkg-basic",
+      "name": "Basic Health Check",
+      "category": "package",
+      "icon": "fa-clipboard-check",
+      "description": "An annual screen for adults with no known condition.",
+      "includes": [
+        {
+          "item": "Complete blood count"
+        },
+        {
+          "item": "Blood sugar (fasting)"
+        },
+        {
+          "item": "Lipid profile"
+        },
+        {
+          "item": "Urine routine"
+        },
+        {
+          "item": "ECG"
+        },
+        {
+          "item": "Physician consultation"
+        }
+      ],
+      "price": 2400,
+      "discount_price": 1799,
+      "prep_instructions": "Fasting 12 hours",
+      "report_time": "Same day",
+      "home_collection": 0,
+      "featured": 0,
+      "sort_order": 7,
+      "status": "published"
+    },
+    {
+      "slug": "pkg-cardiac",
+      "name": "Cardiac Screening Package",
+      "category": "package",
+      "icon": "fa-heart-circle-check",
+      "description": "For anyone over 40, or with a family history of heart disease.",
+      "includes": [
+        {
+          "item": "Lipid profile"
+        },
+        {
+          "item": "ECG"
+        },
+        {
+          "item": "Echocardiogram"
+        },
+        {
+          "item": "Treadmill test"
+        },
+        {
+          "item": "Cardiologist consultation"
+        }
+      ],
+      "price": 6500,
+      "discount_price": 4999,
+      "prep_instructions": "Fasting 12 hours, wear comfortable shoes",
+      "report_time": "Same day",
+      "home_collection": 0,
+      "featured": 0,
+      "sort_order": 8,
+      "status": "published"
+    },
+    {
+      "slug": "pkg-diabetic",
+      "name": "Diabetic Care Package",
+      "category": "package",
+      "icon": "fa-syringe",
+      "description": "Quarterly monitoring for a diagnosed diabetic.",
+      "includes": [
+        {
+          "item": "HbA1c"
+        },
+        {
+          "item": "Fasting and post-meal sugar"
+        },
+        {
+          "item": "Kidney function"
+        },
+        {
+          "item": "Eye screening"
+        },
+        {
+          "item": "Diet consultation"
+        }
+      ],
+      "price": 3200,
+      "discount_price": 2499,
+      "prep_instructions": "Fasting 12 hours",
+      "report_time": "Next day",
+      "home_collection": 0,
+      "featured": 0,
+      "sort_order": 9,
+      "status": "draft"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 3.2 — `tools/seed-export.mjs`, turning `site-data.mjs`,
-`html/assets/jobs.js` and `html/admin/assets/data/*.js` into
-`database/seeds/*.json`.
+**Next action:** 4.1 — `config/resources.php`, the registry describing each
+CRUD resource: table, public id field, writable fields, filters, sort
+whitelist, publish rules, dependency checks.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -63,8 +63,19 @@ reflection across eight cases.
 | # | Task | Status | Notes |
 |---|---|---|---|
 | 3.1 | Migrations for every table | done | 27 tables + `migrations`. Definitions and the JSON-column contract in [`02-schema.md`](02-schema.md) |
-| 3.2 | `tools/seed-export.mjs` | todo | Existing JS content → JSON; nothing retyped |
-| 3.3 | PHP seeder + verify row counts | todo | |
+| 3.2 | `tools/seed-export.mjs` | done | Existing JS content → JSON; nothing retyped. All the mapping lives here so the PHP side is a loader |
+| 3.3 | PHP seeder + verify row counts | done | 372 rows across 26 tables, no unresolved references |
+
+The two vacancy lists in the repo overlap in three of five ids each and neither
+contains the other, so the database takes the union — 7 jobs, and both the
+careers page and the panel still list what they list today.
+
+Three merges are recorded in the exporter's own output each run: departments
+(11 of 12 take their page content from `site-data.mjs`), counters (16 from the
+admin seed plus 36 lifted out of department `stats[]`), and jobs.
+
+Seeded accounts get one generated password, printed once. Nothing in the
+repository contains a hash.
 
 ## Phase 4 — API layer
 

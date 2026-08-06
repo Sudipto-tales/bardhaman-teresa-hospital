@@ -1,0 +1,150 @@
+{
+  "table": "seo_meta",
+  "key": null,
+  "refs": {
+    "entity_id": [
+      {
+        "doctor": [
+          "doctors",
+          "slug"
+        ],
+        "department": [
+          "departments",
+          "slug"
+        ],
+        "post": [
+          "posts",
+          "slug"
+        ],
+        "page": [
+          "pages",
+          "slug"
+        ]
+      },
+      "entity_type"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "entity_type": "doctor",
+      "entity_id": "dr-jonathon-ronan",
+      "meta_title": "Dr. Jonathon Ronan — Head of Cardiology",
+      "meta_description": "Interventional cardiologist with 22 years of experience, leading the cath lab and heart-failure clinic at Teresa Memorial Hospital.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "cardiology",
+      "meta_title": "Cardiology & Heart Care — Teresa Memorial Hospital",
+      "meta_description": "24/7 cath lab, cardiac ICU and a heart-failure clinic in Bardhaman. Six consultant cardiologists, median door-to-balloon of 52 minutes.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "neuro-surgery",
+      "meta_title": "Neuro Surgery & Spine Care — Teresa Memorial Hospital",
+      "meta_description": "Microsurgery, neuro-navigation and an eight-bed neuro ICU, with a 24/7 stroke pathway.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "post",
+      "entity_id": "blog-post",
+      "meta_title": "The six hours after chest pain — Teresa Memorial Hospital",
+      "meta_description": "What happens between the first symptom of a heart attack and the cath lab, and the part of it you control.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "home",
+      "meta_title": "Teresa Memorial Hospital — Compassionate Care, Every Day",
+      "meta_description": "Multi-speciality care, expert doctors, 24/7 emergency services and advanced lab facilities.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "about",
+      "meta_title": "About Teresa Memorial Hospital",
+      "meta_description": "A 210-bed multi-speciality hospital serving Bardhaman since 1994.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "contact",
+      "meta_title": "Contact Teresa Memorial Hospital",
+      "meta_description": "Phone numbers, address, directions and the appointment booking form.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "careers",
+      "meta_title": "Careers at Teresa Memorial Hospital",
+      "meta_description": "Open roles in nursing, medicine and administration, with salaries benchmarked twice a year.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "departments",
+      "meta_title": "Departments — Teresa Memorial Hospital",
+      "meta_description": "Twelve departments, from cardiology to dental care.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "doctors",
+      "meta_title": "Our Doctors — Teresa Memorial Hospital",
+      "meta_description": "Consultants across twelve specialities.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "facilities",
+      "meta_title": "Facilities — Teresa Memorial Hospital",
+      "meta_description": "Emergency, intensive care, theatres, laboratory and imaging.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "blog",
+      "meta_title": "Health articles — Teresa Memorial Hospital",
+      "meta_description": "Plain-language articles from our consultants.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": null
+    }
+  ]
+}

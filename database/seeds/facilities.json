@@ -1,0 +1,116 @@
+{
+  "table": "facilities",
+  "key": "slug",
+  "refs": {},
+  "json": [],
+  "rows": [
+    {
+      "slug": "fac-001",
+      "icon": "fa-truck-medical",
+      "title": "24/7 Emergency",
+      "text": "A resuscitation bay, triage nurse and duty physician on site every hour of the year.",
+      "image": null,
+      "sort_order": 1,
+      "status": "published"
+    },
+    {
+      "slug": "fac-002",
+      "icon": "fa-bed-pulse",
+      "title": "Intensive Care",
+      "text": "34 ICU beds across general, cardiac, neuro and neonatal units with one-to-one nursing.",
+      "image": null,
+      "sort_order": 2,
+      "status": "published"
+    },
+    {
+      "slug": "fac-003",
+      "icon": "fa-hospital",
+      "title": "Modular Operating Theatres",
+      "text": "Four laminar-flow theatres, one kept free at all times for emergencies.",
+      "image": null,
+      "sort_order": 3,
+      "status": "published"
+    },
+    {
+      "slug": "fac-004",
+      "icon": "fa-flask-vial",
+      "title": "Laboratory",
+      "text": "Pathology, microbiology and histopathology with same-day reporting on routine work.",
+      "image": null,
+      "sort_order": 4,
+      "status": "published"
+    },
+    {
+      "slug": "fac-005",
+      "icon": "fa-x-ray",
+      "title": "Radiology & Imaging",
+      "text": "Digital X-ray, ultrasound, colour Doppler and CT with consultant reporting.",
+      "image": null,
+      "sort_order": 5,
+      "status": "published"
+    },
+    {
+      "slug": "fac-006",
+      "icon": "fa-droplet",
+      "title": "Blood Bank Link",
+      "text": "Licensed storage with a direct line to the district blood bank for rare groups.",
+      "image": null,
+      "sort_order": 6,
+      "status": "published"
+    },
+    {
+      "slug": "fac-007",
+      "icon": "fa-pills",
+      "title": "24-Hour Pharmacy",
+      "text": "In-house pharmacy stocking every drug on the hospital formulary, day and night.",
+      "image": null,
+      "sort_order": 7,
+      "status": "published"
+    },
+    {
+      "slug": "fac-008",
+      "icon": "fa-person-walking",
+      "title": "Physiotherapy Unit",
+      "text": "A gym-equipped department running inpatient rounds and outpatient courses.",
+      "image": null,
+      "sort_order": 8,
+      "status": "published"
+    },
+    {
+      "slug": "fac-009",
+      "icon": "fa-ambulance",
+      "title": "Ambulance Fleet",
+      "text": "Six vehicles, two of them advanced life support with a paramedic on board.",
+      "image": null,
+      "sort_order": 9,
+      "status": "published"
+    },
+    {
+      "slug": "fac-010",
+      "icon": "fa-wheelchair",
+      "title": "Accessible Throughout",
+      "text": "Ramps, lifts and accessible toilets on every floor of the building.",
+      "image": null,
+      "sort_order": 10,
+      "status": "published"
+    },
+    {
+      "slug": "fac-011",
+      "icon": "fa-utensils",
+      "title": "Hospital Kitchen",
+      "text": "Therapeutic diets cooked on site — renal, cardiac, diabetic and post-surgical.",
+      "image": null,
+      "sort_order": 11,
+      "status": "published"
+    },
+    {
+      "slug": "fac-012",
+      "icon": "fa-wifi",
+      "title": "Visitor Amenities",
+      "text": "Free Wi-Fi, a cafeteria, prayer room and an attendant lounge on the ground floor.",
+      "image": null,
+      "sort_order": 12,
+      "status": "published"
+    }
+  ]
+}

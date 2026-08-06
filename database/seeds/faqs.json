@@ -1,0 +1,76 @@
+{
+  "table": "faqs",
+  "key": "public_id",
+  "refs": {
+    "department_id": [
+      "departments",
+      "slug"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "public_id": "faq-001",
+      "question": "Do I need an appointment for the emergency department?",
+      "answer": "<p>No. Emergency is open every hour of the year and works on clinical triage, not appointments. Come straight in.</p>",
+      "faq_group": "home",
+      "department_id": null,
+      "sort_order": 1,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-002",
+      "question": "Which insurance companies are you empanelled with?",
+      "answer": "<p>We are empanelled with all major TPAs and with Swasthya Sathi. Bring your card and a photo ID to the insurance desk on the ground floor.</p>",
+      "faq_group": "home",
+      "department_id": null,
+      "sort_order": 2,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-003",
+      "question": "Can I book a doctor’s appointment online?",
+      "answer": "<p>Yes — use the booking form on the contact page, or call reception. You will get a confirmation call within two working hours.</p>",
+      "faq_group": "home",
+      "department_id": null,
+      "sort_order": 3,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-004",
+      "question": "What are the visiting hours?",
+      "answer": "<p>General wards: 5pm to 7pm daily. ICU: one attendant, 6pm to 6.30pm. Maternity has its own arrangement — ask the ward sister.</p>",
+      "faq_group": "home",
+      "department_id": null,
+      "sort_order": 4,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-005",
+      "question": "Is treatment started before payment?",
+      "answer": "<p>Yes. Emergency treatment begins before any payment discussion. The billing desk comes to you afterwards.</p>",
+      "faq_group": "home",
+      "department_id": null,
+      "sort_order": 5,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-006",
+      "question": "Do you offer home sample collection?",
+      "answer": "<p>For most routine blood tests, yes, within Bardhaman town. Book by phone before 9am for a same-day visit.</p>",
+      "faq_group": "contact",
+      "department_id": "lab-diagnostics",
+      "sort_order": 6,
+      "status": "published"
+    },
+    {
+      "public_id": "faq-007",
+      "question": "Where can I park?",
+      "answer": "<p>There is free parking for sixty cars behind the main block, with an ambulance-only lane at the front entrance.</p>",
+      "faq_group": "contact",
+      "department_id": null,
+      "sort_order": 7,
+      "status": "published"
+    }
+  ]
+}

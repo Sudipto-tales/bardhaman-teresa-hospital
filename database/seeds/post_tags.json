@@ -1,0 +1,49 @@
+{
+  "table": "post_tags",
+  "key": null,
+  "refs": {
+    "post_id": [
+      "posts",
+      "slug"
+    ],
+    "category_id": [
+      "categories",
+      "slug"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "post_id": "blog-post",
+      "category_id": "tag-heart-attack"
+    },
+    {
+      "post_id": "blog-post",
+      "category_id": "tag-prevention"
+    },
+    {
+      "post_id": "preparing-for-baby",
+      "category_id": "tag-prevention"
+    },
+    {
+      "post_id": "postpartum-care",
+      "category_id": "tag-recovery"
+    },
+    {
+      "post_id": "self-care-stress",
+      "category_id": "tag-prevention"
+    },
+    {
+      "post_id": "after-knee-replacement",
+      "category_id": "tag-recovery"
+    },
+    {
+      "post_id": "childhood-fever",
+      "category_id": "tag-first-aid"
+    },
+    {
+      "post_id": "stroke-four-hour-window",
+      "category_id": "tag-first-aid"
+    }
+  ]
+}

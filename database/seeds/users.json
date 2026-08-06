@@ -1,0 +1,97 @@
+{
+  "table": "users",
+  "key": "public_id",
+  "refs": {
+    "role_id": [
+      "roles",
+      "public_id"
+    ]
+  },
+  "json": [],
+  "rows": [
+    {
+      "public_id": "usr-001",
+      "name": "Admin Desk",
+      "email": "admin@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-super",
+      "phone": "+91 342 325 4567",
+      "two_factor": 1,
+      "status": "active",
+      "last_active_at": "2026-08-05 08:40:00"
+    },
+    {
+      "public_id": "usr-002",
+      "name": "Riya Sarkar",
+      "email": "riya.sarkar@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-editor",
+      "phone": null,
+      "two_factor": 1,
+      "status": "active",
+      "last_active_at": "2026-08-05 07:10:00"
+    },
+    {
+      "public_id": "usr-003",
+      "name": "Dr. Jonathon Ronan",
+      "email": "j.ronan@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-doctor",
+      "phone": null,
+      "two_factor": 0,
+      "status": "active",
+      "last_active_at": "2026-08-04 18:20:00"
+    },
+    {
+      "public_id": "usr-004",
+      "name": "Billing Team",
+      "email": "billing@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-accounts",
+      "phone": null,
+      "two_factor": 1,
+      "status": "active",
+      "last_active_at": "2026-08-04 16:00:00"
+    },
+    {
+      "public_id": "usr-005",
+      "name": "Sanjay Bhattacharya",
+      "email": "s.bhattacharya@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-editor",
+      "phone": null,
+      "two_factor": 0,
+      "status": "active",
+      "last_active_at": "2026-07-30 09:00:00"
+    },
+    {
+      "public_id": "usr-006",
+      "name": "Old Intern",
+      "email": "intern2025@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-editor",
+      "phone": null,
+      "two_factor": 0,
+      "status": "suspended",
+      "last_active_at": "2026-06-01 09:00:00"
+    },
+    {
+      "public_id": "usr-007",
+      "name": "HR Desk",
+      "email": "hr@teresamemorial.org",
+      "password": null,
+      "avatar": null,
+      "role_id": "role-hr",
+      "phone": null,
+      "two_factor": 0,
+      "status": "invited",
+      "last_active_at": null
+    }
+  ]
+}

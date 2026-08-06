@@ -1,0 +1,1517 @@
+{
+  "table": "departments",
+  "key": "slug",
+  "refs": {},
+  "json": [
+    "chips",
+    "primary_cta",
+    "ghost_cta",
+    "intro_body",
+    "checks",
+    "badge",
+    "procedures",
+    "conditions"
+  ],
+  "rows": [
+    {
+      "slug": "cardiology",
+      "name": "Cardiology",
+      "icon": "fa-heart-pulse",
+      "menu_note": "6+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Cardiology &",
+      "title_strong": "Heart Care",
+      "lead": "A round-the-clock cath lab, non-invasive diagnostics and a heart-failure clinic — under one roof, staffed by six consultants.",
+      "chips": [
+        {
+          "text": "24/7 Cath Lab"
+        },
+        {
+          "text": "Door-to-balloon under 60 min"
+        },
+        {
+          "text": "Cardiac ICU — 12 beds"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Every minute of a cardiac event <strong>is treated like one</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Chest pain is triaged the moment it reaches our door. ECG within ten minutes, troponin at the bedside, and a cath lab team that is already gowning while the report prints."
+        },
+        {
+          "paragraph": "Beyond emergencies, the department runs scheduled clinics for hypertension, arrhythmia, valve disease and post-bypass rehabilitation — so the care does not stop at discharge."
+        }
+      ],
+      "checks": [
+        {
+          "text": "24/7 interventional cover"
+        },
+        {
+          "text": "On-site cardiac ICU"
+        },
+        {
+          "text": "Bedside echo and Doppler"
+        },
+        {
+          "text": "Structured cardiac rehab"
+        },
+        {
+          "text": "Pacemaker & device clinic"
+        },
+        {
+          "text": "Insurance desk on the floor"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-truck-medical",
+        "title": "Chest pain?",
+        "text": "Call +91 342 325 4567 — do not drive yourself."
+      },
+      "procedures": [
+        {
+          "icon": "fa-heart-circle-bolt",
+          "title": "Primary Angioplasty",
+          "text": "Emergency stenting for a heart attack in progress, available every hour of the year."
+        },
+        {
+          "icon": "fa-diagram-project",
+          "title": "Coronary Angiography",
+          "text": "Radial-access diagnostic imaging with same-day discharge for most patients."
+        },
+        {
+          "icon": "fa-wave-square",
+          "title": "Echocardiography",
+          "text": "Transthoracic, transesophageal and stress echo reported by the consultant who scanned you."
+        },
+        {
+          "icon": "fa-microchip",
+          "title": "Pacemaker Implantation",
+          "text": "Single, dual-chamber and biventricular devices, with a lifelong follow-up clinic."
+        },
+        {
+          "icon": "fa-person-running",
+          "title": "TMT & Holter",
+          "text": "Treadmill testing and 24-hour rhythm monitoring booked within 48 hours."
+        },
+        {
+          "icon": "fa-heart",
+          "title": "Heart Failure Clinic",
+          "text": "Weekly review, drug titration and fluid management to keep readmissions down."
+        }
+      ],
+      "conditions_title": "Conditions the cardiology team treats",
+      "conditions_lead": "If your symptom is on this list, book the cardiology clinic directly — you do not need a referral from another department first.",
+      "conditions": [
+        {
+          "text": "Coronary artery disease"
+        },
+        {
+          "text": "Heart attack (STEMI / NSTEMI)"
+        },
+        {
+          "text": "Angina"
+        },
+        {
+          "text": "Hypertension"
+        },
+        {
+          "text": "Heart failure"
+        },
+        {
+          "text": "Atrial fibrillation"
+        },
+        {
+          "text": "Valve disease"
+        },
+        {
+          "text": "Cardiomyopathy"
+        },
+        {
+          "text": "High cholesterol"
+        },
+        {
+          "text": "Congenital heart defects"
+        },
+        {
+          "text": "Palpitations"
+        },
+        {
+          "text": "Post-bypass follow-up"
+        }
+      ],
+      "sort_order": 1,
+      "status": "published",
+      "updated_at": "2026-07-29 11:20:00"
+    },
+    {
+      "slug": "neuro-surgery",
+      "name": "Neuro Surgery",
+      "icon": "fa-brain",
+      "menu_note": "2+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Neuro Surgery &",
+      "title_strong": "Spine Care",
+      "lead": "Microsurgery, neuro-navigation and a dedicated neuro ICU for brain, spine and nerve conditions.",
+      "chips": [
+        {
+          "text": "Neuro ICU — 8 beds"
+        },
+        {
+          "text": "Operating microscope"
+        },
+        {
+          "text": "Stroke pathway 24/7"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Precision work, <strong>on the most delicate tissue there is</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Neurosurgery leaves no margin for approximation. Every case is planned on thin-slice imaging, executed under the microscope and recovered in an ICU staffed by nurses trained only in neuro care."
+        },
+        {
+          "paragraph": "Suspected stroke bypasses the queue entirely: CT within twenty minutes of arrival, thrombolysis decision made by the consultant on call."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Neuro-navigation system"
+        },
+        {
+          "text": "Intra-operative monitoring"
+        },
+        {
+          "text": "24/7 stroke pathway"
+        },
+        {
+          "text": "Minimally invasive spine surgery"
+        },
+        {
+          "text": "Epilepsy and headache clinic"
+        },
+        {
+          "text": "On-site physiotherapy"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-bolt",
+        "title": "Stroke is time-critical",
+        "text": "Face drooping or slurred speech — come straight to Emergency."
+      },
+      "procedures": [
+        {
+          "icon": "fa-brain",
+          "title": "Craniotomy",
+          "text": "Tumour, haematoma and aneurysm surgery under the operating microscope."
+        },
+        {
+          "icon": "fa-bone",
+          "title": "Spinal Fusion",
+          "text": "Instrumented fusion for instability, deformity and degenerative collapse."
+        },
+        {
+          "icon": "fa-scissors",
+          "title": "Microdiscectomy",
+          "text": "Keyhole removal of a herniated disc, most patients walking the same evening."
+        },
+        {
+          "icon": "fa-droplet",
+          "title": "VP Shunt",
+          "text": "Hydrocephalus management for infants and adults, with a programmable valve."
+        },
+        {
+          "icon": "fa-hand-dots",
+          "title": "Nerve Decompression",
+          "text": "Carpal tunnel, ulnar nerve and other entrapment releases as day surgery."
+        },
+        {
+          "icon": "fa-head-side-virus",
+          "title": "Head Injury Care",
+          "text": "Trauma protocol from resuscitation through ICU to rehabilitation."
+        }
+      ],
+      "conditions_title": "Conditions the neuro team treats",
+      "conditions_lead": "Brain, spine and peripheral nerve — assessed by the same team that will operate, if surgery turns out to be the answer.",
+      "conditions": [
+        {
+          "text": "Brain tumours"
+        },
+        {
+          "text": "Stroke"
+        },
+        {
+          "text": "Slipped disc"
+        },
+        {
+          "text": "Spinal stenosis"
+        },
+        {
+          "text": "Head injury"
+        },
+        {
+          "text": "Hydrocephalus"
+        },
+        {
+          "text": "Epilepsy"
+        },
+        {
+          "text": "Trigeminal neuralgia"
+        },
+        {
+          "text": "Sciatica"
+        },
+        {
+          "text": "Spinal cord injury"
+        },
+        {
+          "text": "Aneurysm"
+        },
+        {
+          "text": "Chronic headache"
+        }
+      ],
+      "sort_order": 2,
+      "status": "published",
+      "updated_at": "2026-07-21 09:40:00"
+    },
+    {
+      "slug": "orthopedics",
+      "name": "Orthopedics",
+      "icon": "fa-bone",
+      "menu_note": "4+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Orthopedic",
+      "title_strong": "Surgery",
+      "lead": "Joint replacement, sports injury and trauma care — with physiotherapy starting the day after surgery.",
+      "chips": [
+        {
+          "text": "Laminar-flow theatre"
+        },
+        {
+          "text": "Day-one physiotherapy"
+        },
+        {
+          "text": "Trauma cover 24/7"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "The operation is half the job — <strong>walking again is the other half</strong>",
+      "intro_body": [
+        {
+          "paragraph": "A replaced joint only counts once it is being used. Physiotherapy is booked before surgery, starts the morning after it, and continues as an outpatient course until you are back to your own stairs."
+        },
+        {
+          "paragraph": "Trauma is covered around the clock: fractures are plated or nailed the same admission wherever the soft tissue allows."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Laminar-flow operating theatre"
+        },
+        {
+          "text": "Computer-navigated knee replacement"
+        },
+        {
+          "text": "Arthroscopic sports surgery"
+        },
+        {
+          "text": "On-site physiotherapy gym"
+        },
+        {
+          "text": "Fracture clinic twice weekly"
+        },
+        {
+          "text": "Digital X-ray in the department"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-person-cane",
+        "title": "Free gait assessment",
+        "text": "Walk-in screening every Saturday morning, no appointment."
+      },
+      "procedures": [
+        {
+          "icon": "fa-joint",
+          "title": "Total Knee Replacement",
+          "text": "Navigated implant positioning, with a rehabilitation plan agreed before admission."
+        },
+        {
+          "icon": "fa-person-walking",
+          "title": "Hip Replacement",
+          "text": "Primary and revision arthroplasty using cemented or uncemented implants."
+        },
+        {
+          "icon": "fa-camera",
+          "title": "Arthroscopy",
+          "text": "Keyhole ACL reconstruction, meniscus and rotator-cuff repair."
+        },
+        {
+          "icon": "fa-bone",
+          "title": "Fracture Fixation",
+          "text": "Plating, nailing and external fixation for trauma of any complexity."
+        },
+        {
+          "icon": "fa-hand",
+          "title": "Hand & Wrist Surgery",
+          "text": "Carpal tunnel release, tendon repair and small-joint reconstruction."
+        },
+        {
+          "icon": "fa-child-reaching",
+          "title": "Pediatric Orthopedics",
+          "text": "Club foot, growth-plate injury and limb deformity correction."
+        }
+      ],
+      "conditions_title": "Conditions the orthopedic team treats",
+      "conditions_lead": "Bone, joint, ligament and tendon — from a weekend sports tear to decades of wear.",
+      "conditions": [
+        {
+          "text": "Osteoarthritis"
+        },
+        {
+          "text": "Fractures"
+        },
+        {
+          "text": "ACL tear"
+        },
+        {
+          "text": "Rotator cuff injury"
+        },
+        {
+          "text": "Frozen shoulder"
+        },
+        {
+          "text": "Slipped disc"
+        },
+        {
+          "text": "Sciatica"
+        },
+        {
+          "text": "Osteoporosis"
+        },
+        {
+          "text": "Club foot"
+        },
+        {
+          "text": "Sports injuries"
+        },
+        {
+          "text": "Tennis elbow"
+        },
+        {
+          "text": "Carpal tunnel syndrome"
+        }
+      ],
+      "sort_order": 3,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "general-surgery",
+      "name": "General Surgery",
+      "icon": "fa-user-doctor",
+      "menu_note": "3+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "General &",
+      "title_strong": "Laparoscopic Surgery",
+      "lead": "Keyhole surgery for gallbladder, hernia and appendix — smaller scars, shorter stays.",
+      "chips": [
+        {
+          "text": "Laparoscopic first"
+        },
+        {
+          "text": "48-hour average stay"
+        },
+        {
+          "text": "Emergency theatre 24/7"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Keyhole wherever <strong>keyhole is the right answer</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Laparoscopic surgery is the default here, not an upgrade. Three small incisions instead of one long one means less pain, a lower infection risk and most patients home inside two days."
+        },
+        {
+          "paragraph": "Open surgery is still the correct choice for some cases, and we will say so plainly rather than convert halfway through for the sake of the brochure."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Laparoscopic gallbladder and hernia"
+        },
+        {
+          "text": "Emergency theatre around the clock"
+        },
+        {
+          "text": "Day-care procedure list"
+        },
+        {
+          "text": "Enhanced recovery protocol"
+        },
+        {
+          "text": "Stoma care and counselling"
+        },
+        {
+          "text": "Wound clinic twice weekly"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-hospital",
+        "title": "Home in two days",
+        "text": "Typical stay for a keyhole gallbladder removal."
+      },
+      "procedures": [
+        {
+          "icon": "fa-droplet",
+          "title": "Laparoscopic Cholecystectomy",
+          "text": "Keyhole gallbladder removal, usually discharged the next morning."
+        },
+        {
+          "icon": "fa-shield-halved",
+          "title": "Hernia Repair",
+          "text": "Mesh repair for inguinal, umbilical and incisional hernias."
+        },
+        {
+          "icon": "fa-bolt",
+          "title": "Appendicectomy",
+          "text": "Emergency keyhole appendix removal, theatre available at any hour."
+        },
+        {
+          "icon": "fa-ring",
+          "title": "Piles & Fistula Surgery",
+          "text": "Stapler haemorrhoidopexy and fistula procedures as day cases."
+        },
+        {
+          "icon": "fa-ribbon",
+          "title": "Breast Lump Surgery",
+          "text": "Biopsy, lumpectomy and mastectomy with oncology coordination."
+        },
+        {
+          "icon": "fa-bandage",
+          "title": "Wound & Abscess Care",
+          "text": "Drainage, debridement and diabetic-foot wound management."
+        }
+      ],
+      "conditions_title": "Conditions the surgical team treats",
+      "conditions_lead": "Abdominal pain that will not settle deserves a surgical opinion — not another course of antacids.",
+      "conditions": [
+        {
+          "text": "Gallstones"
+        },
+        {
+          "text": "Hernia"
+        },
+        {
+          "text": "Appendicitis"
+        },
+        {
+          "text": "Piles"
+        },
+        {
+          "text": "Anal fistula"
+        },
+        {
+          "text": "Breast lumps"
+        },
+        {
+          "text": "Thyroid swelling"
+        },
+        {
+          "text": "Abscess"
+        },
+        {
+          "text": "Diabetic foot"
+        },
+        {
+          "text": "Varicose veins"
+        },
+        {
+          "text": "Lipoma & cysts"
+        },
+        {
+          "text": "Bowel obstruction"
+        }
+      ],
+      "sort_order": 4,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "pediatric-surgery",
+      "name": "Pediatric Surgery",
+      "icon": "fa-child",
+      "menu_note": "2+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Pediatric",
+      "title_strong": "Surgery",
+      "lead": "Surgery for newborns, infants and children — in a ward built for parents to stay overnight.",
+      "chips": [
+        {
+          "text": "Parent stays overnight"
+        },
+        {
+          "text": "Neonatal surgery"
+        },
+        {
+          "text": "Play-led preparation"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Children are not <strong>small adults</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Doses, instruments, anaesthesia and recovery all work differently in a four-year-old. The pediatric theatre list is staffed by anaesthetists who work with children every week, not occasionally."
+        },
+        {
+          "paragraph": "A parent stays with the child throughout, including into the anaesthetic room. Preparation is done with picture books and play rather than a consent form pushed across a desk."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Parent stays overnight"
+        },
+        {
+          "text": "Pediatric anaesthesia team"
+        },
+        {
+          "text": "Neonatal surgical cover"
+        },
+        {
+          "text": "Play-led preparation"
+        },
+        {
+          "text": "Day-care surgery list"
+        },
+        {
+          "text": "Follow-up in the child clinic"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-hand-holding-heart",
+        "title": "You stay with them",
+        "text": "Right into the anaesthetic room — no exceptions asked for."
+      },
+      "procedures": [
+        {
+          "icon": "fa-shield-halved",
+          "title": "Hernia & Hydrocele",
+          "text": "The commonest childhood operation, done as a day case."
+        },
+        {
+          "icon": "fa-bolt",
+          "title": "Appendicectomy",
+          "text": "Emergency keyhole surgery for children with appendicitis."
+        },
+        {
+          "icon": "fa-baby",
+          "title": "Neonatal Surgery",
+          "text": "Correction of congenital defects in the first weeks of life."
+        },
+        {
+          "icon": "fa-droplet",
+          "title": "Undescended Testis",
+          "text": "Orchidopexy timed to protect future fertility."
+        },
+        {
+          "icon": "fa-circle-dot",
+          "title": "Circumcision",
+          "text": "Medical circumcision under short general anaesthesia."
+        },
+        {
+          "icon": "fa-bone",
+          "title": "Pediatric Trauma",
+          "text": "Fractures and injuries managed with growth plates in mind."
+        }
+      ],
+      "conditions_title": "Conditions the pediatric team treats",
+      "conditions_lead": "If you are unsure whether something needs surgery at all, book the clinic — most visits end with reassurance.",
+      "conditions": [
+        {
+          "text": "Inguinal hernia"
+        },
+        {
+          "text": "Hydrocele"
+        },
+        {
+          "text": "Undescended testis"
+        },
+        {
+          "text": "Appendicitis"
+        },
+        {
+          "text": "Phimosis"
+        },
+        {
+          "text": "Congenital defects"
+        },
+        {
+          "text": "Intussusception"
+        },
+        {
+          "text": "Tongue tie"
+        },
+        {
+          "text": "Pediatric fractures"
+        },
+        {
+          "text": "Burns"
+        },
+        {
+          "text": "Umbilical hernia"
+        },
+        {
+          "text": "Swallowed objects"
+        }
+      ],
+      "sort_order": 5,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "prenatal-care",
+      "name": "Prenatal Care",
+      "icon": "fa-baby",
+      "menu_note": "3+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Prenatal &",
+      "title_strong": "Maternity Care",
+      "lead": "From the first scan to the first feed — one team, one file, and a labour room that never closes.",
+      "chips": [
+        {
+          "text": "Labour rooms 24/7"
+        },
+        {
+          "text": "Level II nursery"
+        },
+        {
+          "text": "Birth companion welcome"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Nine months of care <strong>from the same faces</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Continuity matters more in maternity than almost anywhere else. The consultant who confirms the pregnancy runs the growth scans, writes the birth plan and is called when labour starts."
+        },
+        {
+          "paragraph": "A birth companion is welcome in the labour room. Ante-natal classes run every second Saturday and cover breathing, feeding and what the first fortnight at home is actually like."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Consultant-led antenatal clinic"
+        },
+        {
+          "text": "Growth and anomaly scans on site"
+        },
+        {
+          "text": "Level II neonatal nursery"
+        },
+        {
+          "text": "Birth companion allowed"
+        },
+        {
+          "text": "Lactation support after discharge"
+        },
+        {
+          "text": "Ante-natal classes fortnightly"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-heart",
+        "title": "Labour room open 24/7",
+        "text": "Come in at any hour — no appointment needed in labour."
+      },
+      "procedures": [
+        {
+          "icon": "fa-stethoscope",
+          "title": "Antenatal Check-ups",
+          "text": "A full schedule of visits, bloods and scans mapped out at your first appointment."
+        },
+        {
+          "icon": "fa-wave-square",
+          "title": "Ultrasound & Doppler",
+          "text": "Dating, anomaly and growth scans reported by the obstetrician who sees you."
+        },
+        {
+          "icon": "fa-baby",
+          "title": "Normal Delivery",
+          "text": "Midwife-led birth with consultant cover, in a private labour room."
+        },
+        {
+          "icon": "fa-hospital",
+          "title": "Caesarean Section",
+          "text": "Planned or emergency, with skin-to-skin contact in theatre wherever possible."
+        },
+        {
+          "icon": "fa-heart-pulse",
+          "title": "High-Risk Pregnancy",
+          "text": "Joint care with medicine or cardiology for diabetes, hypertension or heart disease."
+        },
+        {
+          "icon": "fa-person-breastfeeding",
+          "title": "Postnatal Care",
+          "text": "Six-week review, lactation help and contraception counselling."
+        }
+      ],
+      "conditions_title": "What the maternity team looks after",
+      "conditions_lead": "Straightforward or complicated, the pathway is the same — you are seen by a consultant, not a rotating registrar.",
+      "conditions": [
+        {
+          "text": "Routine pregnancy"
+        },
+        {
+          "text": "Gestational diabetes"
+        },
+        {
+          "text": "Pre-eclampsia"
+        },
+        {
+          "text": "Twin pregnancy"
+        },
+        {
+          "text": "Previous caesarean"
+        },
+        {
+          "text": "Recurrent miscarriage"
+        },
+        {
+          "text": "Anaemia in pregnancy"
+        },
+        {
+          "text": "Thyroid in pregnancy"
+        },
+        {
+          "text": "Preterm labour"
+        },
+        {
+          "text": "Breech presentation"
+        },
+        {
+          "text": "Infertility work-up"
+        },
+        {
+          "text": "Postnatal depression"
+        }
+      ],
+      "sort_order": 6,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "nephrology",
+      "name": "Nephrology",
+      "icon": "fa-droplet",
+      "menu_note": "2+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Medicine &",
+      "title_strong": "Nephrology",
+      "lead": "General internal medicine alongside a 16-station dialysis unit, running three shifts a day.",
+      "chips": [
+        {
+          "text": "16 dialysis stations"
+        },
+        {
+          "text": "Three shifts daily"
+        },
+        {
+          "text": "Transplant work-up"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Chronic care that <strong>fits around a working life</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Dialysis is not a one-off event, it is a schedule someone lives with for years. We run early-morning, afternoon and evening shifts so treatment can sit around a job rather than replace it."
+        },
+        {
+          "paragraph": "The general medicine side handles diabetes, thyroid, infection and the long tail of conditions that do not belong to any single organ specialty."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Three dialysis shifts daily"
+        },
+        {
+          "text": "Isolation stations available"
+        },
+        {
+          "text": "AV fistula creation on site"
+        },
+        {
+          "text": "Transplant work-up and referral"
+        },
+        {
+          "text": "Diabetes and thyroid clinics"
+        },
+        {
+          "text": "Dietician attached to the unit"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-calendar-check",
+        "title": "Regular slot guaranteed",
+        "text": "Fixed weekly chair times for every long-term patient."
+      },
+      "procedures": [
+        {
+          "icon": "fa-droplet",
+          "title": "Haemodialysis",
+          "text": "Bicarbonate dialysis on reverse-osmosis water, with single-use dialysers on request."
+        },
+        {
+          "icon": "fa-house-medical",
+          "title": "Peritoneal Dialysis",
+          "text": "Home-based CAPD, including catheter insertion and family training."
+        },
+        {
+          "icon": "fa-syringe",
+          "title": "Kidney Biopsy",
+          "text": "Ultrasound-guided biopsy with same-day histopathology dispatch."
+        },
+        {
+          "icon": "fa-link",
+          "title": "AV Fistula Surgery",
+          "text": "Access creation and salvage, planned so it matures before you need it."
+        },
+        {
+          "icon": "fa-vial",
+          "title": "Diabetes Clinic",
+          "text": "HbA1c-led review, insulin titration and foot screening in one visit."
+        },
+        {
+          "icon": "fa-notes-medical",
+          "title": "General Medicine OPD",
+          "text": "Fever, infection, thyroid, anaemia — the everyday work of a physician."
+        }
+      ],
+      "conditions_title": "Conditions the medicine team treats",
+      "conditions_lead": "Kidney disease rarely arrives alone. The physicians and nephrologists share a floor so a single visit covers both.",
+      "conditions": [
+        {
+          "text": "Chronic kidney disease"
+        },
+        {
+          "text": "Acute kidney injury"
+        },
+        {
+          "text": "Diabetes mellitus"
+        },
+        {
+          "text": "Hypertension"
+        },
+        {
+          "text": "Nephrotic syndrome"
+        },
+        {
+          "text": "Kidney stones"
+        },
+        {
+          "text": "Urinary infection"
+        },
+        {
+          "text": "Thyroid disorders"
+        },
+        {
+          "text": "Anaemia"
+        },
+        {
+          "text": "Electrolyte imbalance"
+        },
+        {
+          "text": "Fever of unknown origin"
+        },
+        {
+          "text": "Post-transplant follow-up"
+        }
+      ],
+      "sort_order": 7,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "ophthalmology",
+      "name": "Ophthalmology",
+      "icon": "fa-eye",
+      "menu_note": "2+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Ophthalmology &",
+      "title_strong": "Eye Surgery",
+      "lead": "Cataract, glaucoma and retina care with a dedicated eye theatre and same-day discharge.",
+      "chips": [
+        {
+          "text": "Phaco theatre"
+        },
+        {
+          "text": "Day-care surgery"
+        },
+        {
+          "text": "Retina screening"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Sight restored <strong>in a single morning</strong>",
+      "intro_body": [
+        {
+          "paragraph": "A routine cataract is admitted, operated and discharged the same day. Phacoemulsification through a two-millimetre incision means no stitches and, for most people, reading vision back within the week."
+        },
+        {
+          "paragraph": "The department also screens every diabetic patient in the hospital for retinopathy — catching damage while it is still reversible."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Dedicated eye operating theatre"
+        },
+        {
+          "text": "Phacoemulsification with foldable lens"
+        },
+        {
+          "text": "Diabetic retinopathy screening"
+        },
+        {
+          "text": "Glaucoma pressure clinic"
+        },
+        {
+          "text": "Optometry and spectacle advice"
+        },
+        {
+          "text": "Same-day discharge"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-eye",
+        "title": "Diabetic? Screen yearly.",
+        "text": "Free retina screening with any diabetes review."
+      },
+      "procedures": [
+        {
+          "icon": "fa-eye",
+          "title": "Cataract Surgery",
+          "text": "Stitchless phaco with a foldable intraocular lens, discharged the same day."
+        },
+        {
+          "icon": "fa-gauge-high",
+          "title": "Glaucoma Management",
+          "text": "Pressure monitoring, field testing and trabeculectomy when drops stop working."
+        },
+        {
+          "icon": "fa-bolt",
+          "title": "Retinal Laser",
+          "text": "Photocoagulation for diabetic retinopathy and retinal tears."
+        },
+        {
+          "icon": "fa-glasses",
+          "title": "Refraction & Optometry",
+          "text": "Full refraction with a prescription you can take anywhere."
+        },
+        {
+          "icon": "fa-droplet",
+          "title": "Dry Eye Clinic",
+          "text": "Tear-film assessment and long-term management for chronic irritation."
+        },
+        {
+          "icon": "fa-child",
+          "title": "Squint & Amblyopia",
+          "text": "Childhood squint correction and patching programmes."
+        }
+      ],
+      "conditions_title": "Conditions the eye team treats",
+      "conditions_lead": "Sudden loss of vision is an emergency — come to the department the same day, not at your next appointment.",
+      "conditions": [
+        {
+          "text": "Cataract"
+        },
+        {
+          "text": "Glaucoma"
+        },
+        {
+          "text": "Diabetic retinopathy"
+        },
+        {
+          "text": "Dry eye"
+        },
+        {
+          "text": "Squint"
+        },
+        {
+          "text": "Refractive error"
+        },
+        {
+          "text": "Conjunctivitis"
+        },
+        {
+          "text": "Retinal detachment"
+        },
+        {
+          "text": "Corneal ulcer"
+        },
+        {
+          "text": "Eye injury"
+        },
+        {
+          "text": "Watering eyes"
+        },
+        {
+          "text": "Age-related macular degeneration"
+        }
+      ],
+      "sort_order": 8,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "dental-care",
+      "name": "Dental Care",
+      "icon": "fa-tooth",
+      "menu_note": "2+ Doctors Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Dental &",
+      "title_strong": "Oral Health",
+      "lead": "Preventive, restorative and surgical dentistry — including implants and wisdom-tooth removal under sedation.",
+      "chips": [
+        {
+          "text": "Digital OPG on site"
+        },
+        {
+          "text": "Same-day extractions"
+        },
+        {
+          "text": "Sedation available"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "Dentistry without <strong>the dread</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Most people put off dental care because of what they expect it to feel like. Local anaesthesia is given time to work, sedation is offered for longer procedures, and nothing starts before you have seen the plan and the price."
+        },
+        {
+          "paragraph": "The clinic is inside the hospital, so patients on blood thinners or with cardiac history are treated with the relevant specialist a corridor away."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Digital OPG and IOPA imaging"
+        },
+        {
+          "text": "Painless extraction protocol"
+        },
+        {
+          "text": "Implants and crowns"
+        },
+        {
+          "text": "Root canal in a single sitting"
+        },
+        {
+          "text": "Scaling and gum therapy"
+        },
+        {
+          "text": "Written estimate before treatment"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-tooth",
+        "title": "Free first check-up",
+        "text": "Screening and OPG at no charge every first Monday."
+      },
+      "procedures": [
+        {
+          "icon": "fa-tooth",
+          "title": "Root Canal Treatment",
+          "text": "Rotary endodontics, usually completed in one sitting with a crown to follow."
+        },
+        {
+          "icon": "fa-screwdriver-wrench",
+          "title": "Dental Implants",
+          "text": "Titanium implants with guided placement and a three-month review schedule."
+        },
+        {
+          "icon": "fa-teeth",
+          "title": "Crowns & Bridges",
+          "text": "Zirconia and metal-ceramic restorations, shade-matched in the chair."
+        },
+        {
+          "icon": "fa-broom",
+          "title": "Scaling & Polishing",
+          "text": "Ultrasonic cleaning and gum therapy for bleeding or receding gums."
+        },
+        {
+          "icon": "fa-scissors",
+          "title": "Wisdom Tooth Removal",
+          "text": "Surgical extraction of impacted third molars, under sedation if preferred."
+        },
+        {
+          "icon": "fa-child",
+          "title": "Pediatric Dentistry",
+          "text": "Fluoride application, sealants and habit-breaking appliances for children."
+        }
+      ],
+      "conditions_title": "What the dental clinic handles",
+      "conditions_lead": "Routine or urgent — a broken tooth on a Sunday is handled through Emergency, not left until Monday.",
+      "conditions": [
+        {
+          "text": "Tooth decay"
+        },
+        {
+          "text": "Toothache"
+        },
+        {
+          "text": "Bleeding gums"
+        },
+        {
+          "text": "Impacted wisdom teeth"
+        },
+        {
+          "text": "Missing teeth"
+        },
+        {
+          "text": "Broken or chipped teeth"
+        },
+        {
+          "text": "Bad breath"
+        },
+        {
+          "text": "Jaw pain"
+        },
+        {
+          "text": "Mouth ulcers"
+        },
+        {
+          "text": "Teeth grinding"
+        },
+        {
+          "text": "Stained teeth"
+        },
+        {
+          "text": "Dental trauma"
+        }
+      ],
+      "sort_order": 9,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "lab-diagnostics",
+      "name": "Lab & Diagnostics",
+      "icon": "fa-flask-vial",
+      "menu_note": "Same-day reporting",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Laboratory &",
+      "title_strong": "Diagnostics",
+      "lead": "Pathology, radiology and imaging in one block — most reports back the same day, delivered to your phone.",
+      "chips": [
+        {
+          "text": "Same-day reports"
+        },
+        {
+          "text": "Home sample collection"
+        },
+        {
+          "text": "Reports by WhatsApp"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "A result you can act on <strong>before the day is out</strong>",
+      "intro_body": [
+        {
+          "paragraph": "Waiting three days for a blood report delays every decision that depends on it. Routine biochemistry and haematology are released within six hours, and critical values are phoned to the treating doctor immediately."
+        },
+        {
+          "paragraph": "Samples can be collected at home for anyone within eight kilometres — useful for elderly patients and anyone on a dialysis schedule."
+        }
+      ],
+      "checks": [
+        {
+          "text": "NABL-standard quality control"
+        },
+        {
+          "text": "Home sample collection"
+        },
+        {
+          "text": "Reports by WhatsApp and email"
+        },
+        {
+          "text": "Digital X-ray and ultrasound"
+        },
+        {
+          "text": "ECG and echo on site"
+        },
+        {
+          "text": "Critical values phoned immediately"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-mobile-screen",
+        "title": "Reports on your phone",
+        "text": "Delivered by WhatsApp the moment they are verified."
+      },
+      "procedures": [
+        {
+          "icon": "fa-vial",
+          "title": "Blood Chemistry",
+          "text": "Liver, kidney, lipid and thyroid panels with six-hour turnaround."
+        },
+        {
+          "icon": "fa-droplet",
+          "title": "Haematology",
+          "text": "Complete blood counts, coagulation studies and peripheral smears."
+        },
+        {
+          "icon": "fa-bacterium",
+          "title": "Microbiology",
+          "text": "Culture and sensitivity testing to target antibiotics properly."
+        },
+        {
+          "icon": "fa-x-ray",
+          "title": "Digital X-Ray",
+          "text": "Low-dose digital radiography with immediate image availability."
+        },
+        {
+          "icon": "fa-wave-square",
+          "title": "Ultrasound & Doppler",
+          "text": "Abdominal, obstetric and vascular scanning by a consultant radiologist."
+        },
+        {
+          "icon": "fa-microscope",
+          "title": "Histopathology",
+          "text": "Biopsy reporting with second-opinion referral where the case warrants."
+        }
+      ],
+      "conditions_title": "Popular test packages",
+      "conditions_lead": "Packages are priced as a bundle and can be booked without a prescription. Fasting requirements are texted the evening before.",
+      "conditions": [
+        {
+          "text": "Full body check-up"
+        },
+        {
+          "text": "Diabetes panel"
+        },
+        {
+          "text": "Thyroid profile"
+        },
+        {
+          "text": "Lipid profile"
+        },
+        {
+          "text": "Liver function"
+        },
+        {
+          "text": "Kidney function"
+        },
+        {
+          "text": "Anaemia panel"
+        },
+        {
+          "text": "Vitamin D & B12"
+        },
+        {
+          "text": "Pre-employment check"
+        },
+        {
+          "text": "Pregnancy profile"
+        },
+        {
+          "text": "Cardiac markers"
+        },
+        {
+          "text": "Fever panel"
+        }
+      ],
+      "sort_order": 10,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "nutrition",
+      "name": "Nutrition",
+      "icon": "fa-apple-whole",
+      "menu_note": "1 Doctor Available",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Food &",
+      "title_strong": "Nutrition",
+      "lead": "Clinical dietetics for inpatients and a weight, diabetes and child-growth clinic for everyone else.",
+      "chips": [
+        {
+          "text": "Diet plans in Bengali & English"
+        },
+        {
+          "text": "Ward rounds daily"
+        },
+        {
+          "text": "Child growth clinic"
+        }
+      ],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": "A diet plan you can <strong>actually cook at home</strong>",
+      "intro_body": [
+        {
+          "paragraph": "A plan written around foods nobody in the household eats gets abandoned in a week. Ours are built from what is already in your kitchen, priced for your budget and written in the language you read most easily."
+        },
+        {
+          "paragraph": "Inpatients are seen on the ward daily — renal, cardiac, diabetic and post-surgical diets are prepared in the hospital kitchen rather than outsourced."
+        }
+      ],
+      "checks": [
+        {
+          "text": "Plans in Bengali and English"
+        },
+        {
+          "text": "Renal and cardiac diets"
+        },
+        {
+          "text": "Child growth monitoring"
+        },
+        {
+          "text": "Pregnancy and lactation nutrition"
+        },
+        {
+          "text": "Tube-feed planning"
+        },
+        {
+          "text": "Follow-up by phone"
+        }
+      ],
+      "intro_img": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1000&auto=format&fit=crop",
+      "badge": {
+        "icon": "fa-weight-scale",
+        "title": "Free BMI screening",
+        "text": "Walk in any weekday between 10 AM and 12 noon."
+      },
+      "procedures": [
+        {
+          "icon": "fa-chart-line",
+          "title": "Weight Management",
+          "text": "Measured, gradual plans with fortnightly review — no crash protocols."
+        },
+        {
+          "icon": "fa-droplet",
+          "title": "Diabetes Diet Planning",
+          "text": "Carbohydrate counting matched to your insulin or tablet schedule."
+        },
+        {
+          "icon": "fa-kidneys",
+          "title": "Renal Nutrition",
+          "text": "Potassium, phosphate and fluid targets coordinated with the dialysis unit."
+        },
+        {
+          "icon": "fa-child-reaching",
+          "title": "Child Growth Clinic",
+          "text": "Growth-chart tracking, fussy-eating support and anaemia correction."
+        },
+        {
+          "icon": "fa-person-pregnant",
+          "title": "Maternal Nutrition",
+          "text": "Pregnancy and lactation plans built with the maternity team."
+        },
+        {
+          "icon": "fa-hospital-user",
+          "title": "Inpatient Dietetics",
+          "text": "Daily ward rounds and therapeutic meals cooked in the hospital kitchen."
+        }
+      ],
+      "conditions_title": "Who the nutrition clinic helps",
+      "conditions_lead": "Referral is not required. If any of the below applies, book directly at the front desk.",
+      "conditions": [
+        {
+          "text": "Obesity"
+        },
+        {
+          "text": "Type 2 diabetes"
+        },
+        {
+          "text": "Kidney disease"
+        },
+        {
+          "text": "High cholesterol"
+        },
+        {
+          "text": "Underweight children"
+        },
+        {
+          "text": "Anaemia"
+        },
+        {
+          "text": "Fatty liver"
+        },
+        {
+          "text": "PCOS"
+        },
+        {
+          "text": "Food allergies"
+        },
+        {
+          "text": "Post-surgical recovery"
+        },
+        {
+          "text": "Pregnancy nutrition"
+        },
+        {
+          "text": "Elderly malnutrition"
+        }
+      ],
+      "sort_order": 11,
+      "status": "published",
+      "updated_at": "2026-06-12 09:00:00"
+    },
+    {
+      "slug": "physiotherapy",
+      "name": "Physiotherapy",
+      "icon": "fa-person-walking",
+      "menu_note": "New",
+      "show_in_menu": 1,
+      "banner": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1600&auto=format&fit=crop",
+      "title_lead": "Physiotherapy &",
+      "title_strong": "Care",
+      "lead": "Inpatient rounds and outpatient rehabilitation courses.",
+      "chips": [],
+      "primary_cta": null,
+      "ghost_cta": null,
+      "intro_title": null,
+      "intro_body": [],
+      "checks": [],
+      "intro_img": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop",
+      "badge": null,
+      "procedures": [],
+      "conditions_title": "Conditions the physiotherapy team treats",
+      "conditions_lead": null,
+      "conditions": [],
+      "sort_order": 12,
+      "status": "draft",
+      "updated_at": "2026-06-12 09:00:00"
+    }
+  ]
+}
