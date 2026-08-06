@@ -9,84 +9,96 @@
       "name": "Cardiology",
       "type": "category",
       "description": "Heart health and emergency cardiac care",
-      "sort_order": 1
+      "sort_order": 1,
+      "status": "published"
     },
     {
       "slug": "maternity",
       "name": "Maternity",
       "type": "category",
       "description": "Pregnancy, birth and the weeks after",
-      "sort_order": 2
+      "sort_order": 2,
+      "status": "published"
     },
     {
       "slug": "wellness",
       "name": "Wellness",
       "type": "category",
       "description": "Everyday health and prevention",
-      "sort_order": 3
+      "sort_order": 3,
+      "status": "published"
     },
     {
       "slug": "nutrition",
       "name": "Nutrition",
       "type": "category",
       "description": "Diet and therapeutic eating",
-      "sort_order": 4
+      "sort_order": 4,
+      "status": "published"
     },
     {
       "slug": "orthopedics",
       "name": "Orthopedics",
       "type": "category",
       "description": "Bones, joints and recovery",
-      "sort_order": 5
+      "sort_order": 5,
+      "status": "published"
     },
     {
       "slug": "diagnostics",
       "name": "Diagnostics",
       "type": "category",
       "description": "Tests, reports and what they mean",
-      "sort_order": 6
+      "sort_order": 6,
+      "status": "published"
     },
     {
       "slug": "pediatrics",
       "name": "Pediatrics",
       "type": "category",
       "description": "Children’s health",
-      "sort_order": 7
+      "sort_order": 7,
+      "status": "published"
     },
     {
       "slug": "emergency",
       "name": "Emergency",
       "type": "category",
       "description": "When to come straight in",
-      "sort_order": 8
+      "sort_order": 8,
+      "status": "published"
     },
     {
       "slug": "tag-heart-attack",
       "name": "Heart Attack",
       "type": "tag",
       "description": null,
-      "sort_order": 9
+      "sort_order": 9,
+      "status": "published"
     },
     {
       "slug": "tag-prevention",
       "name": "Prevention",
       "type": "tag",
       "description": null,
-      "sort_order": 10
+      "sort_order": 10,
+      "status": "published"
     },
     {
       "slug": "tag-recovery",
       "name": "Recovery",
       "type": "tag",
       "description": null,
-      "sort_order": 11
+      "sort_order": 11,
+      "status": "published"
     },
     {
       "slug": "tag-first-aid",
       "name": "First Aid",
       "type": "tag",
       "description": null,
-      "sort_order": 12
+      "sort_order": 12,
+      "status": "published"
     }
   ]
 }

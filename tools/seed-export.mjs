@@ -206,6 +206,7 @@ function users() {
             two_factor: bool(u.twoFactor),
             status: userStatus(u.status),
             last_active_at: dt(u.lastActiveAt),
+            sort_order: u.order ?? 0,
         })),
         { key: 'public_id', refs: { role_id: ['roles', 'public_id'] } }
     );
@@ -461,6 +462,7 @@ function categories() {
             type: vocab('categories.type', c.type, { category: 'category', tag: 'tag' }, 'category'),
             description: str(c.description),
             sort_order: c.order ?? 0,
+            status: c.status ?? 'draft',
         })),
         { key: 'slug' }
     );
@@ -482,6 +484,7 @@ function posts() {
             published_at: dt(p.publishedAt),
             featured: bool(p.featured),
             views: p.views ?? 0,
+            sort_order: p.order ?? 0,
             status: p.status ?? 'draft',
             updated_at: dt(p.updatedAt),
         })),
@@ -677,6 +680,7 @@ function redirects() {
             code: r.code ?? 301,
             hits: r.hits ?? 0,
             active: bool(r.status !== 'hidden'),
+            sort_order: r.order ?? 0,
         })),
         { key: 'public_id' }
     );
@@ -764,6 +768,7 @@ function applications() {
             rating: num(a.rating),
             notes: [],
             applied_at: dt(a.appliedAt),
+            sort_order: a.order ?? 0,
         })),
         { key: 'public_id', refs: { job_id: ['jobs', 'slug'] }, json: ['notes'] }
     );
@@ -797,6 +802,7 @@ function enquiries() {
             replies: e.replies ?? [],
             internal_notes: e.internalNotes ?? [],
             received_at: dt(e.receivedAt),
+            sort_order: e.order ?? 0,
         })),
         {
             key: 'public_id',

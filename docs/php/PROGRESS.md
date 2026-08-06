@@ -1,8 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 4.1 — `config/resources.php`, the registry describing each
-CRUD resource: table, public id field, writable fields, filters, sort
-whitelist, publish rules, dependency checks.
+**Next action:** 4.2 — `api/controllers/ResourceController.php`, reading the
+registry and implementing the whole of `docs/07-api-contract.md`: list, get,
+create, patch, delete, restore, reorder, bulk.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -81,7 +81,7 @@ repository contains a hash.
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 4.1 | `config/resources.php` registry | todo | One registry, not twenty controllers |
+| 4.1 | `config/resources.php` registry | done | 18 resources. `php tools/check-resources.php` walks all 350 references against the live schema |
 | 4.2 | Generic `ResourceController` | todo | |
 | 4.3 | Auth / Settings / Media / Page / Popup controllers | todo | |
 | 4.4 | PublicIntake + application CV stream | todo | |

@@ -26,6 +26,7 @@
       "published_at": "2026-08-02 09:00:00",
       "featured": 1,
       "views": 4820,
+      "sort_order": 1,
       "status": "published",
       "updated_at": "2026-08-02 09:00:00"
     },
@@ -42,6 +43,7 @@
       "published_at": "2026-01-29 09:00:00",
       "featured": 0,
       "views": 2140,
+      "sort_order": 2,
       "status": "published",
       "updated_at": "2026-01-29 09:00:00"
     },
@@ -58,6 +60,7 @@
       "published_at": "2026-01-29 09:00:00",
       "featured": 0,
       "views": 1880,
+      "sort_order": 3,
       "status": "published",
       "updated_at": "2026-01-29 09:00:00"
     },
@@ -74,6 +77,7 @@
       "published_at": "2026-01-28 09:00:00",
       "featured": 0,
       "views": 1610,
+      "sort_order": 4,
       "status": "published",
       "updated_at": "2026-01-28 09:00:00"
     },
@@ -90,6 +94,7 @@
       "published_at": "2026-01-14 09:00:00",
       "featured": 0,
       "views": 2960,
+      "sort_order": 5,
       "status": "published",
       "updated_at": "2026-01-14 09:00:00"
     },
@@ -106,6 +111,7 @@
       "published_at": "2025-12-30 09:00:00",
       "featured": 0,
       "views": 3410,
+      "sort_order": 6,
       "status": "published",
       "updated_at": "2025-12-30 09:00:00"
     },
@@ -122,6 +128,7 @@
       "published_at": "2025-12-12 09:00:00",
       "featured": 0,
       "views": 5220,
+      "sort_order": 7,
       "status": "published",
       "updated_at": "2025-12-12 09:00:00"
     },
@@ -138,6 +145,7 @@
       "published_at": "2025-11-26 09:00:00",
       "featured": 0,
       "views": 4110,
+      "sort_order": 8,
       "status": "published",
       "updated_at": "2025-11-26 09:00:00"
     },
@@ -154,6 +162,7 @@
       "published_at": "2025-11-03 09:00:00",
       "featured": 0,
       "views": 3890,
+      "sort_order": 9,
       "status": "published",
       "updated_at": "2025-11-03 09:00:00"
     },
@@ -170,6 +179,7 @@
       "published_at": null,
       "featured": 0,
       "views": 0,
+      "sort_order": 10,
       "status": "draft",
       "updated_at": "2026-08-01 15:20:00"
     }

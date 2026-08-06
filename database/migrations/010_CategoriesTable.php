@@ -20,6 +20,7 @@ class CategoriesTable extends Migration
             "type VARCHAR(20) NOT NULL DEFAULT 'category'",
             'description VARCHAR(500)',
             'sort_order INT NOT NULL DEFAULT 0',
+            "status VARCHAR(20) NOT NULL DEFAULT 'draft'",
             'updated_by INT',
             $this->timestamps(),
         ]);

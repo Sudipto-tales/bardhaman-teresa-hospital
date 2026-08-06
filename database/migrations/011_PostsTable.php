@@ -30,6 +30,7 @@ class PostsTable extends Migration
             'published_at DATETIME',
             $this->bool('featured'),
             'views INT NOT NULL DEFAULT 0',
+            'sort_order INT NOT NULL DEFAULT 0',
             "status VARCHAR(20) NOT NULL DEFAULT 'draft'",
             'updated_by INT',
             $this->timestamps(),

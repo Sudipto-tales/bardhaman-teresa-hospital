@@ -21,6 +21,7 @@ class RedirectsTable extends Migration
             'code INT NOT NULL DEFAULT 301',
             'hits INT NOT NULL DEFAULT 0',
             $this->bool('active', true),
+            'sort_order INT NOT NULL DEFAULT 0',
             'updated_by INT',
             $this->timestamps(),
         ]);

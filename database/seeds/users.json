@@ -19,7 +19,8 @@
       "phone": "+91 342 325 4567",
       "two_factor": 1,
       "status": "active",
-      "last_active_at": "2026-08-05 08:40:00"
+      "last_active_at": "2026-08-05 08:40:00",
+      "sort_order": 1
     },
     {
       "public_id": "usr-002",
@@ -31,7 +32,8 @@
       "phone": null,
       "two_factor": 1,
       "status": "active",
-      "last_active_at": "2026-08-05 07:10:00"
+      "last_active_at": "2026-08-05 07:10:00",
+      "sort_order": 2
     },
     {
       "public_id": "usr-003",
@@ -43,7 +45,8 @@
       "phone": null,
       "two_factor": 0,
       "status": "active",
-      "last_active_at": "2026-08-04 18:20:00"
+      "last_active_at": "2026-08-04 18:20:00",
+      "sort_order": 3
     },
     {
       "public_id": "usr-004",
@@ -55,7 +58,8 @@
       "phone": null,
       "two_factor": 1,
       "status": "active",
-      "last_active_at": "2026-08-04 16:00:00"
+      "last_active_at": "2026-08-04 16:00:00",
+      "sort_order": 4
     },
     {
       "public_id": "usr-005",
@@ -67,7 +71,8 @@
       "phone": null,
       "two_factor": 0,
       "status": "active",
-      "last_active_at": "2026-07-30 09:00:00"
+      "last_active_at": "2026-07-30 09:00:00",
+      "sort_order": 5
     },
     {
       "public_id": "usr-006",
@@ -79,7 +84,8 @@
       "phone": null,
       "two_factor": 0,
       "status": "suspended",
-      "last_active_at": "2026-06-01 09:00:00"
+      "last_active_at": "2026-06-01 09:00:00",
+      "sort_order": 6
     },
     {
       "public_id": "usr-007",
@@ -91,7 +97,8 @@
       "phone": null,
       "two_factor": 0,
       "status": "invited",
-      "last_active_at": null
+      "last_active_at": null,
+      "sort_order": 7
     }
   ]
 }

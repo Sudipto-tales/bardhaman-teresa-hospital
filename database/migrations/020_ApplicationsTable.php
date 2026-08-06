@@ -47,6 +47,7 @@ class ApplicationsTable extends Migration
             'notified_at DATETIME',
             'notify_error VARCHAR(500)',
             'ip VARCHAR(45)',
+            'sort_order INT NOT NULL DEFAULT 0',
             'updated_by INT',
             $this->timestamps(),
         ]);

@@ -27,7 +27,8 @@
       "stage": "shortlisted",
       "rating": 4,
       "notes": [],
-      "applied_at": "2026-07-30 10:12:00"
+      "applied_at": "2026-07-30 10:12:00",
+      "sort_order": 1
     },
     {
       "public_id": "app-002",
@@ -45,7 +46,8 @@
       "stage": "new",
       "rating": 0,
       "notes": [],
-      "applied_at": "2026-08-01 08:44:00"
+      "applied_at": "2026-08-01 08:44:00",
+      "sort_order": 2
     },
     {
       "public_id": "app-003",
@@ -63,7 +65,8 @@
       "stage": "interview",
       "rating": 5,
       "notes": [],
-      "applied_at": "2026-07-29 16:20:00"
+      "applied_at": "2026-07-29 16:20:00",
+      "sort_order": 3
     },
     {
       "public_id": "app-004",
@@ -81,7 +84,8 @@
       "stage": "new",
       "rating": 0,
       "notes": [],
-      "applied_at": "2026-07-22 12:05:00"
+      "applied_at": "2026-07-22 12:05:00",
+      "sort_order": 4
     },
     {
       "public_id": "app-005",
@@ -99,7 +103,8 @@
       "stage": "new",
       "rating": 0,
       "notes": [],
-      "applied_at": "2026-08-02 09:30:00"
+      "applied_at": "2026-08-02 09:30:00",
+      "sort_order": 5
     },
     {
       "public_id": "app-006",
@@ -117,7 +122,8 @@
       "stage": "shortlisted",
       "rating": 4,
       "notes": [],
-      "applied_at": "2026-08-02 14:10:00"
+      "applied_at": "2026-08-02 14:10:00",
+      "sort_order": 6
     },
     {
       "public_id": "app-007",
@@ -135,7 +141,8 @@
       "stage": "rejected",
       "rating": 2,
       "notes": [],
-      "applied_at": "2026-07-02 11:00:00"
+      "applied_at": "2026-07-02 11:00:00",
+      "sort_order": 7
     }
   ]
 }

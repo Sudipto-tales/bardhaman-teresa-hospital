@@ -10,7 +10,8 @@
       "to_path": "/cardiology.html",
       "code": 301,
       "hits": 214,
-      "active": 1
+      "active": 1,
+      "sort_order": 1
     },
     {
       "public_id": "rdr-002",
@@ -18,7 +19,8 @@
       "to_path": "/doctors.html",
       "code": 301,
       "hits": 88,
-      "active": 1
+      "active": 1,
+      "sort_order": 2
     },
     {
       "public_id": "rdr-003",
@@ -26,7 +28,8 @@
       "to_path": "/careers.html",
       "code": 301,
       "hits": 41,
-      "active": 1
+      "active": 1,
+      "sort_order": 3
     },
     {
       "public_id": "rdr-004",
@@ -34,7 +37,8 @@
       "to_path": "/blog-post.html",
       "code": 301,
       "hits": 12,
-      "active": 0
+      "active": 0,
+      "sort_order": 4
     }
   ]
 }
