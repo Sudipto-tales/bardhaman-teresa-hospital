@@ -28,6 +28,30 @@ class DepartmentController extends SiteController
     }
 
     /**
+     * `/departments/{slug}` → `/{slug}`, permanently.
+     *
+     * The mega menu built that shape until it was corrected, and it is what
+     * anybody would guess from the listing's own URL. Serving the page at both
+     * addresses would be two URLs for one page; a 301 is one page with one
+     * address and an old link that still lands.
+     *
+     * An unknown slug falls through to show(), which answers it the way every
+     * other unknown path is answered — redirect table, then 404. Redirecting
+     * first would send a visitor to a second 404 to be told the same thing.
+     */
+    public function legacy(): void
+    {
+        $slug = (string) $this->param('slug', '');
+
+        if ($slug !== '' && department_by_slug($slug) !== null) {
+            /* redirect() exits. */
+            $this->redirect(base_url($slug), 301);
+        }
+
+        $this->show();
+    }
+
+    /**
      * One department.
      *
      * This is also the site's catch-all: `{slug}` is the last route, so an

@@ -31,6 +31,10 @@ class ViewRouteProvider extends RouteProvider
             'contact' => ['ContactController', 'index'],
 
             'departments' => ['DepartmentController', 'index'],
+            /* The nested form the mega menu used to build, and the shape
+               anybody would guess from the listing's own URL. It is not a
+               second address for the page — it is a 301 to the first. */
+            'departments/{slug}' => ['DepartmentController', 'legacy'],
             'doctors' => ['DoctorController', 'index'],
             'facilities' => ['FacilityController', 'index'],
 
@@ -39,6 +43,12 @@ class ViewRouteProvider extends RouteProvider
 
             'careers' => ['CareersController', 'index'],
             'careers/{slug}' => ['CareersController', 'show'],
+
+            /* The panel's front door. Both spellings, because a person typing
+               it will type either, and neither should be a 404. */
+            'admin' => ['AdminController', 'index'],
+            'admin/login' => ['AdminController', 'login'],
+            'admin/logout' => ['AdminController', 'logout'],
 
             /* Last. Anything else one segment long is looked up as a
                department, then as a redirect, then answered as a 404. */

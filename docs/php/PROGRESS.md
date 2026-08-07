@@ -1,8 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
 **Next action:** 5.1 — the admin components and the PHP shell scaffolder. The
-public site is finished: phases 4, 6 and 7 are done, and phase 5 is the only
-one that has not been started. Phase 8 follows it.
+public site is finished: phases 4, 6 and 7 are done, and `/admin` now has a
+sign-in (5.0). Phase 8 follows phase 5.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -250,10 +250,44 @@ byte for byte.
 
 | # | Task | Status | Notes |
 |---|---|---|---|
+| 5.0 | `/admin` sign-in | done | The front door only. `AdminController`, two views, the auth loop against `POST api/auth/login` |
 | 5.1 | Admin components + PHP shell scaffolder | todo | Port of `html/admin/tools/scaffold.mjs` |
-| 5.2 | 43 page shells + routes | todo | |
+| 5.2 | 43 page shells + routes | todo | `/admin` shows a placeholder until this lands |
 | 5.3 | `api.js` replaces `store.js` | todo | The only client-side change |
 | 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+
+### 5.0
+
+`/admin` had no route, so the one URL an administrator types answered 404, and
+there was no sign-in screen anywhere — the prototype under `html/` never had
+one, because `store.js` fakes a session.
+
+`AdminController` is the front door and nothing more. `/admin` renders the
+form, or the panel when there is a session; `/admin/login` is the same screen
+under the name people link to, and redirects when there is already a session
+rather than inviting somebody to sign in twice. Authentication is not
+reimplemented: the form posts to `POST api/auth/login`, which is rate limited,
+session-based, and the same endpoint `api.js` will call at 5.3.
+
+`/admin/logout` is a GET, unlike the API's CSRF-guarded `POST api/auth/logout`.
+Until 5.2 there is no panel JavaScript loaded to call the API version, and a
+session with no way out is worse than a forged link that signs somebody out.
+
+The screen borrows the site's document head — theme, fonts, stylesheets — but
+not `SiteController::page()`, which would put the public header, the department
+mega menu, the pre-footer and both popups around a sign-in form. It does not
+load `site/layout/scripts` either: GSAP, Lenis and website.js exist to animate
+markup that is not there. The `.adm-*` rules are appended to `assets/pages.css`
+rather than borrowed from `html/admin/assets/css/`, which is not served and is
+5.1's to port.
+
+Signed in, `/admin` says the panel screens are not built yet. It does not
+redirect into the prototype: that reads from a seeded JavaScript store and
+would look like a working panel that saves nothing.
+
+Verified live against SQLite: the full loop through the rendered form — sign
+in, land on the panel, sign out, land back on the form — plus `/admin/login`
+redirecting to `/admin` while a session exists, and `noindex,nofollow` on both.
 
 ## Phase 6 — Public site as components
 
@@ -293,6 +327,16 @@ not exist, and `DepartmentController` answers it through the redirect table and
 then the 404 page. `RouteManager` tries exact keys before patterns and a
 `{param}` never spans a `/`, so no literal route and no `blog/{slug}` can be
 swallowed by it.
+
+*Corrected afterwards:* `layout/mega-menu.php` was still building the nested
+form, so eleven links in the primary nav — the most-used route into a
+department page on the whole site — answered 404. The URL sweep in 6.3 walked
+the record tables and the route list; it did not walk the rendered pages, which
+is where the two shapes could disagree. `departments/{slug}` is now a route of
+its own that 301s to the root address when the slug is a real department and
+falls through to the ordinary 404 when it is not, so an old bookmark still
+lands and there is still one address per page. Every internal link on every
+page is now walked and answered: 52 unique URLs, none broken.
 
 **The redirect table runs where the 404 does, and nowhere else.** Checking it
 on every request would be one query on every page that was going to work
