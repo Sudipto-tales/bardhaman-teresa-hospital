@@ -1,8 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 5.4 — the end-to-end doctor loop. The panel's 41 screens are
-served, guarded and reading through `/api/*` (5.0–5.3); what is left is driving
-the loop `00-plan.md` calls done. Phase 8 follows phase 5.
+**Next action:** 8.1 — the security pass. Phases 4, 5, 6 and 7 are done: the
+public site is served from the database and the panel's 41 screens read and
+write through `/api/*`. Phase 8 is all that is left.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -254,7 +254,50 @@ byte for byte.
 | 5.1 | Admin components + PHP shell scaffolder | done | Five components, two screen bodies, and `tools/scaffold-admin.php` |
 | 5.2 | 41 page shells + routes | done | One route, one action; a screen exists if its shell does |
 | 5.3 | `api.js` replaces `store.js` | done | Plus a boot gate, and three vocabularies corrected |
-| 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+| 5.4 | End-to-end doctor loop verified | done | Driven through the panel's own UI in headless Chrome |
+
+### 5.4
+
+The loop `00-plan.md` names as the definition of done, driven through the
+panel's own UI rather than the API: add a doctor → **toast** ("Saved as draft")
+→ the row is in the list → reload, and it is still there because it is in
+SQLite → open the form, and it binds the record → edit the role, and the change
+comes back from `GET api/doctors/{slug}` → delete through the row menu and its
+confirm modal, and the record answers `NOT_FOUND` → **Undo** on the toast, and
+it is back under the same slug with the same name. Every step passed.
+
+Alongside it, the writes the doctor loop does not touch: a settings save
+patches only the group that changed and leaves the other five byte-identical; a
+reorder persists and reverses; a bulk hide followed by a bulk publish returns
+every id under `succeeded` and reports no failures; a real PNG uploads over
+multipart, lands under `assets/uploads/2026/08/` with a random name and is
+served over HTTP; and the topbar search answers from `GET api/search` with
+eight groups.
+
+All 41 screens were loaded in headless Chrome, signed in, with the console and
+the network watched. No exception, no console error and no failed request
+except one: `settings-contact` embeds a Google Maps iframe whose seeded `pb=`
+parameter is a placeholder, and Google answers it 400. That is the seed's
+content, not the panel.
+
+Every screen renders its records — the counts match the database row for row.
+Four render "Screen not built yet": `analytics`, `navigation`, `redirects` and
+`seo`. Those are the prototype's own stubs, 14 lines each in
+`html/admin/assets/js/pages/`, and were stubs before this conversion started.
+Their shells, routes and bundles exist; what is missing is the page script, and
+that is the same amount of missing it was on the design branch.
+
+The public site was re-checked afterwards: home, the fixed pages, a department,
+the blog, careers and contact all still answer 200.
+
+Two things found and left alone, both older than phase 5:
+
+* **A soft-deleted record keeps its slug.** Creating a doctor with the slug of
+  a deleted one is refused with "That value is already in use", against a record
+  the panel cannot show. Freeing the slug is what a hard delete would be for,
+  and there is no hard delete — deliberately, because Undo depends on it.
+* **`GET api/search` reaches media and pages** through `searchExtras()`, so
+  nothing was lost in moving the topbar search off the client-side scan.
 
 ### 5.3
 
