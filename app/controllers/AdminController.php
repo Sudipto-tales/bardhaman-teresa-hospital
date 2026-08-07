@@ -1,18 +1,23 @@
 <?php
 
 /**
- * The panel's front door.
+ * The panel's front door, and every screen behind it.
  *
  * `/admin` had no route at all, so the one URL every administrator types
- * answered 404. The panel screens themselves are phase 5 — this is the sign-in
- * that has to exist before any of them can, and the redirect that decides
- * which of the two a visitor sees.
+ * answered 404. 5.0 gave it a sign-in; 5.2 gives it the forty-one screens,
+ * through one action rather than forty-one.
+ *
+ * A screen exists if its shell exists — `app/page/admin/<screen>.php`, written
+ * by `tools/scaffold-admin.php`. There is deliberately no second list of valid
+ * screens here: a route table and a directory that have to agree are a route
+ * table and a directory that eventually do not, and the failure is a 404 on a
+ * page somebody can see in the sidebar.
  *
  * Authentication is not reimplemented here. The form posts to
- * `POST api/auth/login`, which is the same endpoint the panel's own JavaScript
- * will use at 5.3 — rate limited, session-based, and already the only place
- * that knows how a password is checked. This controller renders a page and
- * asks Auth whether there is a session; nothing more.
+ * `POST api/auth/login`, which is what the panel's own JavaScript calls too —
+ * rate limited, session-based, and already the only place that knows how a
+ * password is checked. This controller renders a page and asks Auth whether
+ * there is a session; nothing more.
  */
 class AdminController extends SiteController
 {
@@ -20,8 +25,11 @@ class AdminController extends SiteController
        department menu nor the pre-footer belongs on it. */
     protected string $active = '';
 
+    /** Where `/admin` and a fresh sign-in land. */
+    private const HOME = 'dashboard';
+
     /**
-     * `/admin` — the login screen, or the panel once there is a session.
+     * `/admin` — the sign-in screen, or the panel once there is a session.
      *
      * Not a redirect to `/admin/login`: a bookmark to `/admin` should open the
      * panel for somebody already signed in, and asking them to follow a
@@ -30,11 +38,38 @@ class AdminController extends SiteController
     public function index(): void
     {
         if (Auth::isAuthenticated()) {
-            $this->panel();
-            return;
+            $this->redirect(base_url('admin/' . self::HOME));
         }
 
         $this->loginPage();
+    }
+
+    /**
+     * `/admin/{screen}` — one of the forty-one.
+     *
+     * Three things and no more: refuse anyone without a session, find the
+     * shell, render it. Everything the screen shows still comes from
+     * `assets/admin/js/` (docs/php/06-decisions.md §1).
+     */
+    public function screen(): void
+    {
+        $screen = (string) $this->param('screen', '');
+
+        if (($canonical = $this->stripHtmlSuffix($screen)) !== null) {
+            $this->redirect($canonical, 301);
+        }
+
+        /* Anchored, and no dots: `$screen` goes straight into a file path. */
+        if (!preg_match('/^[a-z0-9-]+$/', $screen) || !$this->shellExists($screen)) {
+            $this->screenNotFound();
+            return;
+        }
+
+        if (!Auth::isAuthenticated()) {
+            $this->redirect(base_url('admin/login?next=' . urlencode($screen)));
+        }
+
+        render_view('/app/page/admin/' . $screen . '.php');
     }
 
     /**
@@ -56,11 +91,10 @@ class AdminController extends SiteController
     /**
      * `/admin/logout` — sign out, then back to the form.
      *
-     * A GET, unlike `POST api/auth/logout`. The API's version is what the
-     * panel's JavaScript calls and it is CSRF-guarded; this one exists so that
-     * a browser with no panel JavaScript loaded — which is every browser until
-     * 5.2 — still has a way out. It ends a session and can create nothing, so
-     * the worst a forged link achieves is signing somebody out.
+     * A GET, unlike `POST api/auth/logout`. The API's version is CSRF-guarded
+     * and is what a fetch would call; this one is a link, which is what the
+     * account menu in the topbar needs. It ends a session and can create
+     * nothing, so the worst a forged link achieves is signing somebody out.
      */
     public function logout(): void
     {
@@ -87,34 +121,91 @@ class AdminController extends SiteController
             'head' => ['title' => 'Sign in', 'noindex' => true],
             'csrf' => Csrf::token(),
             'action' => base_url('api/auth/login'),
-            'next' => base_url('admin'),
-        ]);
-    }
-
-    private function panel(): void
-    {
-        $user = Auth::user() ?? [];
-
-        $this->shell('admin/panel', [
-            'head' => ['title' => 'Panel', 'noindex' => true],
-            'user' => $user,
-            'logout' => base_url('admin/logout'),
+            'next' => base_url('admin/' . $this->nextScreen()),
         ]);
     }
 
     /**
-     * The panel's own chrome: the site's head and footer, and nothing between
-     * them but the screen.
+     * Where a successful sign-in lands: the screen the guard turned somebody
+     * away from, or the dashboard.
      *
-     * SiteController::page() is the wrong wrapper here — it renders the public
-     * header, the department mega menu, the pre-footer and both popups, none
-     * of which belong on a sign-in form. This takes the one part that does:
-     * the document head, so the theme, the fonts and the stylesheets are the
-     * site's own.
+     * `next` is a screen name, not a URL, and it is checked against the shells
+     * on disk before it is used. A login page that redirects to whatever it is
+     * handed is a phishing link that starts on the hospital's own domain.
+     */
+    private function nextScreen(): string
+    {
+        $next = (string) ($_GET['next'] ?? '');
+
+        return preg_match('/^[a-z0-9-]+$/', $next) && $this->shellExists($next)
+            ? $next
+            : self::HOME;
+    }
+
+    private function shellExists(string $screen): bool
+    {
+        return is_file(__BASEDIR__ . '/app/page/admin/' . $screen . '.php')
+            && !in_array($screen, ['login'], true);
+    }
+
+    /**
+     * `doctors.html` → the URL for `doctors`, or null when there is no suffix
+     * to strip.
      *
-     * `site/layout/scripts` is deliberately not rendered either. It loads GSAP,
-     * Lenis and website.js, all of which exist to animate a page whose markup
-     * is not here. The screens below carry their own script.
+     * The panel's navigation lives in `assets/admin/js/core/nav.js` and its
+     * links are still `doctors.html`, as are the ones the forty-one page
+     * scripts build — that file and the forty beside it are the reviewed
+     * JavaScript this port exists to keep (docs/php/06-decisions.md §1). So the
+     * router bends instead: the old address is served by redirecting to the new
+     * one, which is then what the address bar and any bookmark hold. Relative
+     * links resolve against `/admin/`, so a page script needs no base and no
+     * helper — `doctor-form.html?id=x` arrives here and leaves as
+     * `/admin/doctor-form?id=x`.
+     */
+    private function stripHtmlSuffix(string $screen): ?string
+    {
+        if (!str_ends_with($screen, '.html')) {
+            return null;
+        }
+
+        /* Rebuilt from $_GET rather than read from QUERY_STRING, because under
+           Apache the rewrite has already put `route` in there and it would
+           come back around in the redirect. */
+        $params = $_GET;
+        unset($params['route']);
+
+        return base_url('admin/' . substr($screen, 0, -5))
+            . ($params ? '?' . http_build_query($params) : '');
+    }
+
+    /**
+     * Plain text, not the site's 404: the panel's own error page would need
+     * the chrome, the chrome needs the JavaScript and a session, and a mistyped
+     * admin URL is seen by a member of staff rather than by a crawler.
+     */
+    private function screenNotFound(): void
+    {
+        http_response_code(404);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo "No such admin screen.\n";
+    }
+
+    /**
+     * The sign-in screen's chrome: the site's head, and nothing between it and
+     * the form.
+     *
+     * The forty-one screens behind the login use `app/components/admin/`, which
+     * is the panel's own chrome — its stylesheets, its sidebar, its scripts.
+     * The login has none of those: there is no session to render a sidebar for
+     * and no page script to load, so it borrows the site's head instead and is
+     * the one screen the scaffolder does not know about.
+     *
+     * SiteController::page() is the wrong wrapper for it too — it renders the
+     * public header, the department mega menu, the pre-footer and both popups,
+     * none of which belong on a sign-in form. This takes the one part that
+     * does. `site/layout/scripts` is deliberately not rendered either: it loads
+     * GSAP, Lenis and website.js, all of which exist to animate markup that is
+     * not here.
      */
     private function shell(string $body, array $data): void
     {

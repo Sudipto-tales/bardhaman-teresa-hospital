@@ -44,6 +44,25 @@ class ErrorController extends SiteController
             );
         }
 
+        /**
+         * A `.html` path with no row of its own is still the old site's
+         * address for something. Every page here was a file once —
+         * `/about.html`, `/cardiology.html`, `/blog-post.html` — and site_url()
+         * already knows how one of those maps onto a route, because the panel
+         * stores links in exactly that spelling and every template resolves
+         * them through it. The redirects table stays for the addresses that
+         * moved (`/heart.html` → `/cardiology`); this is for the ones that only
+         * lost an extension, which is all of them.
+         *
+         * It costs nothing on a path that was going to work, because nothing
+         * that works arrives here. The target has no extension left, so a
+         * missing page lands on the 404 for its clean address rather than
+         * bouncing.
+         */
+        if (str_ends_with(strtolower($path), '.html')) {
+            $this->redirect(site_url($path), 301);
+        }
+
         http_response_code(404);
 
         /* noindex, because a 404 that a crawler files under the URL it was

@@ -1,8 +1,9 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 5.1 — the admin components and the PHP shell scaffolder. The
-public site is finished: phases 4, 6 and 7 are done, and `/admin` now has a
-sign-in (5.0). Phase 8 follows phase 5.
+**Next action:** 5.3 — `api.js` in place of `store.js`. The public site is
+finished (phases 4, 6 and 7), and the panel's 41 screens are served and guarded
+(5.0–5.2); what they have no data to render is the last client-side change.
+Phase 8 follows phase 5.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -252,9 +253,72 @@ byte for byte.
 |---|---|---|---|
 | 5.0 | `/admin` sign-in | done | The front door only. `AdminController`, two views, the auth loop against `POST api/auth/login` |
 | 5.1 | Admin components + PHP shell scaffolder | done | Five components, two screen bodies, and `tools/scaffold-admin.php` |
-| 5.2 | 43 page shells + routes | todo | `/admin` shows a placeholder until this lands |
+| 5.2 | 41 page shells + routes | done | One route, one action; a screen exists if its shell does |
 | 5.3 | `api.js` replaces `store.js` | todo | The only client-side change |
 | 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+
+### 5.2
+
+Forty-one shells, not forty-three: that is how many screens the prototype has,
+and `settings-popups` being "the 43rd screen" in the phase 0 note counted the
+design's page list rather than the files. The sign-in makes 42 URLs under
+`/admin`; there is no forgot-password screen, because none was ever designed —
+`POST api/auth/forgot` answers, and nothing calls it yet.
+
+**One route and one action, and no list of valid screens anywhere.** A screen
+exists if `app/page/admin/<screen>.php` exists. A route table and a directory
+that have to agree are a route table and a directory that eventually do not,
+and the failure is a 404 on a page somebody can see in the sidebar.
+
+**There is no `admin/{screen}/{id}`**, though the plan sketched one. The panel
+addresses a record with `?id=`, never with a path segment, and a segment would
+change what every relative link its page scripts build resolves to.
+
+**`/admin/doctors.html` 301s to `/admin/doctors`.** Every link in `core/nav.js`
+and in the forty-one page scripts is still `doctors.html`, written when the
+panel was a folder of static files, and those files are the reviewed JavaScript
+this port exists to keep (§1 of [`06-decisions.md`](06-decisions.md)). So the
+router bends rather than the JavaScript: because the shells are served under
+`/admin/`, a page script's `location.href = 'doctor-form.html?id=x'` resolves to
+`/admin/doctor-form.html?id=x`, which arrives here and leaves as
+`/admin/doctor-form?id=x`. The address bar and any bookmark then hold the clean
+one. Two hundred and fifty-four link strings across forty-one files stayed
+untouched, and a page script needs no base URL and no helper.
+
+**A `.html` path on the public site now 301s to its clean address too**, from
+`ErrorController`, after the redirects table has been asked and before the 404.
+The panel's "View on site" buttons link to `../../doctors.html`, which resolves
+to `/doctors.html` from `/admin/anything`; so do the fifteen others like it, and
+so does every bookmark of the old static site. `site_url()` already knew how one
+of those maps onto a route — it is what every stored link in the panel is
+resolved through — so this is that function answering one more caller. It costs
+nothing on a path that was going to work, because nothing that works arrives at
+the 404. The redirects table stays for the addresses that actually moved
+(`/heart.html` → `/cardiology`); this is for the ones that only lost an
+extension.
+
+**The guard sends an unauthenticated request to `/admin/login?next=<screen>`,
+and `next` is a screen name rather than a URL.** It is checked against the
+shells on disk before it is used: a login page that redirects to whatever it is
+handed is a phishing link that starts on the hospital's own domain. Any query
+the original request carried is dropped — it is a row id or a filter, not worth
+the attack surface.
+
+`/admin` now redirects to `/admin/dashboard` when there is a session, and
+`app/page/admin/panel.php` — 5.0's "the screens are not built yet" placeholder —
+is deleted, because they are.
+
+Until 5.3 the shells still load `store.js`, which now has no seed to read. Every
+screen renders its chrome, its page head and an empty list. That is the honest
+state of the panel between these two commits and it is one word in
+`scripts.php` to move on from.
+
+Verified live against SQLite: all 41 screens answer 200 signed in with no PHP
+notice in the output and 302 to the sign-in when signed out; `/admin` lands on
+the dashboard; `/admin/doctor-form.html?id=dr-x` 301s to
+`/admin/doctor-form?id=dr-x`; an unknown screen is a plain-text 404;
+`/cardiology.html` and `/website.html` 301 to `/cardiology` and `/`; and every
+stylesheet and script the shells reference resolves.
 
 ### 5.1
 

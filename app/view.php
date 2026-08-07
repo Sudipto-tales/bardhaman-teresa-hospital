@@ -44,11 +44,19 @@ class ViewRouteProvider extends RouteProvider
             'careers' => ['CareersController', 'index'],
             'careers/{slug}' => ['CareersController', 'show'],
 
-            /* The panel's front door. Both spellings, because a person typing
-               it will type either, and neither should be a 404. */
+            /* The panel. `admin/{screen}` is the whole of it — a screen exists
+               if app/page/admin/<screen>.php does, so adding one is never also
+               remembering to add a route. The two literals above it are the
+               front door and the way out; both beat the pattern, whatever
+               order they are written in.
+
+               There is no `admin/{screen}/{id}`. The panel addresses a record
+               with `?id=`, never with a path segment, and a segment would
+               change what every relative link in the page scripts resolves to. */
             'admin' => ['AdminController', 'index'],
             'admin/login' => ['AdminController', 'login'],
             'admin/logout' => ['AdminController', 'logout'],
+            'admin/{screen}' => ['AdminController', 'screen'],
 
             /* Last. Anything else one segment long is looked up as a
                department, then as a redirect, then answered as a 404. */
