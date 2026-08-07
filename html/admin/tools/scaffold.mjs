@@ -25,14 +25,19 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FORCE = process.argv.includes('--force');
 
 /* Core module bundles, by screen type. Order matters: form.js calls into
-   repeater and media when it binds a record. */
+   repeater, media and multiselect when it binds a record. */
 const CORE = {
     plain: [],
     list: ['table'],
     media: ['media'],
-    form: ['repeater', 'media', 'fields', 'form'],
-    editor: ['repeater', 'media', 'editor', 'fields', 'form'],
-    listform: ['table', 'repeater', 'media', 'fields', 'form'],
+    form: ['repeater', 'media', 'multiselect', 'fields', 'form'],
+    editor: ['repeater', 'media', 'multiselect', 'editor', 'fields', 'form'],
+    listform: ['table', 'repeater', 'media', 'multiselect', 'fields', 'form'],
+    /* A list whose rows are edited in place with the rich pad — faqs.html,
+       where the answer is markup. It was scaffolded as `listform` and had
+       editor.js added to the file by hand, which held until the next --force
+       run silently took it away again. A bundle cannot be forgotten. */
+    listeditor: ['table', 'repeater', 'media', 'multiselect', 'editor', 'fields', 'form'],
 };
 
 /* Every seed file. Pages load all of them: cross-entity lookups (a post's
@@ -55,7 +60,7 @@ const PAGES = [
     ['blog-form',                 'blog',               'Write a post',            'editor'],
     ['blog-categories',           'blog-categories',    'Categories & Tags',       'listform'],
     ['testimonials',              'testimonials',       'Testimonials',            'listform'],
-    ['faqs',                      'faqs',               'FAQs',                    'listform'],
+    ['faqs',                      'faqs',               'FAQs',                    'listeditor'],
     ['gallery',                   'gallery',            'Media Gallery',           'media'],
 
     ['pages',                     'pages',              'All Pages',               'list'],

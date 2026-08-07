@@ -176,8 +176,18 @@
             fields.forEach((f) => {
                 const ctrl = row.querySelector(`[data-key="${CSS.escape(f.key)}"]`);
                 if (!ctrl) return;
-                out[f.key] = ctrl.type === 'checkbox' ? ctrl.checked
-                    : (f.type === 'number' ? Number(ctrl.value) : ctrl.value.trim());
+                if (ctrl.type === 'checkbox') {
+                    out[f.key] = ctrl.checked;
+                    return;
+                }
+                const raw = ctrl.value.trim();
+                /* Empty stays empty. Number('') is 0, which made a blank
+                   counter row read as a real counter worth zero — and the
+                   all-empty filter below then kept the row, because 0 is
+                   neither '' nor false. */
+                out[f.key] = f.type === 'number'
+                    ? (raw === '' || isNaN(Number(raw)) ? '' : Number(raw))
+                    : raw;
             });
             return out;
         }).filter((r) => Object.values(r).some((v) => v !== '' && v !== false));

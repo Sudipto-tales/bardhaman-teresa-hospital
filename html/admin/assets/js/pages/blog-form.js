@@ -129,7 +129,8 @@
                             ${F.select({ name: 'categoryId', label: 'Category', required: true,
                                 placeholderOption: 'Choose a category',
                                 options: cats.map((c) => ({ value: c.id, label: c.name })) })}
-                            ${F.select({ name: 'tags', label: 'Tags', multiple: true, size: 5,
+                            ${F.select({ name: 'tags', label: 'Tags', multiple: true,
+                                placeholder: 'Choose tags', searchPlaceholder: 'Search tags',
                                 options: tags.map((t) => ({ value: t.id, label: t.name })),
                                 hint: 'Tags drive the related-posts rail at the foot of the article.' })}
                             ${F.select({ name: 'authorId', label: 'Author', required: true,

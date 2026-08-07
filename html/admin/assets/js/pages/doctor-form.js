@@ -85,12 +85,16 @@
         });
     }
 
+    /* Before ctrl.bind(), so the multi-select already knows the labels for the
+       ids the record hands it — options that arrive later would have had their
+       chips dropped as unknown. */
     async function fillDepartments() {
         const rows = await store.all('departments');
-        document.getElementById('f-depts').innerHTML = rows
-            .sort((a, b) => (a.order || 0) - (b.order || 0))
-            .map((d) => `<option value="${U.esc(d.id)}">${U.esc(d.name)}</option>`)
-            .join('');
+        window.TMH.multiselect.setOptions(
+            document.getElementById('f-depts'),
+            rows.sort((a, b) => (a.order || 0) - (b.order || 0))
+                .map((d) => ({ value: d.id, label: d.name })),
+        );
     }
 
     /* Typing a name fills the slug — but only while the slug is untouched, so

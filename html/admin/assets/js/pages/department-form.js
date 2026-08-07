@@ -237,9 +237,11 @@
                             sub: 'Consultants shown in the team strip on this department page.',
                             fields: [
                                 F.select({
-                                    name: 'doctorIds', label: 'Consultants', multiple: true, size: 10, wide: true,
+                                    name: 'doctorIds', label: 'Consultants', multiple: true, wide: true,
+                                    placeholder: 'Choose consultants',
+                                    searchPlaceholder: 'Search doctors',
                                     options: doctors.map((d) => ({ value: d.id, label: `${d.name} — ${d.role}` })),
-                                    hint: 'Ctrl/Cmd-click for more than one. A doctor can belong to several departments. <a href="doctors.html">Manage doctors</a>.',
+                                    hint: 'A doctor can belong to several departments. <a href="doctors.html">Manage doctors</a>.',
                                 }),
                             ],
                         })}

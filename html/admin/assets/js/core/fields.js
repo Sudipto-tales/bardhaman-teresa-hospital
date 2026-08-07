@@ -25,8 +25,20 @@
         if (o.requiredToPublish) out.push('data-required-to-publish');
         if (o.requiredMessage) out.push(`data-required-message="${esc(o.requiredMessage)}"`);
         if (o.rule) out.push(`data-rule="${esc(o.rule)}"`);
-        if (o.max) out.push(`data-max="${esc(o.max)}"`);
-        if (o.min !== undefined) out.push(`min="${esc(o.min)}"`);
+        /* `max` means two different things depending on the control, and
+           conflating them put a "3 / 730" character counter under a number
+           box. On a number input it is the largest allowed value; on anything
+           that holds prose it is the soft character limit the meter counts
+           against. */
+        if (o.max !== undefined) {
+            out.push(o.type === 'number'
+                ? `max="${esc(o.max)}" data-max-value="${esc(o.max)}"`
+                : `data-max="${esc(o.max)}"`);
+        }
+        /* Both spellings: the attribute so the control's own spinner respects
+           it, and the data- copy that core/form.js validates against — the
+           forms are all novalidate, so the attribute alone enforces nothing. */
+        if (o.min !== undefined) out.push(`min="${esc(o.min)}" data-min="${esc(o.min)}"`);
         if (o.step) out.push(`step="${esc(o.step)}"`);
         if (o.placeholder) out.push(`placeholder="${esc(o.placeholder)}"`);
         if (o.matchAfter) out.push(`data-match-after="${esc(o.matchAfter)}"`);
@@ -84,14 +96,44 @@
         },
 
         select(o) {
+            if (o.multiple) return F.multiselect(o);
             const c = Object.assign({ id: o.name }, o);
             const opts = (o.options || []).map((op) => {
                 const v = typeof op === 'string' ? op : op.value;
                 const l = typeof op === 'string' ? op : op.label;
                 return `<option value="${esc(v)}">${esc(l)}</option>`;
             }).join('');
-            return shell(c, `<select ${attrs(c)} ${o.multiple ? `multiple size="${esc(o.size || 6)}"` : ''}>${
+            return shell(c, `<select ${attrs(c)}>${
                 o.placeholderOption ? `<option value="">${esc(o.placeholderOption)}</option>` : ''}${opts}</select>`);
+        },
+
+        /**
+         * Many-of-a-list, as chips rather than a Ctrl-click list box.
+         * core/multiselect.js builds the control inside this host and keeps
+         * the hidden input — the thing core/form.js binds and validates — in
+         * step. Reached through select({multiple: true}) as well.
+         */
+        multiselect(o) {
+            const options = (o.options || []).map((op) => (typeof op === 'string'
+                ? { value: op, label: op }
+                : { value: op.value, label: op.label }));
+            const json = (v) => JSON.stringify(v).replace(/'/g, '&#39;');
+
+            return `
+            <div class="field${o.wide ? ' field--wide' : ''}">
+                ${o.label ? `<label>${esc(o.label)}${o.required ? ' <span class="field__req">*</span>' : ''}${
+                    o.help ? ` <span class="help" title="${esc(o.help)}">?</span>` : ''}</label>` : ''}
+                <div class="multiselect" data-multiselect="${esc(o.name)}"
+                     data-options='${json(options)}'
+                     data-placeholder="${esc(o.placeholder || 'Choose')}"
+                     data-search-placeholder="${esc(o.searchPlaceholder || 'Search')}">
+                    <input type="hidden" name="${esc(o.name)}"
+                        ${o.required ? 'required' : ''}
+                        ${o.requiredToPublish ? 'data-required-to-publish' : ''}
+                        data-required-message="${esc(o.requiredMessage || 'Pick at least one')}">
+                </div>
+                ${o.hint ? `<small>${o.hint}</small>` : ''}
+            </div>`;
         },
 
         /* The status select every content form ends with. */

@@ -73,7 +73,7 @@
 
                                 <div class="field">
                                     <label for="f-exp">Years of experience</label>
-                                    <input type="number" id="f-exp" name="experienceYears" min="0" placeholder="14">
+                                    <input type="number" id="f-exp" name="experienceYears" min="0" data-min="0" placeholder="14">
                                 </div>
 
                                 <div class="field">
@@ -101,9 +101,16 @@
 
                             <div class="form-grid">
                                 <div class="field">
-                                    <label for="f-depts">Departments</label>
-                                    <select id="f-depts" name="departments" multiple size="6"></select>
-                                    <small>Ctrl/Cmd-click to pick more than one.</small>
+                                    <label>Departments</label>
+                                    <!-- core/multiselect.js builds the control inside this host and
+                                         keeps the hidden input in step; data-options is filled by
+                                         doctor-form.js once the departments have loaded. -->
+                                    <div class="multiselect" id="f-depts" data-multiselect="departments"
+                                         data-options="[]" data-placeholder="Choose departments"
+                                         data-search-placeholder="Search departments">
+                                        <input type="hidden" name="departments">
+                                    </div>
+                                    <small>Pick as many as apply. Each one shows as a tag you can remove.</small>
                                 </div>
 
                                 <div class="col gap-4">
@@ -117,7 +124,7 @@
                                     </div>
                                     <div class="field">
                                         <label for="f-fee">Consultation fee (&#8377;)</label>
-                                        <input type="number" id="f-fee" name="consultationFee" min="0" placeholder="700">
+                                        <input type="number" id="f-fee" name="consultationFee" min="0" data-min="0" placeholder="700">
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +177,7 @@
 
                                 <div class="field">
                                     <label for="f-order">Display order</label>
-                                    <input type="number" id="f-order" name="order" min="1">
+                                    <input type="number" id="f-order" name="order" min="1" data-min="1">
                                     <small>Lower numbers come first on the doctors page.</small>
                                 </div>
 
@@ -249,6 +256,7 @@
     <script src="assets/js/core/store.js"></script>
     <script src="assets/js/core/session.js"></script>
     <script src="assets/js/core/repeater.js"></script>
+    <script src="assets/js/core/multiselect.js"></script>
     <script src="assets/js/core/media.js"></script>
     <script src="assets/js/core/form.js"></script>
     <script src="assets/js/core/layout.js"></script>

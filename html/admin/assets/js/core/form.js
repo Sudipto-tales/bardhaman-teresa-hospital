@@ -85,8 +85,18 @@
             return RULES[ruleName].message;
         }
 
-        if (control.dataset.min && Number(value) < Number(control.dataset.min)) {
-            return `Must be at least ${control.dataset.min}`;
+        /* Compared against '' rather than truthiness: `min: 0` is the common
+           case on a price or a salary, and `if (dataset.min)` skipped it. */
+        if (value !== '' && control.dataset.min !== undefined && control.dataset.min !== '') {
+            if (Number(value) < Number(control.dataset.min)) {
+                return `Must be at least ${control.dataset.min}`;
+            }
+        }
+
+        if (value !== '' && control.dataset.maxValue !== undefined && control.dataset.maxValue !== '') {
+            if (Number(value) > Number(control.dataset.maxValue)) {
+                return `Must be ${control.dataset.maxValue} or less`;
+            }
         }
 
         if (control.dataset.matchAfter) {
@@ -117,6 +127,10 @@
             else if (c.multiple && c.tagName === 'SELECT') {
                 const set = new Set((v || []).map(String));
                 [...c.options].forEach((o) => { o.selected = set.has(o.value); });
+            } else if (c.closest('[data-multiselect]')) {
+                /* Left alone — multiselect.paintAll below writes the hidden
+                   input itself. Assigning an array here would stringify it to
+                   "a,b" and the chips would repaint from nonsense. */
             } else c.value = v == null ? '' : v;
         });
 
@@ -131,6 +145,7 @@
 
         if (root.TMH.repeater) root.TMH.repeater.mountAll(scope, data);
         if (root.TMH.media) root.TMH.media.paintAll(scope, data);
+        if (root.TMH.multiselect) root.TMH.multiselect.paintAll(scope, data);
 
         refreshMeters(scope);
     }
@@ -153,6 +168,9 @@
             if (body) out[el.dataset.editor] = body.innerHTML.trim();
         });
 
+        /* Both overwrite the raw control value the loop above already wrote:
+           the hidden input holds a JSON string, the record wants the array. */
+        if (root.TMH.multiselect) Object.assign(out, root.TMH.multiselect.collectAll(scope));
         if (root.TMH.repeater) Object.assign(out, root.TMH.repeater.collectAll(scope));
         return out;
     }
@@ -179,6 +197,19 @@
     /* Focus the first bad field, open the tab it lives in, and say how many
        there are. The toast alone is not enough — the user needs to be taken
        to the problem. */
+    /* A hidden input cannot take focus and has no box to scroll to, so a bad
+       media picker or multi-select used to report "1 field needs attention"
+       and then leave the user on whatever part of the form they were on.
+       Media pickers, multi-selects and editors all keep their value in one,
+       so this is the normal case, not an edge one. */
+    function focusTarget(control) {
+        if (control.type !== 'hidden') return control;
+        const field = fieldOf(control);
+        return (field && field.querySelector(
+            '.multiselect__control, .media-pick, .editor__body, button, a',
+        )) || field || control;
+    }
+
     function reportInvalid(scope, result) {
         if (result.ok) return;
         const panel = result.first.closest('.tab-panel');
@@ -186,8 +217,9 @@
             const trigger = document.querySelector(`[data-tab="${panel.id}"]`);
             if (trigger) trigger.click();
         }
-        result.first.focus();
-        result.first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        const target = focusTarget(result.first);
+        if (typeof target.focus === 'function') target.focus();
+        target.scrollIntoView({ block: 'center', behavior: 'smooth' });
         root.TMH.toast.error(
             `${result.count} field${result.count === 1 ? '' : 's'} need${result.count === 1 ? 's' : ''} attention`,
         );
@@ -442,7 +474,7 @@
                 ok.addEventListener('click', () => {
                     const result = validate(scope, {});
                     if (!result.ok) {
-                        result.first.focus();
+                        focusTarget(result.first).focus();
                         root.TMH.toast.error(
                             `${result.count} field${result.count === 1 ? '' : 's'} need${result.count === 1 ? 's' : ''} attention`,
                         );
@@ -452,12 +484,15 @@
                 });
 
                 /* Enter submits from any single-line input — a six-field
-                   dialog should not need a mouse. */
+                   dialog should not need a mouse. Not from inside a
+                   multi-select though: there Enter picks the row you have
+                   filtered down to, and submitting the dialog instead would
+                   close it on the keystroke that was meant to choose. */
                 scope.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                        e.preventDefault();
-                        ok.click();
-                    }
+                    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+                    if (e.target.closest('.multiselect')) return;
+                    e.preventDefault();
+                    ok.click();
                 });
             },
         });

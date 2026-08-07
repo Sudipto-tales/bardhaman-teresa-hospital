@@ -950,7 +950,8 @@ tr.drop-target td {
 .field.is-invalid select,
 .field.is-invalid textarea,
 .field.is-invalid .editor,
-.field.is-invalid .media-pick {
+.field.is-invalid .media-pick,
+.field.is-invalid .multiselect__control {
     border-color: var(--bad);
 }
 
@@ -967,6 +968,177 @@ tr.drop-target td {
 .field__meter.is-over {
     color: var(--accent-orange);
     font-weight: 600;
+}
+
+/* =========================================================
+   Multi-select — core/multiselect.js.
+
+   A closed control that reads "3 selected", a searchable
+   checkbox menu under it, and the picks as removable .chip
+   rows below the box. Replaces <select multiple>, which the
+   .field select rule above was styling as a dropdown while it
+   rendered as a list box.
+   ========================================================= */
+.multiselect {
+    position: relative;
+}
+
+.multiselect__control {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    width: 100%;
+    padding: 9px var(--s3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    font-size: var(--fs-sm);
+    text-align: left;
+    color: var(--text-dark);
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.multiselect__control:hover {
+    border-color: var(--text-muted);
+}
+
+.multiselect__control:focus-visible,
+.multiselect.is-open .multiselect__control {
+    outline: none;
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-blue) 18%, transparent);
+}
+
+.multiselect__value {
+    flex: 1;
+}
+
+.multiselect__value.is-empty {
+    color: var(--text-muted);
+}
+
+.multiselect__control i {
+    font-size: 11px;
+    color: var(--text-muted);
+    transition: transform var(--dur-fast) var(--ease);
+}
+
+.multiselect.is-open .multiselect__control i {
+    transform: rotate(180deg);
+}
+
+.multiselect__menu {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    box-shadow: var(--overlay-shadow);
+    overflow: hidden;
+}
+
+.multiselect__search {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: var(--s2) var(--s3);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.multiselect__search i {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* appearance:none, or the UA draws type=search as a rounded box inside the
+   row that already has a border of its own. */
+.multiselect__search input {
+    flex: 1;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-size: var(--fs-sm);
+    padding: 2px 0;
+}
+
+.multiselect__search input::-webkit-search-decoration,
+.multiselect__search input::-webkit-search-cancel-button {
+    appearance: none;
+}
+
+/* The .field input:focus ring belongs on a bordered box, and this input has
+   no border of its own — it would draw a second rounded rectangle inside the
+   menu. The row carries the highlight instead. */
+.multiselect__search input:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.multiselect__search:focus-within {
+    background: var(--surface-2);
+}
+
+.multiselect__list {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.multiselect__opt {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: 7px var(--s2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+
+.multiselect__opt:hover,
+.multiselect__opt:focus-visible {
+    outline: none;
+    background: var(--surface-3);
+}
+
+/* The tick box is drawn rather than a real checkbox: the row is already the
+   hit target, and a nested input would land in core/form.js's control sweep. */
+.multiselect__opt i {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 4px;
+    font-size: 9px;
+    color: transparent;
+}
+
+.multiselect__opt[aria-selected='true'] i {
+    border-color: var(--brand-blue);
+    background: var(--brand-blue);
+    color: #fff;
+}
+
+.multiselect__none {
+    padding: var(--s3);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+.multiselect__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    margin-top: var(--s2);
+}
+
+.multiselect__chips[hidden] {
+    display: none;
 }
 
 /* input with a leading unit or icon */
