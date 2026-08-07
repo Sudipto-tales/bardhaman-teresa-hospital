@@ -36,6 +36,17 @@
  *
  * A field written as a bare string is shorthand for that type with the column
  * named as the snake_case of the field.
+ *
+ * ---------------------------------------------------------------------------
+ * Filter names
+ *
+ * The contract names a filter after the thing it selects (`department`); the
+ * panel's list controller sends it under the name of the *field* it filters on
+ * (`departmentId`), because that is what its column definition already knows.
+ * Both spellings are registered wherever they differ, for the reason 4.5 gave
+ * for `GET api/activity`: two names in the registry is one less special case in
+ * api.js, and a filter that silently does nothing is the worst of the three
+ * outcomes. Each alias carries a comment naming the screen that sends it.
  * ---------------------------------------------------------------------------
  */
 
@@ -82,6 +93,8 @@ return [
         ],
         'filters' => [
             'department' => ['type' => 'join', 'field' => 'departments'],
+            /* doctors.js — the column is `departments`, so the filter is too. */
+            'departments' => ['type' => 'join', 'field' => 'departments'],
             'isLeadership' => ['type' => 'bool'],
         ],
         'required' => ['name', 'role', 'qualification', 'photo'],
@@ -191,7 +204,12 @@ return [
             'homeCollection' => 'bool',
             'featured' => 'bool',
         ],
-        'filters' => ['category' => ['type' => 'string'], 'featured' => ['type' => 'bool']],
+        'filters' => [
+            'category' => ['type' => 'string'],
+            'featured' => ['type' => 'bool'],
+            /* lab-tests.js — the screen filters on it, so the server can. */
+            'homeCollection' => ['type' => 'bool'],
+        ],
         'required' => ['name'],
     ],
 
@@ -229,6 +247,9 @@ return [
         'filters' => [
             'category' => ['type' => 'ref', 'column' => 'category_id', 'target' => 'categories'],
             'author' => ['type' => 'ref', 'column' => 'author_id', 'target' => 'doctors'],
+            /* blog.js */
+            'categoryId' => ['type' => 'ref', 'column' => 'category_id', 'target' => 'categories'],
+            'authorId' => ['type' => 'ref', 'column' => 'author_id', 'target' => 'doctors'],
             'tag' => ['type' => 'join', 'field' => 'tags'],
             'featured' => ['type' => 'bool'],
             'from' => ['type' => 'dateFrom', 'column' => 'published_at'],
@@ -442,6 +463,8 @@ return [
         ],
         'filters' => [
             'job' => ['type' => 'ref', 'column' => 'job_id', 'target' => 'jobs'],
+            /* applications.js */
+            'jobId' => ['type' => 'ref', 'column' => 'job_id', 'target' => 'jobs'],
             'stage' => ['type' => 'string'],
             'from' => ['type' => 'dateFrom', 'column' => 'applied_at'],
             'to' => ['type' => 'dateTo', 'column' => 'applied_at'],
@@ -483,6 +506,11 @@ return [
             'priority' => ['type' => 'string'],
             'from' => ['type' => 'dateFrom', 'column' => 'received_at'],
             'to' => ['type' => 'dateTo', 'column' => 'received_at'],
+            /* enquiries.js. `window` is its "Received" control — the same
+               three-option shape the activity log calls `withinDays`, under
+               the name that screen gives it. */
+            'departmentId' => ['type' => 'ref', 'column' => 'department_id', 'target' => 'departments'],
+            'window' => ['type' => 'daysBack', 'column' => 'received_at'],
         ],
         /* Its own vocabulary — this is a workflow state, not a publish state. */
         'statusValues' => ['new', 'replied', 'closed', 'spam'],
@@ -522,6 +550,12 @@ return [
             'department' => ['type' => 'ref', 'column' => 'department_id', 'target' => 'departments'],
             'doctor' => ['type' => 'ref', 'column' => 'doctor_id', 'target' => 'doctors'],
             'date' => ['type' => 'date', 'column' => 'preferred_date'],
+            /* appointments.js. `when` is today / upcoming / past, which is the
+               archive's only real question and has no date to be given. */
+            'departmentId' => ['type' => 'ref', 'column' => 'department_id', 'target' => 'departments'],
+            'doctorId' => ['type' => 'ref', 'column' => 'doctor_id', 'target' => 'doctors'],
+            'preferredSlot' => ['type' => 'string'],
+            'when' => ['type' => 'when', 'column' => 'preferred_date'],
         ],
         'statusValues' => ['pending', 'confirmed', 'cancelled', 'completed'],
     ],
@@ -544,6 +578,16 @@ return [
             'avatar' => 'string',
             'twoFactor' => 'bool',
             'lastActiveAt' => ['type' => 'datetime', 'readonly' => true],
+            /* The profile screen's preferences. `landingPage` is the screen
+               `/admin` opens on; it is stored as the select's own
+               `dashboard.html` spelling and AdminController strips the
+               extension, like every other admin URL. */
+            'landingPage' => 'string',
+            'language' => 'string',
+            'timezone' => 'string',
+            'emailDigest' => 'string',
+            /* Stamped by the server whenever `password` is written. */
+            'passwordUpdatedAt' => ['type' => 'datetime', 'readonly' => true],
             /* Write-only: accepted on create and update, never returned. */
             'password' => ['type' => 'password', 'writeonly' => true],
         ],

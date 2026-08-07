@@ -545,6 +545,32 @@ class ResourceController extends ApiController
                     $params[] = gmdate('Y-m-d', time() + ((int) $value * 86400));
                     break;
 
+                /* The mirror image: a window that reaches backwards, for a log
+                   or an inbox. 1 is today from local midnight, not the last 24
+                   hours — the timestamp is stored UTC and the person reading it
+                   is in Kolkata, so a raw subtraction loses the small hours of
+                   this morning. */
+                case 'daysBack':
+                    $days = max(1, (int) $value);
+                    $where[] = 't.' . $filter['column'] . ' >= ?';
+                    $params[] = gmdate('Y-m-d H:i:s', strtotime('today -' . ($days - 1) . ' days'));
+                    break;
+
+                /* today / upcoming / past, against a plain date column. The
+                   appointments archive asks nothing else of a date, and giving
+                   it a picker would suggest a booking screen it is not. */
+                case 'when':
+                    $today = date('Y-m-d');
+                    $operator = ['today' => '=', 'upcoming' => '>', 'past' => '<'][$value] ?? null;
+
+                    if ($operator === null) {
+                        break;
+                    }
+
+                    $where[] = 't.' . $filter['column'] . ' ' . $operator . ' ?';
+                    $params[] = $today;
+                    break;
+
                 default:
                     $where[] = 't.' . $filter['column'] . ' = ?';
                     $params[] = $value;
@@ -570,12 +596,27 @@ class ResourceController extends ApiController
         return $counts;
     }
 
+    /**
+     * The ORDER BY a caller who named no sort gets.
+     *
+     * Not every table has a hand-ordered position. An appointment is not
+     * dragged into place; it has a date. So the fallback is the resource's own
+     * first sortable key, which check-resources has already proved exists,
+     * rather than a sort_order column that may not.
+     */
+    protected function defaultOrder(array $r): string
+    {
+        $fallback = $r['defaultSort']
+            ?? (in_array('order', $r['sort'] ?? [], true) ? 'order' : ($r['sort'][0] ?? 'id'));
+
+        $column = ResourceRegistry::sortColumn($r, $fallback) ?? $r['key'];
+        $dir = strtolower((string) ($r['defaultDir'] ?? 'asc')) === 'desc' ? 'DESC' : 'ASC';
+
+        return ' ORDER BY t.' . $column . ' ' . $dir . ', t.id ASC';
+    }
+
     private function orderBy(array $r): string
     {
-        /* Not every table has a hand-ordered position. An appointment is not
-           dragged into place; it has a date. So the fallback is the resource's
-           own first sortable key, which check-resources has already proved
-           exists, rather than a sort_order column that may not. */
         $fallback = $r['defaultSort']
             ?? (in_array('order', $r['sort'] ?? [], true) ? 'order' : ($r['sort'][0] ?? 'id'));
 
@@ -596,7 +637,7 @@ class ResourceController extends ApiController
        Database row → API row
        --------------------------------------------------------- */
 
-    private function rows(array $r, array $dbRows): array
+    protected function rows(array $r, array $dbRows): array
     {
         if (!$dbRows) {
             return [];
@@ -810,6 +851,17 @@ class ResourceController extends ApiController
             }
 
             $columns[$field['column']] = $this->encode($field, $body[$field['name']], $fields);
+        }
+
+        /* A password change gets a date of its own. `updated_at` cannot stand
+           in for it — that moves when somebody corrects a phone number — and
+           the users screen prints "Changed 3 months ago" from this. Only the
+           one resource declares a password field, so this cannot fire
+           elsewhere, and it is stamped here rather than sent, because a client
+           that decides when its own password was last changed is a client that
+           can say "just now" forever. */
+        if (array_key_exists('password', $columns)) {
+            $columns['password_updated_at'] = now_iso();
         }
 
         return $columns;

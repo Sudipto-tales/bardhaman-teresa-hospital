@@ -28,7 +28,7 @@
         ['tab-seo', 'SEO', 'fa-magnifying-glass-chart'],
     ];
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         record = isEdit ? await store.get('departments', id) : null;

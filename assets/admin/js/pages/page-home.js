@@ -20,7 +20,7 @@
     let ctrl = null;
     let order = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         page = await store.get('pages', 'home');
@@ -165,9 +165,16 @@
                 key: 'faq', label: 'FAQ accordion', enabled: on('faq'),
                 fields: [
                     F.text({ name: 'faq.title', label: 'Heading' }),
-                    F.select({ name: 'faq.group', label: 'Which FAQ group', options: ['Home', 'Contact', 'Department'] }),
+                    F.select({
+                        name: 'faq.group', label: 'Which FAQ group',
+                        options: [
+                            { value: 'home', label: 'Home' },
+                            { value: 'contact', label: 'Contact' },
+                            { value: 'department', label: 'Department' },
+                        ],
+                    }),
                     linked('FAQs', 'faqs.html',
-                        `${store.allSync('faqs').filter((f) => f.group === 'Home').length} questions in the Home group`),
+                        `${store.allSync('faqs').filter((f) => f.group === 'home').length} questions in the Home group`),
                 ],
             })}
 

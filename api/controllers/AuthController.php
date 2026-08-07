@@ -79,6 +79,48 @@ class AuthController extends ApiController
         Api::ok($this->profile());
     }
 
+    /**
+     * "Confirm your current password" — the check the profile screen makes
+     * before it lets somebody change their own.
+     *
+     * Not in the contract, and added at 5.3 because the panel asks the
+     * question and nothing else could answer it. The alternative was posting
+     * to `login` with the signed-in address, which regenerates the session and
+     * writes a second sign-in to the activity log for something that was not
+     * one.
+     *
+     * Rate limited per account, like login: this endpoint takes a password and
+     * says whether it was right, which is the same thing worth grinding.
+     */
+    public function verifyPassword(): never
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            Api::unauthenticated();
+        }
+
+        if (!RateLimit::attempt('verify-password', 10, 900, strtolower((string) $user['email']))) {
+            Api::rateLimited(900);
+        }
+
+        /* Auth::user() strips the hash, which is the right default everywhere
+           else — this is the one caller that has to compare against it, so it
+           asks for that column and nothing more. */
+        $hash = (string) db_scalar('SELECT password FROM users WHERE id = ?', [$user['id']]);
+
+        $ok = $hash !== '' && password_verify((string) ($this->body()['password'] ?? ''), $hash);
+
+        if ($ok) {
+            RateLimit::clear('verify-password', strtolower((string) $user['email']));
+        }
+
+        /* 200 either way. The request worked; the answer is the payload. A 401
+           here would read to the panel as a dead session and send somebody to
+           the sign-in screen for mistyping a password. */
+        Api::ok(['ok' => $ok]);
+    }
+
     /** Split out so login can answer with the same payload as GET me. */
     private function profile(): array
     {

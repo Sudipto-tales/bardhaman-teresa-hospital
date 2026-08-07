@@ -59,7 +59,7 @@
 
     let users = [];
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         users = store.available('users') ? await store.all('users') : [];

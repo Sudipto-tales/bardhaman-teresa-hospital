@@ -7,7 +7,7 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

@@ -38,10 +38,28 @@ class AdminController extends SiteController
     public function index(): void
     {
         if (Auth::isAuthenticated()) {
-            $this->redirect(base_url('admin/' . self::HOME));
+            $this->redirect(base_url('admin/' . $this->landingScreen()));
         }
 
         $this->loginPage();
+    }
+
+    /**
+     * Where this account opens the panel — the profile screen's "Open the
+     * panel on", or the dashboard.
+     *
+     * The select there still offers the design's `dashboard.html` spellings,
+     * so the extension is stripped here rather than left for the redirect to
+     * bounce a second time. An unknown value falls back rather than 404s: a
+     * screen can be renamed, and a stale preference should not shut somebody
+     * out of their own panel.
+     */
+    private function landingScreen(): string
+    {
+        $stored = (string) (Auth::user()['landing_page'] ?? '');
+        $screen = preg_replace('/\.html$/i', '', trim($stored)) ?? '';
+
+        return $this->shellExists($screen) ? $screen : self::HOME;
     }
 
     /**

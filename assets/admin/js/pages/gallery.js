@@ -65,7 +65,7 @@
     const isImage = (row) => String(row.mime || 'image/jpeg').startsWith('image/');
     const extOf = (row) => (String(row.filename || '').split('.').pop() || 'file').toUpperCase();
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

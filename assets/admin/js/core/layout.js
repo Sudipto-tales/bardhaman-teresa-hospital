@@ -46,16 +46,17 @@
     /* ---------------------------------------------------------
        SIDEBAR
        --------------------------------------------------------- */
-    /* The shell shows whoever is signed in. A page that never loaded
-       assets/data/system.js has no users to read, so the seeded desk account
-       is the fallback rather than an empty chip. */
+    /* The shell shows whoever is signed in. GET /api/auth/me has already
+       answered by the time this mounts — see TMH.boot at the foot of the file
+       — so the fallback is only what a browser sees if the shell is somehow
+       painted without it. */
     function me() {
         const user = root.TMH.session ? root.TMH.session.currentSync() : null;
-        const name = (user && user.name) || 'Admin Desk';
+        const name = (user && user.name) || 'Signed in';
         return {
             name,
-            role: user ? root.TMH.session.roleName(user.roleId) : 'Super Admin',
-            initials: root.TMH.util ? root.TMH.util.initials(name) : 'AD',
+            role: user ? root.TMH.session.roleName(user.roleId) : '',
+            initials: root.TMH.util ? root.TMH.util.initials(name) : '··',
             avatar: (user && user.avatar) || '',
         };
     }
@@ -122,98 +123,44 @@
 
     /* ---------------------------------------------------------
        GLOBAL SEARCH
-       One index over everything the panel edits. A source names the
-       entity, the fields worth matching on, and where a hit opens —
-       a form screen when the record has one, otherwise its list page
+       The server does the matching — GET /api/search, which was
+       built for this at 4.5 — and this table is what is left of
+       the panel's side of it: which icon a collection wears and
+       which screen one of its records opens on. A form screen
+       when the record has one, otherwise its list page
        pre-filtered through ?q= so the row is on screen on arrival.
        --------------------------------------------------------- */
     const form = (page) => (r) => `${page}.html?id=${encodeURIComponent(r.id)}`;
     const listAt = (page) => (r, q) => `${page}.html?q=${encodeURIComponent(q)}`;
 
-    const SEARCH_SOURCES = [
-        {
-            entity: 'doctors', group: 'Doctors', icon: 'fa-user-doctor',
-            fields: ['name', 'role', 'speciality', 'qualification'],
-            title: (r) => r.name, sub: (r) => r.role || r.speciality, href: form('doctor-form'),
-        },
-        {
-            entity: 'leadership', group: 'Leadership', icon: 'fa-user-tie',
-            fields: ['name', 'title'],
-            title: (r) => r.name, sub: (r) => r.title, href: form('leadership-form'),
-        },
-        {
-            entity: 'departments', group: 'Departments', icon: 'fa-hospital',
-            fields: ['name', 'id', 'lead'],
-            /* `lead` is a full paragraph, so it is matched on but never shown
-               as the subtitle — the menu note is one line and says more. */
-            title: (r) => r.name, sub: (r) => r.menuNote || r.id, href: form('department-form'),
-        },
-        {
-            entity: 'posts', group: 'Blog', icon: 'fa-newspaper',
-            fields: ['title', 'heading', 'excerpt'],
-            title: (r) => r.title, sub: (r) => r.excerpt, href: form('blog-form'),
-        },
-        {
-            entity: 'jobs', group: 'Vacancies', icon: 'fa-bullhorn',
-            fields: ['title', 'dept', 'summary'],
-            title: (r) => r.title, sub: (r) => r.dept, href: form('job-form'),
-        },
-        {
-            entity: 'enquiries', group: 'Enquiries', icon: 'fa-envelope-open-text',
-            fields: ['name', 'email', 'phone', 'subject', 'message'],
-            title: (r) => r.name, sub: (r) => r.subject, href: form('enquiry-view'),
-        },
-        {
-            entity: 'appointments', group: 'Appointments', icon: 'fa-calendar-check',
-            fields: ['patientName', 'phone', 'email', 'reason'],
-            title: (r) => r.patientName, sub: (r) => r.reason, href: listAt('appointments'),
-        },
-        {
-            entity: 'applications', group: 'Applications', icon: 'fa-file-signature',
-            fields: ['name', 'email', 'currentEmployer'],
-            title: (r) => r.name, sub: (r) => r.currentEmployer, href: listAt('applications'),
-        },
-        {
-            entity: 'pages', group: 'Pages', icon: 'fa-file-lines',
-            fields: ['title', 'path'],
-            title: (r) => r.title, sub: (r) => r.path, href: listAt('pages'),
-        },
-        {
-            entity: 'lab-tests', group: 'Lab tests', icon: 'fa-flask-vial',
-            fields: ['name', 'description', 'category'],
-            title: (r) => r.name, sub: (r) => r.category, href: listAt('lab-tests'),
-        },
-        {
-            entity: 'facilities', group: 'Facilities', icon: 'fa-bed-pulse',
-            fields: ['title', 'text'],
-            title: (r) => r.title, sub: (r) => r.text, href: () => 'facilities.html',
-        },
-        {
-            entity: 'testimonials', group: 'Testimonials', icon: 'fa-comment-medical',
-            fields: ['name', 'text', 'role'],
-            title: (r) => r.name, sub: (r) => r.role, href: () => 'testimonials.html',
-        },
-        {
-            entity: 'faqs', group: 'FAQs', icon: 'fa-circle-question',
-            fields: ['question', 'answer', 'group'],
-            title: (r) => r.question, sub: (r) => r.group, href: () => 'faqs.html',
-        },
-        {
-            entity: 'media', group: 'Media', icon: 'fa-images',
-            fields: ['filename', 'alt', 'caption'],
-            title: (r) => r.filename, sub: (r) => r.alt, href: listAt('gallery'),
-        },
-        {
-            entity: 'users', group: 'Users', icon: 'fa-user-shield',
-            fields: ['name', 'email'],
-            title: (r) => r.name, sub: (r) => r.email, href: () => 'users.html',
-        },
-    ];
+    const SEARCH_SOURCES = {
+        doctors: { group: 'Doctors', icon: 'fa-user-doctor', href: form('doctor-form') },
+        leadership: { group: 'Leadership', icon: 'fa-user-tie', href: form('leadership-form') },
+        departments: { group: 'Departments', icon: 'fa-hospital', href: form('department-form') },
+        posts: { group: 'Blog', icon: 'fa-newspaper', href: form('blog-form') },
+        categories: { group: 'Categories', icon: 'fa-tags', href: listAt('blog-categories') },
+        jobs: { group: 'Vacancies', icon: 'fa-bullhorn', href: form('job-form') },
+        enquiries: { group: 'Enquiries', icon: 'fa-envelope-open-text', href: form('enquiry-view') },
+        appointments: { group: 'Appointments', icon: 'fa-calendar-check', href: listAt('appointments') },
+        applications: { group: 'Applications', icon: 'fa-file-signature', href: listAt('applications') },
+        pages: { group: 'Pages', icon: 'fa-file-lines', href: listAt('pages') },
+        'lab-tests': { group: 'Lab tests', icon: 'fa-flask-vial', href: listAt('lab-tests') },
+        facilities: { group: 'Facilities', icon: 'fa-bed-pulse', href: listAt('facilities') },
+        testimonials: { group: 'Testimonials', icon: 'fa-comment-medical', href: listAt('testimonials') },
+        faqs: { group: 'FAQs', icon: 'fa-circle-question', href: listAt('faqs') },
+        counters: { group: 'Counters', icon: 'fa-arrow-up-9-1', href: listAt('stats') },
+        'nav-items': { group: 'Navigation', icon: 'fa-sitemap', href: listAt('navigation') },
+        redirects: { group: 'Redirects', icon: 'fa-right-left', href: listAt('redirects') },
+        media: { group: 'Media', icon: 'fa-images', href: listAt('gallery') },
+        users: { group: 'Users', icon: 'fa-user-shield', href: () => 'users.html' },
+        roles: { group: 'Roles', icon: 'fa-user-shield', href: () => 'users.html' },
+    };
 
     const SEARCH_LIMIT = 8;
 
     /* Sidebar destinations are searchable too — "where do I set the favicon"
-       is a navigation question, not a content one. */
+       is a navigation question, not a content one. They are matched here
+       because the server has never heard of the sidebar. */
     function navHits(needle) {
         const out = [];
         (root.TMH_NAV || []).forEach((group) => group.items.forEach((item) => {
@@ -228,44 +175,47 @@
         return out;
     }
 
-    function searchAll(q) {
+    /**
+     * GET /api/search — every collection at once, ranked and capped by the
+     * server.
+     *
+     * The mock scanned the seed files the page had loaded, which is why the
+     * prototype's version asked `store.available(entity)` first and quietly
+     * skipped anything the screen had not seeded. There is nothing to skip
+     * now: the endpoint searches the columns config/resources.php names, and
+     * reaches pages and media, neither of which is a collection the panel
+     * holds in memory.
+     */
+    async function searchAll(q) {
         const needle = q.trim().toLowerCase();
         if (needle.length < 2) return [];
 
-        const store = root.TMH && root.TMH.store;
         const hits = navHits(needle);
+        let groups = [];
 
-        if (store) {
-            SEARCH_SOURCES.forEach((src) => {
-                /* A page that never loaded this entity's data file cannot
-                   answer for it, and asking would only report it as empty. */
-                if (!store.available(src.entity)) return;
+        try {
+            groups = await root.TMH.store.search(q.trim());
+        } catch (e) {
+            /* A failed search is not worth a toast in the middle of typing —
+               the sidebar matches above are still a useful answer. */
+            console.warn('[search] request failed', e);
+        }
 
-                (store.allSync(src.entity) || []).forEach((row) => {
-                    let rank = -1;
-                    src.fields.some((f) => {
-                        const v = row[f];
-                        if (v == null) return false;
-                        const at = String(v).toLowerCase().indexOf(needle);
-                        if (at < 0) return false;
-                        /* A title that starts with the query beats one that
-                           merely mentions it, which beats a body-text match. */
-                        rank = f === src.fields[0] ? (at === 0 ? 0 : 1) : 3;
-                        return true;
-                    });
-                    if (rank < 0) return;
+        groups.forEach((group) => {
+            const src = SEARCH_SOURCES[group.entity]
+                || { group: group.entity, icon: 'fa-circle-dot', href: () => '#' };
 
-                    hits.push({
-                        group: src.group,
-                        icon: src.icon,
-                        title: src.title(row) || row.id,
-                        sub: src.sub(row) || '',
-                        href: src.href(row, q.trim()),
-                        rank,
-                    });
+            group.items.forEach((item) => {
+                hits.push({
+                    group: src.group,
+                    icon: src.icon,
+                    title: item.label || item.id,
+                    sub: item.status && item.status !== 'published' ? item.status : '',
+                    href: src.href(item, q.trim()),
+                    rank: 1,
                 });
             });
-        }
+        });
 
         return hits.sort((a, b) => a.rank - b.rank).slice(0, SEARCH_LIMIT);
     }
@@ -277,6 +227,10 @@
 
         let hits = [];
         let active = -1;
+        /* Answers can overtake each other now that they come off the network.
+           A stale one repainting over a newer one would show results for a
+           prefix of what is in the box. */
+        let seq = 0;
 
         const close = () => {
             panel.hidden = true;
@@ -293,14 +247,21 @@
 
         /* Only the results list is rewritten — the input keeps its node, so
            the caret never moves and no keystroke is lost mid-search. */
-        function render() {
+        async function render() {
             const q = input.value.trim();
             if (q.length < 2) {
                 close();
                 return;
             }
 
-            hits = searchAll(q);
+            const mine = seq + 1;
+            seq = mine;
+
+            const found = await searchAll(q);
+
+            if (mine !== seq) return;
+
+            hits = found;
             active = hits.length ? 0 : -1;
 
             panel.innerHTML = hits.length
@@ -337,8 +298,9 @@
                    is not made to press Enter twice. */
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    render();
-                    if (hits.length) location.href = hits[0].href;
+                    render().then(() => {
+                        if (hits.length) location.href = hits[0].href;
+                    });
                 }
                 return;
             }
@@ -412,8 +374,15 @@
                     <a href="settings-general.html" role="menuitem"><i class="fa-solid fa-sliders"></i> Settings</a>
                     <a href="../../website.html" target="_blank" rel="noopener" role="menuitem"><i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>
                     <hr>
-                    <button type="button" role="menuitem" id="resetDemo"><i class="fa-solid fa-rotate-left"></i> Reset demo data</button>
-                    <a href="login.html" class="danger" role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</a>
+                    <!-- "Reset demo data" was here, and is gone with the mock
+                         it emptied. There is no demo data to go back to now,
+                         and a button that would have to mean "delete the
+                         hospital's content" is not a menu item.
+
+                         Sign out is GET /admin/logout — a link, not the API's
+                         CSRF-guarded POST, because a link is what a menu item
+                         is. It ends a session and creates nothing. -->
+                    <a href="logout" class="danger" role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</a>
                 </div>
             </div>
         </header>`;
@@ -515,23 +484,6 @@
             accountMenu.addEventListener('click', (e) => e.stopPropagation());
         }
 
-        const resetBtn = document.getElementById('resetDemo');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', async () => {
-                const ok = await root.TMH.confirm({
-                    title: 'Reset demo data?',
-                    body: 'Every change you have made in this browser is discarded and the panel goes back to the seeded content.',
-                    danger: true,
-                    icon: 'fa-rotate-left',
-                    confirmLabel: 'Reset everything',
-                });
-                if (!ok) return;
-                root.TMH.store.reset();
-                root.TMH.toast.success('Demo data reset', { body: 'Reloading…' });
-                setTimeout(() => location.reload(), 700);
-            });
-        }
-
         /* ---- global search: "/" focuses it, like the public site's shortcut ---- */
         const search = document.getElementById('globalSearch');
         document.addEventListener('keydown', (e) => {
@@ -546,9 +498,21 @@
 
         const bell = document.getElementById('bellBtn');
         if (bell) {
+            /* The prototype's bell said "4 new enquiries" whatever the inbox
+               held. It counts them now — the same count the sidebar badge
+               shows, from the same collection — and says so plainly when there
+               are none. A notification centre is still not built; this is the
+               one number it would have opened with. */
             bell.addEventListener('click', () => {
-                root.TMH.toast.info('4 new enquiries', {
-                    body: 'Notification centre lands with the backend.',
+                const unread = root.TMH_NAV_COUNT('enquiries', (e) => e.status === 'new');
+
+                if (!unread) {
+                    root.TMH.toast.info('Nothing new', { body: 'Every enquiry has been picked up.' });
+                    return;
+                }
+
+                root.TMH.toast.info(`${unread} new enquir${unread === 1 ? 'y' : 'ies'}`, {
+                    body: 'Nobody has replied to these yet.',
                     action: { label: 'Open enquiries', onClick: () => { location.href = 'enquiries.html'; } },
                 });
             });
@@ -578,9 +542,9 @@
     root.TMH = root.TMH || {};
     root.TMH.layout = { mount, pageHead, syncPill, theme };
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', mount);
-    } else {
-        mount();
-    }
+    /* Through TMH.boot rather than DOMContentLoaded, like every page script:
+       the shell prints the signed-in name and two sidebar badges counted off
+       the collections, and none of those exist until api.js has finished its
+       boot request. */
+    root.TMH.boot(mount);
 }(window));

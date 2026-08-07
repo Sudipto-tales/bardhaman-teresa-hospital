@@ -29,7 +29,7 @@
 
     let list = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({
@@ -93,14 +93,14 @@
     async function paintStats() {
         const rows = await store.all('users');
         const roles = await store.all('roles');
-        const supers = rows.filter((u) => u.roleId === session.SUPER_ROLE && u.status === 'published');
+        const supers = rows.filter((u) => u.roleId === session.SUPER_ROLE && u.status === 'active');
         const twoFactor = rows.filter((u) => u.twoFactor).length;
 
         document.getElementById('strip').innerHTML = U.statStrip([
-            ['fa-users', 'red', rows.length, 'Accounts', `${rows.filter((u) => u.status === 'published').length} active`],
+            ['fa-users', 'red', rows.length, 'Accounts', `${rows.filter((u) => u.status === 'active').length} active`],
             ['fa-user-shield', 'navy', supers.length, 'Super admins', supers.length === 1
                 ? 'Only one — add a second for cover' : 'Full access to every screen'],
-            ['fa-envelope-circle-check', 'blue', rows.filter((u) => u.status === 'draft').length, 'Invited',
+            ['fa-envelope-circle-check', 'blue', rows.filter((u) => u.status === 'invited').length, 'Invited',
                 'Have not signed in yet'],
             ['fa-shield-halved', 'magenta', `${twoFactor}/${rows.length}`, 'Two-factor on',
                 twoFactor < rows.length ? 'Some accounts rely on a password alone' : 'Every account is covered'],
@@ -117,12 +117,12 @@
        --------------------------------------------------------- */
     function paintSuperBand() {
         const supers = store.allSync('users').filter((u) => u.roleId === session.SUPER_ROLE);
-        const active = supers.filter((u) => u.status === 'published');
+        const active = supers.filter((u) => u.status === 'active');
 
         const chips = supers.map((u) => `
             <button type="button" class="chip" data-open-user="${U.esc(u.id)}" title="Open ${U.esc(u.name)}">
                 <i class="fa-solid fa-user-shield"></i> ${U.esc(u.name)}
-                ${u.status === 'published' ? '' : `<span class="muted">· ${U.esc((session.USER_STATUS[u.status] || {}).label || u.status)}</span>`}
+                ${u.status === 'active' ? '' : `<span class="muted">· ${U.esc((session.USER_STATUS[u.status] || {}).label || u.status)}</span>`}
                 ${u.id === session.CURRENT_ID ? '<span class="muted">· you</span>' : ''}
             </button>`).join(' ');
 
@@ -166,9 +166,9 @@
             selectable: false,
             statusOptions: [
                 { value: 'all', label: 'All' },
-                { value: 'published', label: 'Active' },
-                { value: 'draft', label: 'Invited' },
-                { value: 'hidden', label: 'Suspended' },
+                { value: 'active', label: 'Active' },
+                { value: 'invited', label: 'Invited' },
+                { value: 'suspended', label: 'Suspended' },
             ],
             filters: [{ key: 'roleId', label: 'Role', options: roles }],
             empty: {
@@ -272,7 +272,7 @@
             },
         ];
 
-        if (row.status === 'draft') {
+        if (row.status === 'invited') {
             out.push({
                 label: 'Resend invite', icon: 'fa-paper-plane',
                 onClick: () => toast.success(`Invite resent to ${row.email}`, {
@@ -283,11 +283,11 @@
 
         out.push({ divider: true });
 
-        out.push(row.status === 'hidden'
+        out.push(row.status === 'suspended'
             ? {
                 label: 'Restore access', icon: 'fa-user-check',
                 onClick: async () => {
-                    await store.update('users', row.id, { status: 'published' });
+                    await store.update('users', row.id, { status: 'active' });
                     toast.success(`${row.name} can sign in again`);
                     refresh();
                 },
@@ -312,7 +312,7 @@
                         icon: 'fa-user-lock',
                     });
                     if (!ok) return;
-                    await store.update('users', row.id, { status: 'hidden' });
+                    await store.update('users', row.id, { status: 'suspended' });
                     toast.success(`${row.name} suspended`);
                     refresh();
                 },
@@ -486,7 +486,7 @@
                                 ${members.map((m) => `
                                     <a class="chip" href="user-form.html?id=${encodeURIComponent(m.id)}">
                                         ${U.esc(m.name)}
-                                        ${m.status === 'published' ? '' : `<span class="muted">· ${U.esc((session.USER_STATUS[m.status] || {}).label || m.status)}</span>`}
+                                        ${m.status === 'active' ? '' : `<span class="muted">· ${U.esc((session.USER_STATUS[m.status] || {}).label || m.status)}</span>`}
                                     </a>`).join('')}
                             </div>` : ''}
                     </article>`;

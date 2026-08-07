@@ -43,7 +43,7 @@ $bundles = [
 $type = $type ?? 'plain';
 
 $core = array_merge(
-    ['util', 'nav', 'toast', 'modal', 'store', 'session'],
+    ['util', 'nav', 'toast', 'modal', 'api', 'session'],
     $bundles[$type] ?? [],
     ['layout']
 );
@@ -54,12 +54,10 @@ $core = array_merge(
     <script src="<?= e(base_url("assets/admin/js/core/{$module}.js")) ?>"></script>
 <?php endforeach; ?>
 
-    <!-- The prototype loaded assets/data/*.js here to seed its localStorage
-         mock, and they are deliberately not copied to assets/admin/: the
-         panel's content comes from /api/*, and a seed file shipped beside it
-         would be a second copy of the content, stale from the first save.
-         Until 5.3 puts api.js in place of store.js the screens below render
-         their chrome and an empty list, which is the honest state of them. -->
+    <!-- The prototype loaded assets/data/*.js here to seed store.js's
+         localStorage mock. api.js reads /api/* instead, and a seed file
+         shipped beside it would be a second copy of the content, stale from
+         the first save. -->
 
     <script src="<?= e(base_url("assets/admin/js/pages/{$script}.js")) ?>"></script>
 </body>

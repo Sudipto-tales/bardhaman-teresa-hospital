@@ -32,7 +32,7 @@
     let list = null;
     let users = [];
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         users = (await store.all('users')).filter((u) => u.status !== 'hidden');

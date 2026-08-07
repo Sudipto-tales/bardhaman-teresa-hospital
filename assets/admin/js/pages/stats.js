@@ -20,7 +20,7 @@
         { value: 'department', label: 'Department page' },
     ];
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

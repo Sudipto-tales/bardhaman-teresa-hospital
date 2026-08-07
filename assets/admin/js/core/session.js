@@ -1,11 +1,12 @@
 /* =========================================================
-   The signed-in user — PHASE 1 ONLY.
+   The signed-in user.
 
-   There is no auth backend yet, so "who am I" is a constant
-   pointing at a row in assets/data/system.js. Phase 2 replaces
-   currentSync()/current() with whatever /api/auth/me returns
-   and verifyPassword()/changePassword() with the endpoints in
-   docs/07-api-contract.md — no page JS changes.
+   Was a constant pointing at a row in assets/data/system.js,
+   because there was no auth backend to ask. Now it is whatever
+   GET /api/auth/me answered at boot — api.js holds that reply
+   and this reads it back, so "who am I" is still a synchronous
+   question and the shell can paint a name before it awaits
+   anything.
 
    Everything that asks "may this person manage the panel" goes
    through here, so the super-admin rules live in one file
@@ -14,36 +15,55 @@
 (function (root) {
     'use strict';
 
-    const CURRENT_ID = 'usr-001';
     const SUPER_ROLE = 'role-super';
 
-    /* Statuses on a user row read differently from content:
-       published = active, draft = invited, hidden = suspended. */
+    /**
+     * A user's status, in the words the database uses.
+     *
+     * The prototype filed users under the content vocabulary — published,
+     * draft, hidden — with a comment translating them, because its list
+     * component only knew those three. The column has always held `active`,
+     * `invited` and `suspended`, which is what the API returns and what the
+     * three screens that read it now compare against. Saying "draft" about a
+     * colleague was never going to survive contact with a real table.
+     */
     const USER_STATUS = {
-        published: { tone: 'ok', label: 'Active' },
-        draft: { tone: 'warn', label: 'Invited' },
-        hidden: { tone: 'off', label: 'Suspended' },
+        active: { tone: 'ok', label: 'Active' },
+        invited: { tone: 'warn', label: 'Invited' },
+        suspended: { tone: 'off', label: 'Suspended' },
     };
 
     const store = () => root.TMH && root.TMH.store;
+    const identity = () => (root.TMH.api ? root.TMH.api.me() : null) || {};
 
     const session = {
 
-        CURRENT_ID,
         SUPER_ROLE,
         USER_STATUS,
 
-        /* Synchronous, because the shell paints the name and initials before
-           it has awaited anything. Returns null on a page that never loaded
-           assets/data/system.js. */
+        /* A getter, not a constant: the panel no longer decides who is signed
+           in, and the answer does not exist until the boot request returns. */
+        get CURRENT_ID() {
+            return (identity().user || {}).id || null;
+        },
+
+        /**
+         * Synchronous, because the shell paints the name and initials before
+         * it has awaited anything. This is the /api/auth/me payload, which
+         * carries everything the chrome shows; `current()` is the full record.
+         */
         currentSync() {
-            const s = store();
-            if (!s || !s.available('users')) return null;
-            return (s.allSync('users') || []).find((u) => u.id === CURRENT_ID) || null;
+            return identity().user || null;
+        },
+
+        /** What this account is allowed to do, as the server described it. */
+        permissions() {
+            return identity().permissions || {};
         },
 
         current() {
-            return store().get('users', CURRENT_ID);
+            const id = session.CURRENT_ID;
+            return id ? store().get('users', id) : Promise.resolve(null);
         },
 
         isSuper(user) {
@@ -56,14 +76,14 @@
             const s = store();
             if (!s || !s.available('users')) return [];
             return (s.allSync('users') || [])
-                .filter((u) => u.roleId === SUPER_ROLE && u.status === 'published');
+                .filter((u) => u.roleId === SUPER_ROLE && u.status === 'active');
         },
 
         /* True when demoting, suspending or deleting this user would leave
            nobody able to reach Users, Settings or the permission matrix —
            i.e. would lock the hospital out of its own panel. */
         isLastSuper(user) {
-            if (!session.isSuper(user) || user.status !== 'published') return false;
+            if (!session.isSuper(user) || user.status !== 'active') return false;
             return session.superAdmins().length <= 1;
         },
 
@@ -80,9 +100,9 @@
         },
 
         /* ---------- passwords ----------
-           No plaintext and no hash is ever written to the store: Phase 1 keeps
-           only the timestamp, which is the part the UI actually reads back.
-           The real hashing belongs on the server. */
+           Nothing here hashes anything. The rules below are what the form
+           refuses to submit; the server applies its own and does the hashing,
+           and a password only ever leaves this file inside a request body. */
 
         /** '' when the password is acceptable, otherwise the reason. */
         passwordProblem(pw) {
@@ -114,25 +134,34 @@
             return `${pick()}-${pick()}-${digits}`;
         },
 
-        /* Phase 1 has nothing to check the current password against, so this
-           only enforces that the field was filled in. Phase 2 posts it to
-           /api/auth/login and this becomes a real answer. */
+        /**
+         * "Confirm your current password", before changing it.
+         *
+         * POST /api/auth/verify-password answers 200 with {ok} either way — a
+         * wrong password is an answer, not a failed request, and a 401 here
+         * would send somebody to the sign-in screen for a typo.
+         */
         async verifyPassword(plain) {
-            await new Promise((r) => setTimeout(r, 200));
-            return String(plain || '').length > 0;
+            const res = await root.TMH.api.post('api/auth/verify-password', { password: String(plain || '') });
+            return !!(res && res.data && res.data.ok);
         },
 
+        /**
+         * The password is a write-only field on the user record, so this is an
+         * ordinary PATCH. `passwordUpdatedAt` and `mustChangePassword` were
+         * the mock's own bookkeeping — the server stamps `updatedAt` and there
+         * is no forced-change flow to raise.
+         */
         async changePassword(userId, plain) {
             const problem = session.passwordProblem(plain);
+
             if (problem) {
                 const err = new Error(problem);
                 err.fields = { newPassword: problem };
                 throw err;
             }
-            return store().update('users', userId, {
-                passwordUpdatedAt: new Date().toISOString(),
-                mustChangePassword: false,
-            });
+
+            return store().update('users', userId, { password: plain });
         },
     };
 

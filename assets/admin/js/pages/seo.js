@@ -1,7 +1,7 @@
 /* SEO Manager — not built yet. */
 (function () {
     'use strict';
-    document.addEventListener('DOMContentLoaded', function () {
+    window.TMH.boot(function () {
         document.getElementById('pageHead').innerHTML = window.TMH.layout.pageHead({
             title: 'SEO Manager',
         });

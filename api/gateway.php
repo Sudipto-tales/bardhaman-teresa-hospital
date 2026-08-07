@@ -34,6 +34,10 @@ class ApiGatewayProvider extends RouteProvider
             'POST:api/auth/reset' => ['AuthController', 'reset'],
             'POST:api/auth/logout' => ['AuthController', 'logout', 'session'],
             'GET:api/auth/me' => ['AuthController', 'me', 'session'],
+            /* Not in the contract. The profile screen confirms the current
+               password before changing it, and posting to `login` to find out
+               would regenerate the session and log a sign-in that was not one. */
+            'POST:api/auth/verify-password' => ['AuthController', 'verifyPassword', 'session'],
 
             /* -----------------------------------------------------
                Public intake — called by the website, not the panel.
@@ -81,6 +85,12 @@ class ApiGatewayProvider extends RouteProvider
 
             'POST:api/enquiries/{id}/reply' => ['EnquiryController', 'reply', 'session'],
             'POST:api/enquiries/{id}/note' => ['EnquiryController', 'note', 'session'],
+
+            /* Not in the contract, and added at 5.3. The panel reads its
+               lookup collections synchronously — a table cell cannot await —
+               so api.js fills that cache once per page load instead of the
+               nine seed files the prototype shipped. See the controller. */
+            'GET:api/bootstrap' => ['BootstrapController', 'index', 'session'],
 
             'GET:api/dashboard/summary' => ['DashboardController', 'summary', 'session'],
             'GET:api/activity' => ['DashboardController', 'activity', 'session'],

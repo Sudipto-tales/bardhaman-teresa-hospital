@@ -27,6 +27,15 @@ class UsersTable extends Migration
             /* active | suspended | invited */
             "status VARCHAR(20) NOT NULL DEFAULT 'active'",
             'last_active_at DATETIME',
+            /* The profile screen's preferences, and the date the users list
+               prints under "Password" — updated_at cannot stand in for that,
+               it moves when somebody fixes a phone number. Without these the
+               five controls saved nothing. */
+            'password_updated_at DATETIME',
+            'landing_page VARCHAR(64)',
+            'language VARCHAR(12)',
+            'timezone VARCHAR(64)',
+            'email_digest VARCHAR(12)',
             'remember_token VARCHAR(255)',
             'reset_token VARCHAR(255)',
             'reset_expires_at DATETIME',

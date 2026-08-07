@@ -1,9 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 5.3 — `api.js` in place of `store.js`. The public site is
-finished (phases 4, 6 and 7), and the panel's 41 screens are served and guarded
-(5.0–5.2); what they have no data to render is the last client-side change.
-Phase 8 follows phase 5.
+**Next action:** 5.4 — the end-to-end doctor loop. The panel's 41 screens are
+served, guarded and reading through `/api/*` (5.0–5.3); what is left is driving
+the loop `00-plan.md` calls done. Phase 8 follows phase 5.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -254,8 +253,101 @@ byte for byte.
 | 5.0 | `/admin` sign-in | done | The front door only. `AdminController`, two views, the auth loop against `POST api/auth/login` |
 | 5.1 | Admin components + PHP shell scaffolder | done | Five components, two screen bodies, and `tools/scaffold-admin.php` |
 | 5.2 | 41 page shells + routes | done | One route, one action; a screen exists if its shell does |
-| 5.3 | `api.js` replaces `store.js` | todo | The only client-side change |
+| 5.3 | `api.js` replaces `store.js` | done | Plus a boot gate, and three vocabularies corrected |
 | 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+
+### 5.3
+
+**`api.js` registers as `TMH.store`.** The file is new; the name the panel
+reaches for is not. Sixty-five `store.update()` calls and thirty-six
+`store.all()` calls are the reason — §1 of [`06-decisions.md`](06-decisions.md)
+promised the page scripts would not be rewritten, and a renamed export is a
+rewrite of every one of them. Argument lists and promise shapes are the mock's
+too, including `remove()` returning `{row, index}` so the toast can still offer
+Undo.
+
+**`TMH.boot(fn)` is the one line every page script changed.** `allSync()` is
+sixty-four synchronous reads — a table cell rendering a post's author cannot
+await — and a mock backed by localStorage could answer them; a network cannot.
+So `GET api/bootstrap` fills a cache with all eighteen collections before any
+page script runs, and `boot()` is what waits for it. Alongside it go
+`/api/settings`, `/api/pages` and `/api/auth/me`, in parallel: four requests, on
+a panel whose prototype loaded nine seed files on every screen whether it used
+them or not. The difference is that these are read from the database per page
+load and cannot be stale.
+
+`BootstrapController` extends `ResourceController` for one method — `rows()`,
+which turns columns into the field names the panel reads. A second copy of that
+mapping is the one thing that endpoint must not be.
+
+**Three vocabularies were wrong, and are the kind of wrong a mock hides.**
+
+* *Filter names.* The contract names a filter after what it selects
+  (`department`); the panel's list controller sends the name of the field it
+  filters on (`departmentId`), because that is what its column definition
+  already knows. Ten screens sent a name the registry had never heard of, and an
+  unknown filter is silently ignored — the control moves and the list does not.
+  Both spellings are registered now, each alias commented with the screen that
+  sends it, which is what 4.5 already did for `GET api/activity`. Two new filter
+  types came with them: `daysBack` (the enquiries inbox's "Received" window) and
+  `when` (the appointments archive's today / upcoming / past).
+* *User status.* The panel filed accounts as `published` / `draft` / `hidden`,
+  with a comment in `session.js` translating them, because its list component
+  only knew those three. The column has always held `active`, `invited` and
+  `suspended`. Nineteen literals across `users.js` and `user-form.js` now say
+  what the database says.
+* *FAQ groups.* `faqs.js` grouped on `Home` / `Contact` / `Department`; the
+  column holds the lower-case key the public accordion reads. Every question
+  fell outside every group, and the screen showed three empty panels over seven
+  seeded rows. The group is now a key and a label, and `page-home.js`'s select
+  follows.
+
+**Five columns were added to `users`.** The profile screen has a preferences
+form — language, timezone, "Open the panel on", email digest — and none of the
+four had a column, so the form saved nothing and said it had. `password_updated_at`
+is the fifth: the users list prints "Changed 3 months ago" under Password, and
+`updated_at` cannot answer that because it moves when somebody corrects a phone
+number. It is stamped by `ResourceController` whenever a password is written,
+never sent by the client. `/admin` honours `landingPage` — the select still
+offers the design's `dashboard.html` spellings and the controller strips the
+extension, like every other admin URL.
+
+**`POST api/auth/verify-password` is new and is not in the contract.** The
+profile screen confirms the current password before changing it, and nothing
+could answer that. Posting to `login` instead would regenerate the session and
+write a second sign-in to the activity log for something that was not one. It
+answers 200 either way — a wrong password is an answer, not a failed request,
+and a 401 would send somebody to the sign-in screen for a typo. Rate limited
+per account, because it takes a password and says whether it was right.
+
+**Four things in `core/` that the mock made true and the API does not:**
+
+* `media.js` uploaded by reading each file into a data URL, because
+  localStorage had nowhere else to put the bytes. It posts the file as a file
+  now, which is also the only version of this that can reject a PHP script
+  renamed `.png` by looking at its bytes. Its size and type checks stay as the
+  first, friendlier refusal.
+* `layout.js`'s "Reset demo data" is gone with the mock it emptied. There is no
+  demo data to go back to, and a button that would have to mean "delete the
+  hospital's content" is not a menu item. Sign out points at `/admin/logout`.
+* The topbar's global search is `GET api/search`, the endpoint 4.5 built for it.
+  What is left of `SEARCH_SOURCES` is which icon a collection wears and which
+  screen a record opens on — presentation, which is what that note said it
+  would be. Requests can overtake each other now, so a sequence number stops a
+  stale answer painting over a newer one.
+* The notification bell said "4 new enquiries" whatever the inbox held. It
+  counts them, from the same collection the sidebar badge counts.
+
+**A 401 anywhere navigates to the sign-in with `next` set.** A session that
+expired mid-visit is not something a screen can recover from — every later
+request fails the same way — and one password gets the same screen back.
+
+**`setDoc('settings', doc)` patches only the groups that moved.** The settings
+screens read the whole document, change one group and hand the whole thing
+back, which is what the mock wanted and what `PATCH /api/settings/{group}` is
+not. Sending all six would put six entries in the activity log, and saving the
+social links should not read as having edited the SMTP password the same
+afternoon.
 
 ### 5.2
 

@@ -20,7 +20,7 @@
     let me = null;
     let ctrl = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         me = await session.current();

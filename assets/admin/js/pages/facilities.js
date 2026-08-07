@@ -18,7 +18,7 @@
        facilities page itself, and the editor should be told which is which. */
     const HOME_BAND = 6;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

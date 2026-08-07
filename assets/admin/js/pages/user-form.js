@@ -34,7 +34,7 @@
     let roles = [];
     let ctrl = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         record = isEdit ? await store.get('users', id) : null;
@@ -97,9 +97,9 @@
                             F.select({
                                 name: 'status', label: 'Account status',
                                 options: [
-                                    { value: 'draft', label: 'Invited — not signed in yet' },
-                                    { value: 'published', label: 'Active — can sign in' },
-                                    { value: 'hidden', label: 'Suspended — cannot sign in' },
+                                    { value: 'invited', label: 'Invited — not signed in yet' },
+                                    { value: 'active', label: 'Active — can sign in' },
+                                    { value: 'suspended', label: 'Suspended — cannot sign in' },
                                 ],
                             }),
                             F.toggle({
@@ -183,7 +183,7 @@
 
         ctrl.bind(Object.assign(
             {
-                status: 'draft',
+                status: 'invited',
                 twoFactor: true,
                 sendInvite: true,
                 roleId: startRole,
@@ -462,7 +462,7 @@
            Checked against the stored record, not the form, because the form is
            exactly what is trying to change it. */
         if (isEdit && session.isLastSuper(record)
-            && (data.roleId !== session.SUPER_ROLE || data.status !== 'published')) {
+            && (data.roleId !== session.SUPER_ROLE || data.status !== 'active')) {
             toast.error('This is the only active super admin', {
                 body: 'Give somebody else the Super Admin role before changing this account.',
             });
@@ -497,7 +497,7 @@
                seeded accounts are usr-001…, and the activity log joins on
                these ids by eye during Phase 1. */
             id: nextUserId(),
-            status: data.status || 'draft',
+            status: data.status || 'invited',
             lastActiveAt: '',
             /* No password, plain or hashed, is written in Phase 1 — see
                core/session.js. Only the fact that one was set is kept. */

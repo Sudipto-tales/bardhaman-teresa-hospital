@@ -9,7 +9,7 @@
     let record = null;
     let ctrl = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         record = isEdit ? await store.get('leadership', id) : null;

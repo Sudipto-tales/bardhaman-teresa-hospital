@@ -53,24 +53,24 @@
     }
 
     /* ---------------------------------------------------------
-       Upload — validate, read as a data URL, store as a media
-       record so it shows up in the gallery like any other file.
+       Upload — POST /api/media, one multipart request per file.
+
+       The prototype read each file into a data URL, because a
+       mock backed by localStorage had nowhere else to put the
+       bytes. There is somewhere now: the file goes to the server
+       as a file, which is also the only version of this that can
+       reject a PHP script renamed .png by looking at its bytes.
+       The checks below stay as the first, friendlier refusal —
+       the server makes the same ones and is the one that counts.
        --------------------------------------------------------- */
-    function readFile(file) {
-        return new Promise((resolve, reject) => {
-            if (!TYPES.includes(file.type)) {
-                reject(new Error(`${file.name}: ${file.type || 'that file type'} is not an image`));
-                return;
-            }
-            if (file.size > MAX_BYTES) {
-                reject(new Error(`${file.name} is ${U.bytes(file.size)} — the limit is 5 MB`));
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error(`Could not read ${file.name}`));
-            reader.readAsDataURL(file);
-        });
+    function reject(file) {
+        if (!TYPES.includes(file.type)) {
+            return `${file.name}: ${file.type || 'that file type'} is not an image`;
+        }
+        if (file.size > MAX_BYTES) {
+            return `${file.name} is ${U.bytes(file.size)} — the limit is 5 MB`;
+        }
+        return '';
     }
 
     async function upload(files, folder) {
@@ -79,21 +79,24 @@
         const failed = [];
 
         for (const file of list) {
+            const problem = reject(file);
+
+            if (problem) {
+                failed.push(problem);
+                continue;
+            }
+
+            const form = new FormData();
+            form.append('file', file, file.name);
+            form.append('folder', folder || 'Uploads');
+            form.append('alt', '');
+            form.append('caption', '');
+
             try {
-                const url = await readFile(file);
-                const row = await root.TMH.store.create('media', {
-                    url,
-                    filename: file.name,
-                    alt: '',
-                    caption: '',
-                    folder: folder || 'Uploads',
-                    sizeBytes: file.size,
-                    mime: file.type,
-                    status: 'published',
-                });
-                created.push(row);
+                const res = await root.TMH.api.request('POST', 'api/media', { form });
+                created.push(res.data);
             } catch (err) {
-                failed.push(err.message);
+                failed.push(`${file.name}: ${err.message}`);
             }
         }
 

@@ -8,12 +8,13 @@
          active item when a form page declares its parent
          (e.g. doctor-form.html sets data-page="doctors")
    badge optional; a number renders as a red count bubble.
-         A function is called at mount time, after the store
-         exists, so the bubble tracks the data instead of
-         drifting from it the moment someone clears an inbox.
+         A function is called at mount time, which is after the
+         boot request, so the bubble tracks the database instead
+         of drifting from it the moment someone clears an inbox.
    ========================================================= */
 (function () {
-    /* Counts live rows, not seed rows — the store may have been written to. */
+    /* Counts what the collection actually holds, at the moment the shell is
+       painted. TMH.boot is what guarantees there is something to count. */
     function count(entity, test) {
         try {
             return (window.TMH.store.allSync(entity) || []).filter(test).length;

@@ -19,17 +19,19 @@
         util: U, store, fields: F, form: formLib, layout, toast, editor,
     } = window.TMH;
 
+    /* [stored value, label, icon, subtitle]. The column holds the lower-case
+       key the public site reads; the heading is the readable half. */
     const GROUPS = [
-        ['Home', 'fa-house', 'The accordion on the home page.'],
-        ['Contact', 'fa-phone', 'Shown under the contact form.'],
-        ['Department', 'fa-hospital', 'Appears on the department page it is tagged with.'],
+        ['home', 'Home', 'fa-house', 'The accordion on the home page.'],
+        ['contact', 'Contact', 'fa-phone', 'Shown under the contact form.'],
+        ['department', 'Department', 'fa-hospital', 'Appears on the department page it is tagged with.'],
     ];
 
     /* One open editor at a time. Two half-finished answers on screen is a
        way to lose one of them. */
     let openId = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({
@@ -52,7 +54,7 @@
        others. */
     function sorted(rows) {
         const rank = (g) => {
-            const i = GROUPS.findIndex(([name]) => name === g);
+            const i = GROUPS.findIndex(([key]) => key === g);
             return i === -1 ? GROUPS.length : i;
         };
         return rows.slice().sort((a, b) =>
@@ -66,33 +68,33 @@
         document.getElementById('view').innerHTML = `
             ${U.statStrip([
                 ['fa-circle-question', 'red', rows.length, 'Questions', `${live.length} published`],
-                ['fa-house', 'navy', rows.filter((r) => r.group === 'Home').length, 'On the home page', 'The main accordion'],
-                ['fa-phone', 'blue', rows.filter((r) => r.group === 'Contact').length, 'On contact', 'Under the enquiry form'],
-                ['fa-hospital', 'magenta', rows.filter((r) => r.group === 'Department').length, 'Department-specific', 'Tagged to one department'],
+                ['fa-house', 'navy', rows.filter((r) => r.group === 'home').length, 'On the home page', 'The main accordion'],
+                ['fa-phone', 'blue', rows.filter((r) => r.group === 'contact').length, 'On contact', 'Under the enquiry form'],
+                ['fa-hospital', 'magenta', rows.filter((r) => r.group === 'department').length, 'Department-specific', 'Tagged to one department'],
             ])}
             <div class="bento">
-                ${GROUPS.map(([name, icon, sub]) => groupHtml(name, icon, sub, rows.filter((r) => r.group === name))).join('')}
+                ${GROUPS.map(([key, label, icon, sub]) => groupHtml(key, label, icon, sub, rows.filter((r) => r.group === key))).join('')}
             </div>`;
 
         U.stagger(document.getElementById('view'));
         wire(rows);
     }
 
-    function groupHtml(name, icon, sub, list) {
+    function groupHtml(key, label, icon, sub, list) {
         return `
         <article class="card card--flush c12 anim-item mb-4">
             <div class="card__head">
                 <div>
-                    <h3><i class="fa-solid ${icon}" style="color:var(--brand-red)"></i> ${U.esc(name)}</h3>
+                    <h3><i class="fa-solid ${icon}" style="color:var(--brand-red)"></i> ${U.esc(label)}</h3>
                     <p>${U.esc(sub)}</p>
                 </div>
                 <span class="pill">${list.length} question${list.length === 1 ? '' : 's'}</span>
-                <button type="button" class="btn btn--ghost btn--sm" data-add-group="${U.esc(name)}">
+                <button type="button" class="btn btn--ghost btn--sm" data-add-group="${U.esc(key)}">
                     <i class="fa-solid fa-plus"></i> Add here</button>
             </div>
 
             ${list.length ? `
-                <div class="faq-list" data-group="${U.esc(name)}">
+                <div class="faq-list" data-group="${U.esc(key)}">
                     ${list.map(itemHtml).join('')}
                 </div>` : `
                 <div class="empty empty--sm">
@@ -196,7 +198,7 @@
                         }),
                         F.select({
                             name: 'group', label: 'Group',
-                            options: GROUPS.map(([g]) => g),
+                            options: GROUPS.map(([key, label]) => ({ value: key, label })),
                             hint: 'Which public accordion this belongs to.',
                         }),
                         F.select({

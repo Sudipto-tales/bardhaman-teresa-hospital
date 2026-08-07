@@ -52,7 +52,7 @@
     let departments = [];
     let phone = '+91 342 325 4567';
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         const id = U.param('id');

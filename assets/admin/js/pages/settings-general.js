@@ -7,7 +7,7 @@
     let doc = null;
     let ctrl = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         doc = await store.getDoc('settings');

@@ -12,7 +12,7 @@
     let ctrl = null;
     let order = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         page = await store.get('pages', 'contact');

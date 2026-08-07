@@ -34,7 +34,7 @@
     let departments = [];
     let day = U.param('day') || todayIso();
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         [doctors, departments] = await Promise.all([

@@ -18,7 +18,7 @@
         blog: { href: 'blog.html', label: 'Built from Blog' },
     };
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

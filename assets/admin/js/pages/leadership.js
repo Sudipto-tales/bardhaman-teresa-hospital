@@ -13,7 +13,7 @@
         { value: 'clinical-leadership', label: 'Clinical leadership' },
     ];
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({

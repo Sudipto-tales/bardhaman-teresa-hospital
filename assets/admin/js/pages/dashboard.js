@@ -68,7 +68,7 @@
     const screenFor = (entity) => SCREEN[entity] || 'dashboard.html';
     const nounFor = (entity) => NOUN[entity] || entity;
 
-    document.addEventListener('DOMContentLoaded', init);
+    window.TMH.boot(init);
 
     async function init() {
         const who = window.TMH.session ? window.TMH.session.currentSync() : null;
