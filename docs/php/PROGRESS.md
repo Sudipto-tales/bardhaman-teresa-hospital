@@ -251,10 +251,53 @@ byte for byte.
 | # | Task | Status | Notes |
 |---|---|---|---|
 | 5.0 | `/admin` sign-in | done | The front door only. `AdminController`, two views, the auth loop against `POST api/auth/login` |
-| 5.1 | Admin components + PHP shell scaffolder | todo | Port of `html/admin/tools/scaffold.mjs` |
+| 5.1 | Admin components + PHP shell scaffolder | done | Five components, two screen bodies, and `tools/scaffold-admin.php` |
 | 5.2 | 43 page shells + routes | todo | `/admin` shows a placeholder until this lands |
 | 5.3 | `api.js` replaces `store.js` | todo | The only client-side change |
 | 5.4 | End-to-end doctor loop verified | todo | add → toast → reload → edit → delete → undo, against SQLite |
+
+### 5.1
+
+**`html/admin/assets/` was copied to `assets/admin/`, byte identical, minus the
+seed data.** `html/` is blocked by `.htaccess`, so nothing under it is served —
+the same move phase 6 made for the public site's assets, and with the same
+consequence: **from here on the served copy is `assets/admin/`, and a change
+made in `html/admin/assets/` alone changes nothing.** Nothing inside the CSS or
+the JavaScript points at a relative asset, so there was nothing to rewrite. The
+nine files in `assets/data/` are the exception and were left behind on purpose:
+they seed `store.js`'s localStorage mock, and the panel's content comes from
+`/api/*` now. A seed file shipped beside the API would be a second copy of the
+content, stale from the first save.
+
+**Five components under `app/components/admin/`, and a screen is one call.** In
+the prototype every screen carried its own copy of the head, the mount points
+and the script list — 45 lines repeated 41 times, which is how a panel ends up
+with three different stylesheet orders. `layout.php` takes four facts about a
+screen and renders the rest: `head.php` (the pre-paint theme script, the
+stylesheet order, and two new metas — the CSRF token and the application base,
+both of which `api.js` needs at 5.3), `sidebar.php` and `topbar.php` (mount
+points, and nothing else: `core/layout.js` replaces both nodes outright, so
+anything PHP wrote there would be work done twice and thrown away once), and
+`scripts.php`, which holds the module bundles as data.
+
+The bundle table was checked against all 41 prototype screens rather than
+copied from `scaffold.mjs`: the `.mjs` table was already wrong about two of
+them. `faqs.html` loads `editor.js` — added to the file by hand, which held
+until the next `--force` run silently took it away — and `doctor-form.html`
+does not load `fields.js`, because it is the one screen whose fields are
+written out rather than generated. Both are bundles of their own now
+(`listeditor`, `form-static`), and a bundle cannot be forgotten.
+
+**`tools/scaffold-admin.php` is the port of `scaffold.mjs`, with the two
+hand-written screens folded back in.** The `.mjs` version excluded `doctors` and
+`doctor-form` because their `<main>` is not the empty `#pageHead` / `#view`
+pair and regenerating them would have destroyed the markup. PHP has an include
+and HTML does not: that markup now sits in `app/components/admin/body/`, copied
+unchanged, and the shells above it are as ordinary as the other 39.
+
+`login` is deliberately not in the table. It is not one of the panel's 41
+screens — no page script, no sidebar, no session to render for — and 5.0 built
+it against the site's own head. `AdminController` renders it directly.
 
 ### 5.0
 
