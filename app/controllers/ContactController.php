@@ -59,11 +59,11 @@ class ContactController extends SiteController
             'csrf' => Csrf::token(),
             'action' => base_url('api/public/enquiry'),
 
-            'phone' => $phone,
+            /* `phone` and `email` arrive from page(); the emergency line is
+               this page's own, and falls back to reception where none is set. */
             'emergency' => $emergency !== ''
                 ? ['number' => $emergency, 'digits' => site_digits($emergency)]
                 : $phone,
-            'email' => site_primary_email(),
             'whatsapp' => $whatsapp,
             'whatsappMessage' => (string) setting('contact', 'whatsappMessage', ''),
             'address' => site_address_lines(),

@@ -27,7 +27,6 @@ class DoctorController extends SiteController
             'doctors' => $doctors,
             'counters' => counters_for_scope('home', 4),
             'bannerImage' => (string) setting('seo', 'defaultOgImage', ''),
-            'phone' => site_primary_phone()['number'],
         ]);
     }
 }

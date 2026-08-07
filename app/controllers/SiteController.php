@@ -41,6 +41,22 @@ abstract class SiteController extends BaseController
         $footer = array_merge($this->footer(), $data['footer'] ?? []);
         $scripts = array_merge(['pages' => true], $data['scripts'] ?? []);
 
+        /* The hospital's own contact details, on every page whether or not its
+           controller thought to pass them. Eight of the twelve templates print
+           the reception number somewhere — usually in the closing band — and a
+           controller that forgets does not render an empty button, it renders
+           the number written into the component as a default. Which is the
+           repo-wide find-and-replace this conversion exists to end. */
+        $data += [
+            'phone' => site_primary_phone(),
+            'email' => site_primary_email(),
+        ];
+
+        /* The closing band's second button, ready-made: `tel:` when there is a
+           number and an empty array when there is not, which is what the
+           component reads as "print one button, not two". */
+        $data += ['callAction' => $this->callAction($data['phone'])];
+
         App::render('site/layout/head', $head);
         App::render('site/layout/header', $header);
 
@@ -278,6 +294,23 @@ abstract class SiteController extends BaseController
     protected function menuDepartments(): array
     {
         return $this->menuDepartments ??= departments_for_menu();
+    }
+
+    /**
+     * A phone number as the `{href, label, icon}` a button takes.
+     *
+     * Empty when there is no number, rather than a `tel:` to nothing — the
+     * blocks that take this all skip a button whose `href` is missing, so a
+     * hospital that has not filled its contact settings in gets one button
+     * instead of a dead second one.
+     *
+     * @param array $phone ['number', 'digits'], as site_primary_phone() returns
+     */
+    protected function callAction(array $phone): array
+    {
+        return ($phone['number'] ?? '') === ''
+            ? []
+            : ['href' => 'tel:' . $phone['digits'], 'label' => $phone['number'], 'icon' => 'fa-phone'];
     }
 
     /**

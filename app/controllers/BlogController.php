@@ -35,7 +35,6 @@ class BlogController extends SiteController
             'recent' => array_slice(array_map([$this, 'card'], $posts), 0, 5),
             'counters' => $this->counters($posts, $categories),
             'bannerImage' => media_url('consult.jpg', $this->defaultImage()),
-            'phone' => site_primary_phone(),
         ]);
     }
 
@@ -85,7 +84,6 @@ class BlogController extends SiteController
                 ))
             ),
 
-            'phone' => site_primary_phone(),
             'emergency' => $this->emergency(),
         ]);
     }

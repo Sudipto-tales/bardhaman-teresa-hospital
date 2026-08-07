@@ -95,4 +95,5 @@ $name = (string) ($d['name'] ?? '');
     'title' => 'Speak to the ' . e($name) . ' team',
     'text' => 'Appointments are confirmed the same day. Emergencies do not need one — walk in at any hour.',
     'primary' => ['href' => base_url('contact') . '#book', 'label' => 'Book an Appointment', 'icon' => 'fa-calendar-check'],
+    'secondary' => $callAction ?? [],
 ]); ?>

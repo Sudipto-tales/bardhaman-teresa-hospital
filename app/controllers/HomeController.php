@@ -73,7 +73,6 @@ class HomeController extends SiteController
                a tab can never come up empty. */
             'doctorTabs' => $this->doctorTabs($doctors, $departments),
 
-            'phone' => site_primary_phone(),
             'bannerImage' => $this->defaultImage(),
         ]);
     }

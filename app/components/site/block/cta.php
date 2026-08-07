@@ -15,7 +15,11 @@
  */
 
 $primary = $primary ?? ['href' => base_url('contact'), 'label' => 'Book an Appointment', 'icon' => 'fa-calendar-check'];
-$secondary = $secondary ?? ['href' => 'tel:+913423254567', 'label' => '+91 342 325 4567', 'icon' => 'fa-phone'];
+/* No default. The design put the same number in this band on every page, and
+   a component that keeps doing so is a page that goes on printing it after the
+   hospital has changed it in the panel. The caller passes `callAction`, which
+   is empty when there is no number — and then one button is printed, not two. */
+$secondary = $secondary ?? [];
 $id = $id ?? '';
 $section = $section ?? '';
 ?>

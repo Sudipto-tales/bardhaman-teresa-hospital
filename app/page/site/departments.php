@@ -62,4 +62,5 @@
     'title' => 'Book with any department',
     'text' => 'One number, every clinic. Tell us the symptom and we will find the right consultant.',
     'primary' => ['href' => base_url('contact') . '#book', 'label' => 'Book an Appointment', 'icon' => 'fa-calendar-check'],
+    'secondary' => $callAction ?? [],
 ]); ?>

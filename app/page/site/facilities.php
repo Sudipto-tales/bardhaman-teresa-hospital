@@ -73,5 +73,6 @@
 <?php App::render('site/block/cta', [
     'title' => 'Planning an admission?',
     'text' => 'Call ahead and the admission desk will have your paperwork and insurance pre-approval ready before you arrive.',
-    'primary' => ['href' => base_url('contact'), 'label' => 'Contact the desk', 'icon' => 'fa-phone'],
+    'primary' => ['href' => base_url('contact') . '#book', 'label' => 'Book an Appointment', 'icon' => 'fa-calendar-check'],
+    'secondary' => $callAction ?? [],
 ]); ?>

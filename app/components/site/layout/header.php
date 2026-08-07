@@ -14,8 +14,12 @@
  *   tel, whatsapp                           Forwarded to the dock.
  */
 
-$email = $email ?? 'contact@teresamemorial.org';
-$phone = $phone ?? '+91 342 325 4567';
+/* No literal fallback. A number written here is a number nobody edits in the
+   panel and nobody finds when it changes — which is the thing this conversion
+   set out to remove. Absent, the strip prints one item or none rather than a
+   stale one. */
+$email = trim((string) ($email ?? ''));
+$phone = trim((string) ($phone ?? ''));
 ?>
 <?= App::component('site/layout/brand-rail', [
     'logo' => $logo ?? null,
@@ -25,8 +29,12 @@ $phone = $phone ?? '+91 342 325 4567';
     <!-- ============ NAV (separate element — hides on scroll-down) ============ -->
     <div class="nav-shell" id="navShell">
         <div class="nav-topbar" translate="no">
+<?php if ($email !== ''): ?>
             <span><i class="fa-solid fa-envelope"></i> <?= e($email) ?></span>
+<?php endif; ?>
+<?php if ($phone !== ''): ?>
             <span><i class="fa-solid fa-phone"></i> <?= e($phone) ?></span>
+<?php endif; ?>
         </div>
 
 <?= App::component('site/layout/nav-bar', [

@@ -52,10 +52,12 @@ $last = count($crumb) - 1;
                     </div>
 
                     <div class="post-hero__side">
-                        <a class="post-hero__call" href="tel:<?= e($tel ?? '+913423254567') ?>" translate="no">
+<?php if (trim((string) ($phone ?? '')) !== ''): ?>
+                        <a class="post-hero__call" href="tel:<?= e($tel ?? '') ?>" translate="no">
                             <span class="post-hero__call-ic"><i class="fa-solid fa-phone-volume"></i></span>
-                            <span>Call: <strong><?= e($phone ?? '+91 342 325 4567') ?></strong></span>
+                            <span>Call: <strong><?= e($phone) ?></strong></span>
                         </a>
+<?php endif; ?>
 
                         <!-- wired in pages.js. Without JS the mail link still
                              works and the two buttons are inert rather than broken -->

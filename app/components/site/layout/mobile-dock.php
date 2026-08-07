@@ -10,8 +10,10 @@
  *   whatsapp  string  Digits for wa.me, no spaces.
  */
 
-$tel = $tel ?? '+913423254567';
-$whatsapp = $whatsapp ?? '913423254567';
+/* Empty rather than the design's own number — see the note in header.php. A
+   dock button with nothing to dial is not rendered. */
+$tel = trim((string) ($tel ?? ''));
+$whatsapp = trim((string) ($whatsapp ?? ''));
 ?>
     <!-- ============ FLOATING GLASS DOCK (left) ============ -->
     <aside class="dock" aria-label="Quick actions">
@@ -24,14 +26,18 @@ $whatsapp = $whatsapp ?? '913423254567';
                 <i class="fa-solid fa-truck-medical"></i>
                 <span class="dock__tip">Our Location</span>
             </a>
+<?php if ($tel !== ''): ?>
             <a href="tel:<?= e($tel) ?>" class="dock__btn" aria-label="Connect With Us">
                 <i class="fa-solid fa-phone"></i>
                 <span class="dock__tip">Connect With Us</span>
             </a>
+<?php endif; ?>
+<?php if ($whatsapp !== ''): ?>
             <a href="https://wa.me/<?= e($whatsapp) ?>" class="dock__btn dock__btn--wa" aria-label="WhatsApp" target="_blank"
                 rel="noopener">
                 <i class="fa-brands fa-whatsapp"></i>
                 <span class="dock__tip">WhatsApp</span>
             </a>
+<?php endif; ?>
         </div>
     </aside>

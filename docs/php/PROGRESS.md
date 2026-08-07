@@ -1,10 +1,8 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 6.4 — the last of the hardcoded contact details. Every public
-page now renders from the database, so what is left is the eight `block/cta`
-call sites that never pass `secondary` and fall back to the phone number
-written into the component. Phases 4, 6.3 and 7 are finished; phase 5 (the
-admin panel on PHP) has not been started.
+**Next action:** 5.1 — the admin components and the PHP shell scaffolder. The
+public site is finished: phases 4, 6 and 7 are done, and phase 5 is the only
+one that has not been started. Phase 8 follows it.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -264,7 +262,7 @@ byte for byte.
 | 6.1 | Layout components | done | 10 under `app/components/site/layout/` |
 | 6.2 | Block + card + form components | done | 34 components total. Pure: no database, no superglobals, safe with zero props |
 | 6.3 | Pages + controllers + models | done | 12 page templates, 10 controllers, 18 models, and the frontend route table. Every URL the design has, served from the database |
-| 6.4 | Settings-driven contact details, redirects | todo | Redirects are done (in 6.3); what is left is the eight `block/cta` call sites |
+| 6.4 | Settings-driven contact details, redirects | done | Redirects in 6.3. No phone number or address is written in a file any more — changing one in the panel changes every page |
 
 `html/` is blocked by `.htaccess`, so the eleven
 files in `html/assets/` were copied to `assets/` — flat, not under `css/` and
@@ -342,6 +340,46 @@ were submitted as the browser sends them, from the markup the server rendered:
 the enquiry resolved its department, date and slot; the application stored its
 CV, denormalised `job_title` from the slug and filed the optional half of the
 form into `details`.
+
+### 6.4
+
+**The components no longer carry a fallback phone number or address.** They
+carried the design's own — `+91 342 325 4567`, four times across the header,
+the dock, the closing band and the article banner — which read as a safety net
+and was in fact the failure this conversion set out to remove: a number nobody
+edits in the panel and nobody finds when it changes. A missing value now prints
+nothing. The top strip shows one item or none, a dock button with nothing to
+dial is not rendered, and the closing band prints one button rather than two.
+
+**`SiteController::page()` supplies `phone`, `email` and `callAction` to every
+page**, so a controller cannot forget them — which is what the four listing and
+department pages had done, falling through to the component's literal and
+looking correct while doing it. `callAction` is the closing band's second
+button ready-made, empty when there is no number.
+
+Two shapes for `$phone` were in circulation, both under that name: an array on
+eight templates and the number alone on `doctors.php`. It is the array
+everywhere now, and `DoctorController` no longer passes its own.
+
+`facilities.php` also had "Contact the desk" where the design says "Book an
+Appointment". Corrected against `html/facilities.html`.
+
+Verified live against SQLite: changing the reception number in `settings`
+changes it on every page that prints it, in one edit — home, the three listing
+pages, every department, the blog listing, an article and a vacancy. Emptying
+the `phones` repeater altogether leaves all eight pages at 200 with no PHP
+notice and no `href="tel:"` pointing at nothing.
+
+Three copies of the number survive in the database, and are meant to: the
+cardiology badge ("Chest pain? Call …"), the maintenance message and the
+WhatsApp field. Those are records with a panel screen behind them, which is the
+point — editorial copy that names a number is edited where the number is.
+
+`initJobDetail()` in `pages.js` still has the careers address written into its
+"role no longer listed" panel. It is unreachable here: the vacancy page is
+server-rendered and carries no `#jobDetail`, so the function returns on its
+first line. It stays for the static design copy, like the two literal blocks in
+`website.js`.
 
 ## Phase 7 — Forms, mail, popups
 

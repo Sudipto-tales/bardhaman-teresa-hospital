@@ -6,10 +6,11 @@
  * The roster is rows; the banner and the appointment list are the page's own
  * copy — `doctors` has no page_sections.
  *
- * $doctors   every published consultant, in the order the panel arranged them
- * $counters  the stats band
- * $phone     the reception number, so the "how to see one of them" list is not
- *            a second place a number has to be kept up to date
+ * $doctors     every published consultant, in the order the panel arranged them
+ * $counters    the stats band
+ * $phone       ['number', 'digits'] — the reception number, so the "how to see
+ *              one of them" list is not a second place a number is kept
+ * $callAction  the same number as the closing band's second button
  */
 ?>
 <?php App::render('site/block/banner', [
@@ -44,8 +45,8 @@
     'title' => 'How to see one of them',
     'lead' => 'Appointments open fourteen days ahead. Call, WhatsApp or use the form — all three reach the same desk and are confirmed the same day.',
     'items' => array_values(array_filter([
-        $phone ? 'Call ' . $phone : '',
-        $phone ? 'WhatsApp the same number' : '',
+        ($phone['number'] ?? '') !== '' ? 'Call ' . $phone['number'] : '',
+        ($phone['number'] ?? '') !== '' ? 'WhatsApp the same number' : '',
         'Use the online form',
         'Walk in for Emergency',
         'Bring previous reports',
@@ -64,4 +65,5 @@
     'title' => 'Find the right consultant',
     'text' => 'Tell us the symptom rather than the speciality — the desk will match you to the correct clinic.',
     'primary' => ['href' => base_url('contact') . '#book', 'label' => 'Book an Appointment', 'icon' => 'fa-calendar-check'],
+    'secondary' => $callAction ?? [],
 ]); ?>
