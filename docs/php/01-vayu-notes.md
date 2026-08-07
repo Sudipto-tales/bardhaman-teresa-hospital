@@ -194,6 +194,12 @@ configured.
 - `display_errors` follows `APP_DEBUG` instead of the php.ini default.
 - Behind a TLS-terminating proxy, `X-Forwarded-Proto` is honoured when building
   the base URL — otherwise every link on an https page is emitted as http.
+- The two route tables are combined with `+`, not `array_merge()`. PHP stores
+  the key `'404'` as the integer `404`, and `array_merge()` renumbers integer
+  keys — the error route arrived as key `0`, so change 2's real 404 was
+  unreachable and every path matching no route answered with the plain-text
+  fallback. Union keeps the key. The tables cannot collide in any case: an API
+  key carries its method (`GET:api/…`) and a frontend key never does.
 
 ## 11. `config/bootstrap.php`
 

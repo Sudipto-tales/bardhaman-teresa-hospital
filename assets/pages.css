@@ -946,6 +946,12 @@
     display: inline-flex;
 }
 
+/* the same line carrying a refusal from the server rather than a
+   confirmation — see post() in pages.js */
+.ct-note--error {
+    color: var(--crimson);
+}
+
 .ct-aside {
     display: grid;
     gap: var(--sp-gap);

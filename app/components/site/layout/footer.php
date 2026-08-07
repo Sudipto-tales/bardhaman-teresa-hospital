@@ -41,7 +41,9 @@ $columns = $columns ?? [
         ['label' => 'Visitor Information', 'href' => base_url('facilities') . '#visiting'],
         ['label' => 'Emergency Care', 'href' => base_url('contact') . '#emergency'],
         ['label' => 'Donate', 'href' => base_url('contact')],
-        ['label' => 'Online Services', 'href' => base_url('departments/lab-diagnostics')],
+        /* Department pages sit at the root, not under /departments/ — the
+           design names them that way and the redirects follow it. */
+        ['label' => 'Online Services', 'href' => base_url('lab-diagnostics')],
         ['label' => 'Pay Your Bills', 'href' => base_url('contact')],
     ]],
 ];

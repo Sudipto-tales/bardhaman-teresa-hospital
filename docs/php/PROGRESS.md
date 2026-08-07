@@ -1,9 +1,10 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 6.3 — the public site's pages and controllers. `app/models/` and
-the components are done and the assets are now served from `assets/`, so what is
-left is the page templates, the controllers behind them and the frontend route
-table. Phase 4 is finished.
+**Next action:** 6.4 — the last of the hardcoded contact details. Every public
+page now renders from the database, so what is left is the eight `block/cta`
+call sites that never pass `secondary` and fall back to the phone number
+written into the component. Phases 4, 6.3 and 7 are finished; phase 5 (the
+admin panel on PHP) has not been started.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -262,10 +263,10 @@ byte for byte.
 |---|---|---|---|
 | 6.1 | Layout components | done | 10 under `app/components/site/layout/` |
 | 6.2 | Block + card + form components | done | 34 components total. Pure: no database, no superglobals, safe with zero props |
-| 6.3 | Pages + controllers + models | doing | `app/models/` done — 16 files, read-only, published-only. Assets copied to `assets/` in 4.5. Pages and controllers still to write |
-| 6.4 | Settings-driven contact details, redirects | todo | Kills the repo-wide find-and-replace |
+| 6.3 | Pages + controllers + models | done | 12 page templates, 10 controllers, 18 models, and the frontend route table. Every URL the design has, served from the database |
+| 6.4 | Settings-driven contact details, redirects | todo | Redirects are done (in 6.3); what is left is the eight `block/cta` call sites |
 
-The first of those is done. `html/` is blocked by `.htaccess`, so the eleven
+`html/` is blocked by `.htaccess`, so the eleven
 files in `html/assets/` were copied to `assets/` — flat, not under `css/` and
 `js/`, because that is the path the components already reference
 (`assets/website.css`, `assets/pages.js`, `assets/logo-teresa.png`). Byte
@@ -274,28 +275,82 @@ there was nothing to rewrite. `html/` stays the frozen design reference:
 **from here on the served copy is `assets/`, and a change made in `html/assets/`
 alone changes nothing.**
 
-What is left for 6.3: the contact, careers, job and blog-listing page bodies
-have no functions in `build-pages.mjs` at all — they are inline template
-literals, so those regions (`ct-tiles`, `ct-aside`, `ct-map`, `cr-toolbar`, the
-blog sidebar) have no component and the page templates carry them.
-
-One thing 6.4 will have to fix, found while checking the dashboard's setup
-checklist: `settings.general.logo` and its two neighbours are seeded as
-`../../assets/logo-teresa.png`, which is a path relative to `html/admin/`. It
-resolves from the panel and from nowhere else.
+The contact, careers, job and blog-listing page bodies have no functions in
+`build-pages.mjs` at all — they are inline template literals, so those regions
+(`ct-tiles`, `ct-aside`, `ct-map`, `cr-toolbar`, the blog sidebar) have no
+component and the page templates carry them.
 
 Section headings, a banner's `lead` and an FAQ's `answer` are echoed as raw
 markup, because every heading in this design carries `<strong>` on its
 emphasised half. A controller must never pass visitor input into those.
 
+### 6.3
+
+**Department pages sit at the root.** `/cardiology`, not
+`/departments/cardiology` — the design names the files that way, the seeded
+redirects point at them that way, and a department is a destination on this
+site rather than a child of the listing. So `{slug}` is the last route and
+deliberately a catch-all: an unknown one-segment path is a department that does
+not exist, and `DepartmentController` answers it through the redirect table and
+then the 404 page. `RouteManager` tries exact keys before patterns and a
+`{param}` never spans a `/`, so no literal route and no `blog/{slug}` can be
+swallowed by it.
+
+**The redirect table runs where the 404 does, and nowhere else.** Checking it
+on every request would be one query on every page that was going to work
+anyway; checking it in `ErrorController` costs a query only on paths that had
+already failed. `site_url()` is what makes the seeded rows still mean
+something: they were written against the static site, so `/heart.html` →
+`/cardiology.html` arrives as a 301 to `/cardiology`. The same function drops
+the leading `../` from `settings.general.logo` — the path relative to
+`html/admin/` that PROGRESS flagged for 6.4 — and resolves every stored
+`*.html` through the same route map.
+
+**The two lists the design builds in JavaScript are now server-rendered, and
+`pages.js` was taught to leave them alone.** A vacancy list marked
+`data-server` is filtered in place: the rows came from the database, and
+rebuilding them from `TMH_JOBS` would replace real markup with a copy of it —
+or with nothing, on a page where that global is not printed at all. The static
+design file has no such marker and keeps rendering its own. `website.js` takes
+the same shape for the specialities panel and the testimonial rotator:
+`window.TMH_SPECIALITIES` and `window.TMH_TESTIMONIALS` replace the literals
+outright rather than merging into them, because a department deleted in the
+panel has to disappear rather than survive under the design's own key.
+
+**A form with an `action` posts it; one without keeps validating and
+clearing.** That is what lets the same `pages.js` serve both this site and the
+static design copy. The submit is intercepted either way — the endpoint answers
+JSON, and a native post would navigate the visitor to it. A 422 names the
+fields it rejected and the note shows the first, because the note is one line
+and the browser has already caught everything checkable without the server.
+
+**A draft or hidden record is a 404, not a thinner page.** One draft
+department, one draft post and one draft vacancy in the seed, plus one vacancy
+marked `hidden` — which the content model defines as *closed* — and all four
+answer 404 while their published neighbours render.
+
+Verified live against SQLite: all 33 public URLs — home, seven fixed pages,
+eleven published departments, nine published posts and five open vacancies —
+answer 200 with no PHP notice in the output, and the four unpublished records
+answer 404. The design had twenty static pages; a page per record is what
+replaces them. Every asset the pages reference resolves. The
+three seeded redirects 301 to their clean-URL targets, and a path matching no
+route at all now reaches the site's own 404 page rather than the framework's
+plain-text fallback (see [`01-vayu-notes.md`](01-vayu-notes.md) §10 — `'404'`
+is a numeric key and `array_merge()` was renumbering it). Both intake forms
+were submitted as the browser sends them, from the markup the server rendered:
+the enquiry resolved its department, date and slot; the application stored its
+CV, denormalised `job_title` from the slug and filed the optional half of the
+form into `details`.
+
 ## Phase 7 — Forms, mail, popups
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 7.1 | Enquiry endpoint + notification | done in 4.4 | Only the site-side `fetch` is left, with 6.3 |
-| 7.2 | Application: CV upload, HR mail, applicant ack | done in 4.4 | Row first, mail second — a failed send must not lose the application |
-| 7.3 | Doctor appointment link behaviour | todo | |
-| 7.4 | Cookie bar + ads popup from the database | todo | |
+| 7.1 | Enquiry endpoint + notification | done | Endpoint in 4.4, the site-side `fetch` in 6.3 |
+| 7.2 | Application: CV upload, HR mail, applicant ack | done | Row first, mail second — a failed send must not lose the application |
+| 7.3 | Doctor appointment link behaviour | done in 6.3 | Nine of ten published doctors carry `?doctor=`; the tenth has booking off and carries none |
+| 7.4 | Cookie bar + ads popup from the database | done in 6.3 | `SiteController::popups()`, from the `popups` settings group |
 
 ## Phase 8 — Hardening and handover
 

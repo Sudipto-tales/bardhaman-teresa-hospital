@@ -240,15 +240,20 @@
 
     /* ---------------------------------------------------------
        Appointment / enquiry form.
-       There is no backend here, so this validates, shows a
-       confirmation and clears. Point the <form> at your handler
-       (action + method) and delete the preventDefault to go live.
+
+       A form with an action posts it there and reports what came
+       back; one without — the static copy of this design, which
+       has no backend behind it — validates, confirms and clears.
+       The submit is intercepted either way, because the endpoint
+       answers JSON and a native post would navigate the visitor
+       to it.
        --------------------------------------------------------- */
     const initForm = () => {
         const form = $('#appointmentForm');
         if (!form) return;
 
         const note = $('#formNote', form);
+        const endpoint = form.getAttribute('action');
 
         preselectDoctor(form);
 
@@ -256,13 +261,77 @@
             if (!form.reportValidity()) return;
 
             e.preventDefault();
-            form.reset();
 
-            if (note) {
-                note.classList.add('is-visible');
-                setTimeout(() => note.classList.remove('is-visible'), 6000);
+            if (!endpoint) {
+                form.reset();
+                flash(note);
+                return;
             }
+
+            post(form, endpoint, note);
         });
+    };
+
+    /* Shows the note for a few seconds. `message` overrides the
+       server-rendered text — an error, usually — and is restored
+       afterwards so the next submit reads correctly. */
+    const flash = (note, message, isError) => {
+        if (!note) return;
+
+        const original = note.dataset.original || note.innerHTML;
+        note.dataset.original = original;
+
+        if (message) {
+            note.textContent = message;
+        }
+
+        note.classList.toggle('ct-note--error', !!isError);
+        note.classList.add('is-visible');
+
+        setTimeout(() => {
+            note.classList.remove('is-visible', 'ct-note--error');
+            note.innerHTML = original;
+        }, 6000);
+    };
+
+    /* Posts a form as multipart, which is what the intake
+       endpoints read — the application form carries a CV, and
+       sending both the same way keeps one path to maintain.
+
+       A 422 names the fields it rejected; the first message is
+       shown rather than all of them, because the note is one
+       line and the browser's own validation has already caught
+       everything that can be checked without the server. */
+    const post = (form, endpoint, note, onSent) => {
+        const button = $('button[type="submit"]', form);
+        if (button) button.disabled = true;
+
+        fetch(endpoint, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+            credentials: 'same-origin',
+        })
+            .then((res) => res.json().catch(() => ({})).then((data) => ({ res, data })))
+            .then(({ res, data }) => {
+                if (res.ok) {
+                    form.reset();
+                    if (onSent) onSent();
+                    flash(note);
+                    return;
+                }
+
+                /* {error: {code, message, fields}} — see core/Api.php */
+                const error = data.error || {};
+                const fields = error.fields || {};
+                const first = Object.keys(fields)[0];
+
+                flash(note, first ? fields[first] : (error.message || 'Something went wrong — please call the desk.'), true);
+            })
+            .catch(() => flash(note, 'Could not reach the server — please call the desk.', true))
+            .finally(() => {
+                if (button) button.disabled = false;
+            });
     };
 
     /* ---------------------------------------------------------
@@ -440,6 +509,27 @@
                     <li><i class="fa-solid fa-user-clock"></i> ${esc(job.experience)}</li>
                 </ul>`;
 
+    /* Fills the count line and hides the empty panel. Shared by
+       both paths below so the two lists read identically. */
+    const jobTally = (n, count, empty, list) => {
+        if (list) list.hidden = n === 0;
+        if (empty) empty.hidden = n > 0;
+        if (count) {
+            count.textContent = n === 0
+                ? 'No roles match that filter'
+                : `${n} open ${n === 1 ? 'role' : 'roles'}`;
+        }
+    };
+
+    /* ---------------------------------------------------------
+       The vacancy list.
+
+       A server-rendered list — marked data-server — is filtered
+       in place: the rows came from the database and rebuilding
+       them from TMH_JOBS would replace real markup with a copy,
+       or with nothing at all where that global is absent. The
+       static build has no such list and keeps rendering its own.
+       --------------------------------------------------------- */
     const initCareers = () => {
         const list = $('#jobList');
         if (!list) return;
@@ -447,6 +537,35 @@
         const empty = $('#jobEmpty');
         const count = $('#jobCount');
         const filter = $('#jobFilter');
+
+        if ('server' in list.dataset) {
+            const rows = [...list.children];
+
+            if (filter) {
+                [...new Set(rows.map((li) => li.dataset.dept).filter(Boolean))].sort().forEach((dept) => {
+                    const opt = document.createElement('option');
+                    opt.value = dept;
+                    opt.textContent = dept;
+                    filter.appendChild(opt);
+                });
+
+                filter.addEventListener('change', () => {
+                    let shown = 0;
+
+                    rows.forEach((li) => {
+                        const match = !filter.value || li.dataset.dept === filter.value;
+                        li.hidden = !match;
+                        if (match) shown += 1;
+                    });
+
+                    jobTally(shown, count, empty, null);
+                });
+            }
+
+            jobTally(rows.length, count, empty, null);
+            return;
+        }
+
         const all = JOBS();
 
         if (filter) {
@@ -471,13 +590,7 @@
                         class="fa-solid fa-arrow-right"></i> View &amp; apply</a>
             </li>`).join('');
 
-            list.hidden = rows.length === 0;
-            if (empty) empty.hidden = rows.length > 0;
-            if (count) {
-                count.textContent = rows.length === 0
-                    ? 'No roles match that filter'
-                    : `${rows.length} open ${rows.length === 1 ? 'role' : 'roles'}`;
-            }
+            jobTally(rows.length, count, empty, list);
         };
 
         render('');
@@ -618,8 +731,17 @@
 
         const note = $('#applyNote', form);
         const files = $$('input[type="file"]', form);
+        const endpoint = form.getAttribute('action');
 
         files.forEach((input) => input.addEventListener('change', () => checkFile(input)));
+
+        /* The role is rendered into the field's value attribute, so a
+           reset() puts it back on its own. */
+        const clear = () => files.forEach((input) => {
+            const box = input.closest('.cr-file');
+            const nameEl = box && $('[data-file-name]', box);
+            if (nameEl) nameEl.classList.remove('is-visible');
+        });
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -629,21 +751,17 @@
             if (files.some((input) => !checkFile(input))) return;
             if (!form.reportValidity()) return;
 
-            const role = $('#apRole', form);
-            const keepRole = role ? role.value : '';
-            form.reset();
-            if (role) role.value = keepRole;
-
-            files.forEach((input) => {
-                const box = input.closest('.cr-file');
-                const nameEl = box && $('[data-file-name]', box);
-                if (nameEl) nameEl.classList.remove('is-visible');
-            });
-
-            if (note) {
-                note.classList.add('is-visible');
-                setTimeout(() => note.classList.remove('is-visible'), 6000);
+            if (!endpoint) {
+                const role = $('#apRole', form);
+                const keepRole = role ? role.value : '';
+                form.reset();
+                if (role) role.value = keepRole;
+                clear();
+                flash(note);
+                return;
             }
+
+            post(form, endpoint, note, clear);
         });
     };
 

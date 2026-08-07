@@ -536,7 +536,11 @@
     /* assigned in initSpecialities; used by the site search */
     let selectSpecialty = null;
 
-    const SPECIALTIES = {
+    /* The server prints window.TMH_SPECIALITIES from the departments table, the
+       same way it prints TMH_JOBS and TMH_POPUPS. The literal below is what the
+       static design file falls back to, and is also what shows if the block is
+       ever rendered without its data — never an empty panel. */
+    const SPECIALTIES_FALLBACK = {
         cardiac: {
             title: 'Cardiac Sciences',
             img: 'https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=800&auto=format&fit=crop',
@@ -623,6 +627,13 @@
         }
     };
 
+    /* A supplied set replaces the fallback outright rather than merging into
+       it: a department deleted in the panel must disappear, and a merge would
+       keep it alive under the design's own key. */
+    const SPECIALTIES = (window.TMH_SPECIALITIES && Object.keys(window.TMH_SPECIALITIES).length)
+        ? window.TMH_SPECIALITIES
+        : SPECIALTIES_FALLBACK;
+
     const initSpecialities = () => {
         const list = $('#specialtyList');
         if (!list) return;
@@ -645,11 +656,14 @@
                 els.img.alt = data.title;
                 els.title.textContent = data.title;
                 els.desc.textContent = data.desc;
-                els.procs.innerHTML = data.procedures
+                els.procs.innerHTML = (data.procedures || [])
                     .map((p) => `<span class="spec__proc-tag">${p}</span>`).join('');
                 els.btn.innerHTML =
                     `Meet Our ${data.title} Experts <i class="fa-solid fa-arrow-right"></i>`;
-                els.conds.innerHTML = data.conditions.map((c) => `<li>${c}</li>`).join('');
+                /* Server-supplied rows carry the department's own page; the
+                   design's do not, and keep the button pointing at the roster. */
+                if (data.href) els.btn.href = data.href;
+                els.conds.innerHTML = (data.conditions || []).map((c) => `<li>${c}</li>`).join('');
             };
 
             if (REDUCED) return swap();
@@ -866,7 +880,7 @@
         const specSection = $('#specialities');
         Object.entries(SPECIALTIES).forEach(([key, d]) => {
             add('Specialities', `${d.title} — ${d.desc}`, specSection, key);
-            [...d.procedures, ...d.conditions].forEach((t) =>
+            [...(d.procedures || []), ...(d.conditions || [])].forEach((t) =>
                 add(`Specialities · ${d.title}`, t, specSection, key));
         });
 
@@ -998,7 +1012,10 @@
     /* =====================================================
        14. TESTIMONIALS — auto-advancing quote card
        ===================================================== */
-    const TESTIMONIALS = [
+    /* Same arrangement as SPECIALTIES above: the server prints
+       window.TMH_TESTIMONIALS from the testimonials table, and these are what
+       the static design file runs on. */
+    const TESTIMONIALS_FALLBACK = [
         {
             quote: 'I had a great experience at this hospital. I was seen quickly, and the doctor was able to diagnose and treat my condition very patiently.',
             name: 'JANE RONAN',
@@ -1030,6 +1047,10 @@
             img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=150&auto=format&fit=crop'
         }
     ];
+
+    const TESTIMONIALS = Array.isArray(window.TMH_TESTIMONIALS) && window.TMH_TESTIMONIALS.length
+        ? window.TMH_TESTIMONIALS
+        : TESTIMONIALS_FALLBACK;
 
     const initTestimonials = () => {
         const card = $('#testimonialCard');

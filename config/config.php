@@ -43,4 +43,10 @@ if (APP_DEBUG) {
 
 $frontendRoutes = require __DIR__ . '/../app/view.php';
 $apiRoutes = require __DIR__ . '/../api/gateway.php';
-$routes = array_merge($frontendRoutes, $apiRoutes);
+
+/* Union, not array_merge. PHP stores '404' as the integer 404, and
+   array_merge renumbers integer keys — the error route arrived as key 0 and
+   RouteManager, looking for '404', fell back to plain text on every path that
+   matched no route. The two tables cannot collide in any case: an API key
+   carries its method ('GET:api/...') and a frontend key never does. */
+$routes = $frontendRoutes + $apiRoutes;

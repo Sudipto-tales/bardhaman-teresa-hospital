@@ -20,10 +20,17 @@
  *   eyebrow, heading, lead      The form's own header; `heading` is markup
  *   times               array   Preferred-time options
  *   note                string  The success line pages.js reveals
+ *   ask                 array   Which optional questions to put — department,
+ *                               doctor, date, reason. The panel's Appointment
+ *                               section has a switch per row and a form that
+ *                               ignored them would make those switches a lie.
+ *                               Absent, every question is asked
  */
 
 $departments = $departments ?? [];
 $doctors = $doctors ?? [];
+
+$ask = ($ask ?? []) + ['department' => true, 'doctor' => true, 'date' => true, 'reason' => true];
 
 $departmentOptions = [];
 foreach ($departments as $department) {
@@ -96,6 +103,7 @@ $times = $times ?? [
 
 <?= App::component('site/form/field', ['type' => 'email', 'id' => 'ctEmail', 'name' => 'email', 'label' => 'Email', 'autocomplete' => 'email']) ?>
 
+<?php if ($ask['department']): ?>
 <?= App::component('site/form/field', [
     'type' => 'select',
     'id' => 'ctDept',
@@ -106,7 +114,9 @@ $times = $times ?? [
     'options' => $departmentOptions,
     'value' => $selectedDepartment ?? '',
 ]) ?>
+<?php endif; ?>
 
+<?php if ($ask['doctor']): ?>
 <?= App::component('site/form/field', [
     'type' => 'select',
     'id' => 'ctDoctor',
@@ -118,11 +128,15 @@ $times = $times ?? [
     'value' => $selectedDoctor ?? '',
     'help' => 'Doctors not listed here do not take booked appointments.',
 ]) ?>
+<?php endif; ?>
 
+<?php if ($ask['date']): ?>
 <?= App::component('site/form/field', ['type' => 'date', 'id' => 'ctDate', 'name' => 'date', 'label' => 'Preferred date']) ?>
 
 <?= App::component('site/form/field', ['type' => 'select', 'id' => 'ctTime', 'name' => 'time', 'label' => 'Preferred time', 'options' => $times]) ?>
+<?php endif; ?>
 
+<?php if ($ask['reason']): ?>
 <?= App::component('site/form/field', [
     'type' => 'textarea',
     'id' => 'ctMsg',
@@ -131,6 +145,7 @@ $times = $times ?? [
     'full' => true,
     'placeholder' => 'Describe the symptom in your own words — you do not need medical terms.',
 ]) ?>
+<?php endif; ?>
 
 <?= App::component('site/form/field', [
     'type' => 'checkbox',

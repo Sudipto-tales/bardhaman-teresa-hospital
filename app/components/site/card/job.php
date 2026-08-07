@@ -28,7 +28,9 @@ $niceDate = static function ($value): string {
 $posted = $niceDate($job['posted'] ?? $job['postedAt'] ?? $job['posted_at'] ?? '');
 $closes = $niceDate($job['closes'] ?? $job['closesAt'] ?? $job['closes_at'] ?? '');
 ?>
-            <li class="cr-job">
+            <!-- data-dept is what initCareers() filters a server-rendered
+                 list on; the script builds its own select from these -->
+            <li class="cr-job" data-dept="<?= e($job['dept'] ?? '') ?>">
                 <div>
                     <h3><?= e($job['title'] ?? '') ?></h3>
                     <ul class="cr-chips">
