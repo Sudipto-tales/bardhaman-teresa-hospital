@@ -9,31 +9,34 @@
 
     const { util: U, store, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     /* Where an entity name coming back from the API opens. The server names
        collections; which screen edits them is the panel's business. */
     const SCREEN = {
-        doctors: 'doctors.html',
-        leadership: 'leadership.html',
-        departments: 'departments.html',
-        facilities: 'facilities.html',
-        'lab-tests': 'lab-tests.html',
-        posts: 'blog.html',
-        categories: 'blog-categories.html',
-        testimonials: 'testimonials.html',
-        faqs: 'faqs.html',
-        counters: 'stats.html',
-        'nav-items': 'navigation.html',
-        redirects: 'redirects.html',
-        jobs: 'jobs.html',
-        applications: 'applications.html',
-        enquiries: 'enquiries.html',
-        appointments: 'appointments.html',
-        users: 'users.html',
-        roles: 'users.html',
-        media: 'gallery.html',
-        pages: 'pages.html',
-        settings: 'settings-general.html',
-        auth: 'activity-log.html',
+        doctors: 'doctors',
+        leadership: 'leadership',
+        departments: 'departments',
+        facilities: 'facilities',
+        'lab-tests': 'lab-tests',
+        posts: 'blog',
+        categories: 'blog-categories',
+        testimonials: 'testimonials',
+        faqs: 'faqs',
+        counters: 'stats',
+        'nav-items': 'navigation',
+        redirects: 'redirects',
+        jobs: 'jobs',
+        applications: 'applications',
+        enquiries: 'enquiries',
+        appointments: 'appointments',
+        users: 'users',
+        roles: 'users',
+        media: 'gallery',
+        pages: 'pages',
+        settings: 'settings-general',
+        auth: 'activity-log',
     };
 
     const NOUN = {
@@ -65,7 +68,7 @@
         delete: 'off', restore: 'info', login: 'off', logout: 'off', view: 'off',
     };
 
-    const screenFor = (entity) => SCREEN[entity] || 'dashboard.html';
+    const screenFor = (entity) => SCREEN[entity] || 'dashboard';
     const nounFor = (entity) => NOUN[entity] || entity;
 
     window.TMH.boot(init);
@@ -79,7 +82,7 @@
             title: `${greeting},`,
             accent: (who && who.name ? who.name.split(' ')[0] : 'there'),
             sub: 'What has come in, and what is waiting on you.',
-            actions: '<a class="btn btn--ghost" href="../../website.html" target="_blank" rel="noopener">'
+            actions: `<a class="btn btn--ghost" href="${SITE}" target="_blank" rel="noopener">`
                 + '<i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>',
         });
 
@@ -109,7 +112,7 @@
                 <article class="card c8">
                     <div class="card__head">
                         <h2>Recent enquiries</h2>
-                        <a class="btn btn--ghost btn--sm" href="enquiries.html">All enquiries</a>
+                        <a class="btn btn--ghost btn--sm" href="enquiries">All enquiries</a>
                     </div>
                     ${enquiriesHtml(data.recentEnquiries)}
                 </article>
@@ -127,7 +130,7 @@
                 <article class="card c8">
                     <div class="card__head">
                         <h2>Recently edited</h2>
-                        <a class="btn btn--ghost btn--sm" href="activity-log.html">Activity log</a>
+                        <a class="btn btn--ghost btn--sm" href="activity-log">Activity log</a>
                     </div>
                     ${activityHtml(data.recentActivity)}
                 </article>
@@ -229,7 +232,7 @@
                 <thead><tr><th>From</th><th>Subject</th><th>Status</th><th>Received</th></tr></thead>
                 <tbody>
                     ${rows.map((r) => `
-                        <tr data-href="enquiry-view.html?id=${U.esc(encodeURIComponent(r.id))}">
+                        <tr data-href="enquiry-view?id=${U.esc(encodeURIComponent(r.id))}">
                             <td>
                                 <span class="cell-main">${U.esc(r.name)}</span>
                                 <span class="cell-sub">${U.esc(r.email || r.phone || '')}</span>
@@ -273,10 +276,10 @@
 
     function quickActionsHtml() {
         const actions = [
-            ['fa-user-doctor', 'Add a doctor', 'doctor-form.html'],
-            ['fa-pen-nib', 'Write a post', 'blog-form.html'],
-            ['fa-bullhorn', 'Post a vacancy', 'job-form.html'],
-            ['fa-address-book', 'Edit contact details', 'settings-contact.html'],
+            ['fa-user-doctor', 'Add a doctor', 'doctor-form'],
+            ['fa-pen-nib', 'Write a post', 'blog-form'],
+            ['fa-bullhorn', 'Post a vacancy', 'job-form'],
+            ['fa-address-book', 'Edit contact details', 'settings-contact'],
         ];
 
         return `<div class="quick-actions">${actions.map(([icon, label, href]) => `

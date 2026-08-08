@@ -4,7 +4,7 @@ __t_dark.html
 __t_light.html
 
 # Pre-rebuild copy of the old single-page site, kept locally for
-# reference. The current home page is html/website.html.
+# reference. The home page is now rendered by app/page/site/home.php.
 website.original.html
 
 # Secrets and machine-specific config. .env.example is the template.

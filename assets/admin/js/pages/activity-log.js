@@ -14,13 +14,13 @@
     /* Where a collection's records are edited. Same map the dashboard uses;
        both turn a name the server gave them into a screen. */
     const SCREEN = {
-        doctors: 'doctors.html', leadership: 'leadership.html', departments: 'departments.html',
-        facilities: 'facilities.html', 'lab-tests': 'lab-tests.html', posts: 'blog.html',
-        categories: 'blog-categories.html', testimonials: 'testimonials.html', faqs: 'faqs.html',
-        counters: 'stats.html', 'nav-items': 'navigation.html', redirects: 'redirects.html',
-        jobs: 'jobs.html', applications: 'applications.html', enquiries: 'enquiries.html',
-        appointments: 'appointments.html', users: 'users.html', roles: 'users.html',
-        media: 'gallery.html', pages: 'pages.html', settings: 'settings-general.html',
+        doctors: 'doctors', leadership: 'leadership', departments: 'departments',
+        facilities: 'facilities', 'lab-tests': 'lab-tests', posts: 'blog',
+        categories: 'blog-categories', testimonials: 'testimonials', faqs: 'faqs',
+        counters: 'stats', 'nav-items': 'navigation', redirects: 'redirects',
+        jobs: 'jobs', applications: 'applications', enquiries: 'enquiries',
+        appointments: 'appointments', users: 'users', roles: 'users',
+        media: 'gallery', pages: 'pages', settings: 'settings-general',
     };
 
     const NOUN = {

@@ -26,13 +26,13 @@
        it. Adding an image field to a form means adding it here too — the
        alternative is a delete that silently breaks a page. */
     const REFS = [
-        { entity: 'doctors', label: 'Doctor', fields: ['photo'], name: (r) => r.name, href: (r) => `doctor-form.html?id=${encodeURIComponent(r.id)}` },
-        { entity: 'leadership', label: 'Leadership', fields: ['photo'], name: (r) => r.name, href: (r) => `leadership-form.html?id=${encodeURIComponent(r.id)}` },
-        { entity: 'departments', label: 'Department', fields: ['banner', 'image'], name: (r) => r.name, href: (r) => `department-form.html?id=${encodeURIComponent(r.id)}` },
-        { entity: 'posts', label: 'Blog post', fields: ['coverImage'], name: (r) => r.title, href: (r) => `blog-form.html?id=${encodeURIComponent(r.id)}` },
-        { entity: 'testimonials', label: 'Testimonial', fields: ['photo'], name: (r) => `${r.name}’s quote`, href: () => 'testimonials.html' },
-        { entity: 'facilities', label: 'Facility', fields: ['image'], name: (r) => r.title, href: () => 'facilities.html' },
-        { entity: 'jobs', label: 'Vacancy', fields: ['image'], name: (r) => r.title, href: (r) => `job-form.html?id=${encodeURIComponent(r.id)}` },
+        { entity: 'doctors', label: 'Doctor', fields: ['photo'], name: (r) => r.name, href: (r) => `doctor-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'leadership', label: 'Leadership', fields: ['photo'], name: (r) => r.name, href: (r) => `leadership-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'departments', label: 'Department', fields: ['banner', 'image'], name: (r) => r.name, href: (r) => `department-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'posts', label: 'Blog post', fields: ['coverImage'], name: (r) => r.title, href: (r) => `blog-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'testimonials', label: 'Testimonial', fields: ['photo'], name: (r) => `${r.name}’s quote`, href: () => 'testimonials' },
+        { entity: 'facilities', label: 'Facility', fields: ['image'], name: (r) => r.title, href: () => 'facilities' },
+        { entity: 'jobs', label: 'Vacancy', fields: ['image'], name: (r) => r.title, href: (r) => `job-form?id=${encodeURIComponent(r.id)}` },
     ];
 
     const FILTERS = [
@@ -120,7 +120,7 @@
                         add(v, {
                             label: 'Page section',
                             name: `${page.title} — ${s.label}`,
-                            href: `page-${page.id}.html`,
+                            href: `page-${page.id}`,
                         });
                     }
                 });
@@ -131,7 +131,7 @@
         const general = settings.general || {};
         [['logo', 'Header logo'], ['logoDark', 'Dark-theme logo'], ['favicon', 'Favicon']]
             .forEach(([field, label]) => add(general[field], {
-                label: 'Site setting', name: label, href: 'settings-general.html',
+                label: 'Site setting', name: label, href: 'settings-general',
             }));
 
         return map;

@@ -13,6 +13,19 @@
     const $ = (sel, ctx = document) => ctx.querySelector(sel);
     const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
+    const meta = (name) => {
+        const el = document.querySelector(`meta[name="${name}"]`);
+        return el ? el.getAttribute('content') || '' : '';
+    };
+
+    /* Absolute, because /blog/{slug} and /careers/{slug} are two segments
+       deep — a relative href written here would resolve against /blog/
+       rather than the site root, and the site may be installed in a
+       subdirectory besides. app/components/site/layout/head.php prints the
+       real base; core/api.js reads the same meta on the panel's side. */
+    const BASE = (meta('app-base') || '/').replace(/\/+$/, '') + '/';
+    const url = (path) => BASE + String(path ?? '').replace(/^\/+/, '');
+
     const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const HAS_GSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
@@ -336,7 +349,7 @@
 
     /* ---------------------------------------------------------
        "Book an appointment" on a doctor card lands here as
-       contact.html?doctor=dr-anita-sharma#book. Fill the doctor
+       /contact?doctor=dr-anita-sharma#book. Fill the doctor
        in, and the department with it — someone who picked a
        cardiologist should not then have to say "cardiology".
 
@@ -435,7 +448,7 @@
             });
         }
 
-        /* An article's tag links point here as blog.html?tag=Cardiology.
+        /* An article's tag links point here as /blog?tag=Cardiology.
            Only honour a value that an actual chip carries, so a stale or
            hand-typed tag shows the full list instead of an empty grid. */
         const wanted = new URLSearchParams(location.search).get('tag');
@@ -485,9 +498,11 @@
     };
 
     /* ---------------------------------------------------------
-       Careers. window.TMH_JOBS (assets/jobs.js) is the single
-       source for both the list and the detail page, so a vacancy
-       opens or closes without rebuilding the static HTML.
+       Careers. window.TMH_JOBS was the prototype's single source
+       for both the list and the detail page. The PHP site renders
+       both server-side from the jobs table, so nothing defines it
+       any more and JOBS() returns an empty array — the branches
+       below are reached only when the markup lacks data-server.
        --------------------------------------------------------- */
     const JOBS = () => (Array.isArray(window.TMH_JOBS) ? window.TMH_JOBS : []);
 
@@ -586,7 +601,7 @@
                     ${jobChips(job)}
                     <span class="cr-job__posted">Posted ${niceDate(job.posted)}${job.closes ? ` &middot; closes ${niceDate(job.closes)}` : ''}</span>
                 </div>
-                <a class="arrow-link" href="job.html?id=${encodeURIComponent(job.id)}"><i
+                <a class="arrow-link" href="${url('careers/' + encodeURIComponent(job.id))}"><i
                         class="fa-solid fa-arrow-right"></i> View &amp; apply</a>
             </li>`).join('');
 
@@ -598,9 +613,13 @@
     };
 
     /* ---------------------------------------------------------
-       Job detail — job.html?id=<slug>. An unknown or missing id
+       Job detail — /careers/{slug}. An unknown or missing id
        shows the not-found panel and takes the form away, so an
        expired link cannot collect applications for nothing.
+
+       The PHP site renders this server-side and deliberately omits
+       #jobDetail (app/page/site/job.php), so initJob() returns on its
+       first line and this block is the prototype's path only.
        --------------------------------------------------------- */
     const jobBlock = (title, items) => (items && items.length
         ? `<div class="cr-jd__block">
@@ -625,7 +644,7 @@
                 <h3>This role is no longer listed</h3>
                 <p>It may have been filled or the link may be out of date. The current openings are always on the
                     careers page — or send a CV and HR will match it against what is coming up.</p>
-                <a href="careers.html" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> All open roles</a>
+                <a href="${url('careers')}" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> All open roles</a>
                 <a href="mailto:careers@teresamemorial.org" class="arrow-link"><i
                         class="fa-solid fa-envelope"></i> Email careers@teresamemorial.org</a>
             </div>`;

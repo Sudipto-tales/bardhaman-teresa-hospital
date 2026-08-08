@@ -14,6 +14,9 @@
         util: U, store, fields: F, form: formLib, layout, toast,
     } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     /* The home page band renders six. Anything past that only appears on the
        facilities page itself, and the editor should be told which is which. */
     const HOME_BAND = 6;
@@ -26,7 +29,7 @@
             title: 'Facilities',
             sub: 'The icon grid on the home page and the facilities page. Drag a card to change the order — the first six are the ones the home page shows.',
             actions: `
-                <a class="btn btn--ghost" href="../../facilities.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}facilities" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
                 <button type="button" class="btn btn--primary" id="addBtn">
                     <i class="fa-solid fa-plus"></i> Add facility</button>`,

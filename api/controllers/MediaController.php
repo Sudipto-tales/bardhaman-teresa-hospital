@@ -95,7 +95,7 @@ class MediaController extends ApiController
      *
      * multipart, not JSON — the panel posts a FormData with the file in
      * `file`. Several files are several requests, which is what
-     * html/admin/assets/js/core/media.js already does, and it means one
+     * assets/admin/js/core/media.js already does, and it means one
      * rejected file does not take the others with it.
      */
     public function store(): never

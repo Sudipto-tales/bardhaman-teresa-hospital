@@ -4,6 +4,9 @@
 
     const { util: U, store, table, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     window.TMH.boot(init);
 
     async function init() {
@@ -11,11 +14,11 @@
             crumb: [{ label: 'Content' }, { label: 'Blog & News' }],
             title: 'Blog',
             accent: '& News',
-            sub: 'The featured post is the one blog-post.html renders in full; the rest are cards on the blog index.',
+            sub: 'The featured post is the one the article page renders in full; the rest are cards on the blog index.',
             actions: `
-                <a class="btn btn--ghost" href="../../blog.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}blog" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View blog</a>
-                <a class="btn btn--primary" href="blog-form.html">
+                <a class="btn btn--primary" href="blog-form">
                     <i class="fa-solid fa-pen-nib"></i> Write a post</a>`,
         });
 
@@ -55,7 +58,7 @@
                                      style="width:56px;height:40px;border-radius:var(--radius-xs);object-fit:cover;flex-shrink:0">`
                                 : '<span style="width:56px;height:40px;border-radius:var(--radius-xs);background:var(--surface-3);display:grid;place-items:center;color:var(--text-muted);flex-shrink:0"><i class="fa-solid fa-image"></i></span>'}
                             <span style="min-width:0">
-                                <span class="cell-main">${r.featured ? '<i class="fa-solid fa-star" style="color:var(--accent-orange)" title="Featured — rendered in full on blog-post.html"></i> ' : ''}${U.mark(r.title, s.q)}</span>
+                                <span class="cell-main">${r.featured ? '<i class="fa-solid fa-star" style="color:var(--accent-orange)" title="Featured — rendered in full on the article page"></i> ' : ''}${U.mark(r.title, s.q)}</span>
                                 <span class="cell-sub clamp-2">${U.esc(r.excerpt || '')}</span>
                             </span>
                         </div>`,
@@ -82,7 +85,7 @@
                 { label: 'Status', sort: 'status', width: '10%', render: (r) => U.statusTag(r.status) },
             ],
             rowActions: (row) => [
-                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `blog-form.html?id=${encodeURIComponent(row.id)}`; } },
+                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `blog-form?id=${encodeURIComponent(row.id)}`; } },
                 {
                     label: row.featured ? 'Remove from featured' : 'Make featured', icon: 'fa-star',
                     onClick: () => setFeatured(row, list),
@@ -115,7 +118,7 @@
                     },
                 },
                 { divider: true },
-                { label: 'View on site', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open('../../blog-post.html', '_blank') },
+                { label: 'View on site', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(`${SITE}blog`, '_blank') },
                 { divider: true },
                 {
                     label: 'Delete', icon: 'fa-trash-can', danger: true,
@@ -125,23 +128,23 @@
                     }),
                 },
             ],
-            onRowClick: (row) => { location.href = `blog-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `blog-form?id=${encodeURIComponent(row.id)}`; },
             empty: {
                 icon: 'fa-newspaper', title: 'No posts yet',
                 text: 'The blog index and the related-posts rail both read from this list.',
                 actionLabel: 'Write the first post',
-                onAction: () => { location.href = 'blog-form.html'; },
+                onAction: () => { location.href = 'blog-form'; },
             },
         });
     }
 
-    /* Only one post can be featured — blog-post.html renders exactly one in
+    /* Only one post can be featured — the article page renders exactly one in
        full. Setting a new one clears the old, and says so. */
     async function setFeatured(row, list) {
         if (row.featured) {
             await store.update('posts', row.id, { featured: false });
             toast.warning('No featured post', {
-                body: 'blog-post.html falls back to the most recent published article.',
+                body: 'The article page falls back to the most recent published article.',
             });
             list.load();
             return;

@@ -1,8 +1,9 @@
 /* =========================================================
    Teresa Memorial Hospital — cookie bar and ads popup.
 
-   Both read assets/popups-config.js (window.TMH_POPUPS), which
-   the admin panel owns. Neither exists in the markup: if a
+   Both read window.TMH_POPUPS, printed by the cookie-bar and
+   ads-popup components from the settings record the admin panel
+   owns. Neither exists in the markup: if a
    widget is off, nothing is inserted into the DOM at all,
    rather than inserted and hidden. A hidden overlay still
    costs a screen-reader user a tab stop.

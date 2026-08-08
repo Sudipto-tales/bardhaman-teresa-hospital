@@ -18,6 +18,9 @@
         util: U, store, fields: F, form: formLib, layout, toast,
     } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const SOURCES = ['Website form', 'Google', 'Manual'];
 
     const TABS = [
@@ -34,7 +37,7 @@
             title: 'Testimonials',
             sub: 'Patient quotes for the home page rail. Nothing goes live until it is approved here.',
             actions: `
-                <a class="btn btn--ghost" href="../../website.html#testimonials" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}#testimonials" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
                 <button type="button" class="btn btn--primary" id="addBtn">
                     <i class="fa-solid fa-plus"></i> Add testimonial</button>`,

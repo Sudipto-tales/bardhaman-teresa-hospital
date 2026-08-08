@@ -25,7 +25,7 @@ class SettingsController extends ApiController
      * A fixed list rather than "whatever is already in the table": a typo in a
      * URL should be a 404, not a seventh group nobody can see because no
      * screen renders it. `seo` is the seventh real one — the content model
-     * calls popups the sixth, and SEO defaults arrived with seo.html.
+     * calls popups the sixth, and SEO defaults arrived with the SEO screen.
      */
     private const GROUPS = ['general', 'contact', 'social', 'integrations', 'theme', 'popups', 'seo'];
 

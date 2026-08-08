@@ -4,18 +4,21 @@
 
     const { util: U, store, table, layout } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     /* Which admin screen owns each page. Pages with no editor of their own are
        assembled from a list elsewhere — saying so is more useful than a
        disabled Edit button. */
     const EDITOR = {
-        home: { href: 'page-home.html', label: 'Section editor' },
-        about: { href: 'page-about.html', label: 'Section editor' },
-        contact: { href: 'page-contact.html', label: 'Section editor' },
-        careers: { href: 'page-careers.html', label: 'Section editor' },
-        departments: { href: 'departments.html', label: 'Built from Departments' },
-        doctors: { href: 'doctors.html', label: 'Built from Doctors' },
-        facilities: { href: 'facilities.html', label: 'Built from Facilities' },
-        blog: { href: 'blog.html', label: 'Built from Blog' },
+        home: { href: 'page-home', label: 'Section editor' },
+        about: { href: 'page-about', label: 'Section editor' },
+        contact: { href: 'page-contact', label: 'Section editor' },
+        careers: { href: 'page-careers', label: 'Section editor' },
+        departments: { href: 'departments', label: 'Built from Departments' },
+        doctors: { href: 'doctors', label: 'Built from Doctors' },
+        facilities: { href: 'facilities', label: 'Built from Facilities' },
+        blog: { href: 'blog', label: 'Built from Blog' },
     };
 
     window.TMH.boot(init);
@@ -26,7 +29,7 @@
             title: 'All',
             accent: 'Pages',
             sub: 'Every page on the public website, and the screen that controls its content.',
-            actions: '<a class="btn btn--ghost" href="seo.html"><i class="fa-solid fa-magnifying-glass-chart"></i> SEO overview</a>',
+            actions: '<a class="btn btn--ghost" href="seo"><i class="fa-solid fa-magnifying-glass-chart"></i> SEO overview</a>',
         });
 
         const rows = await store.all('pages');
@@ -53,8 +56,10 @@
             columns: [
                 {
                     label: 'Page', sort: 'title', width: '26%',
+                    /* No `/` prefix: the stored path carries its own leading
+                       slash now. Printing one here would read as `//about`. */
                     render: (r, s) => `<span class="cell-main">${U.mark(r.title, s.q)}</span>
-                        <span class="cell-sub">/${U.esc(r.path)}</span>`,
+                        <span class="cell-sub">${U.esc(r.path)}</span>`,
                 },
                 {
                     label: 'Content comes from', width: '22%',
@@ -85,9 +90,11 @@
                 const e = EDITOR[row.id];
                 const actions = [];
                 if (e) actions.push({ label: 'Edit content', icon: 'fa-pen', onClick: () => { location.href = e.href; } });
-                actions.push({ label: 'Edit SEO', icon: 'fa-magnifying-glass-chart', onClick: () => { location.href = `seo.html?page=${encodeURIComponent(row.id)}`; } });
+                actions.push({ label: 'Edit SEO', icon: 'fa-magnifying-glass-chart', onClick: () => { location.href = `seo?page=${encodeURIComponent(row.id)}`; } });
                 actions.push({ divider: true });
-                actions.push({ label: 'Open public page', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(`../../${row.path}`, '_blank') });
+                /* The leading slash is stripped before joining: SITE already
+                   ends in one, and `//about` is a hostname, not a path. */
+                actions.push({ label: 'Open public page', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(SITE + String(row.path || '').replace(/^\/+/, ''), '_blank') });
                 return actions;
             },
             onRowClick: (row) => {

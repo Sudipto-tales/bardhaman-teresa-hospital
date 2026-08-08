@@ -8,7 +8,7 @@
    role label on the list screen.
 
    ?role=role-super opens the form already set to Super Admin —
-   the "Add super admin" button on users.html.
+   the "Add super admin" button on users.
    ========================================================= */
 (function () {
     'use strict';
@@ -44,7 +44,7 @@
                 <article class="card"><div class="empty">
                     <div class="empty__art"><i class="fa-solid fa-user-slash"></i></div>
                     <h3>That account no longer exists</h3>
-                    <a class="btn btn--primary mt-4" href="users.html">Back to users</a>
+                    <a class="btn btn--primary mt-4" href="users">Back to users</a>
                 </div></article>`;
             return;
         }
@@ -58,7 +58,7 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'System' },
-                { label: 'Users & Roles', href: 'users.html' },
+                { label: 'Users & Roles', href: 'users' },
                 { label: isEdit ? record.name : 'New user' },
             ],
             title: isEdit ? 'Edit' : 'Add a',
@@ -66,7 +66,7 @@
             sub: isEdit
                 ? 'Changes to a role take effect the next time they load a screen.'
                 : 'They receive an invite email and set their own password on first sign-in.',
-            actions: '<a class="btn btn--ghost" href="users.html"><i class="fa-solid fa-arrow-left"></i> Back</a>',
+            actions: '<a class="btn btn--ghost" href="users"><i class="fa-solid fa-arrow-left"></i> Back</a>',
         });
 
         document.getElementById('view').innerHTML = `
@@ -177,7 +177,7 @@
         ctrl = formLib.create({
             el: '#userForm',
             bar: '#formBar',
-            onCancel: () => { location.href = 'users.html'; },
+            onCancel: () => { location.href = 'users'; },
             onSave: save,
         });
 
@@ -384,7 +384,7 @@
 
     /* An admin setting somebody else's password is overriding it, not changing
        their own, so no current password is asked for. Their own password lives
-       on profile.html, where the current one is required. */
+       on profile, where the current one is required. */
     async function setPassword() {
         const data = await formLib.editModal({
             title: `Set a new password for ${record.name}`,
@@ -437,7 +437,7 @@
         toast.success('Account deleted', {
             undo: () => store.restore('users', removed.row, removed.index),
         });
-        setTimeout(() => { location.href = 'users.html'; }, 900);
+        setTimeout(() => { location.href = 'users'; }, 900);
     }
 
     /* ---------------------------------------------------------
@@ -515,7 +515,7 @@
         });
 
         setTimeout(() => {
-            location.href = `users.html?created=${encodeURIComponent(created.id)}`;
+            location.href = `users?created=${encodeURIComponent(created.id)}`;
         }, 700);
     }
 }());

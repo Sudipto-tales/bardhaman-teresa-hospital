@@ -6,6 +6,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast, media } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     let page = null;
     let ctrl = null;
     let order = null;
@@ -16,11 +19,11 @@
         page = await store.get('pages', 'about');
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({
-            crumb: [{ label: 'Pages', href: 'pages.html' }, { label: 'About Page' }],
+            crumb: [{ label: 'Pages', href: 'pages' }, { label: 'About Page' }],
             title: 'About',
             accent: 'Page',
             sub: 'Story, mission, values, milestones and the proof mosaic.',
-            actions: '<a class="btn btn--ghost" href="../../about.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>',
+            actions: `<a class="btn btn--ghost" href="${SITE}about" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>`,
         });
 
         document.getElementById('view').innerHTML = markup();
@@ -116,7 +119,7 @@
                         ],
                     }),
                     F.mirror({
-                        label: 'Content source', source: 'Leadership', href: 'leadership.html',
+                        label: 'Content source', source: 'Leadership', href: 'leadership',
                         value: `${leaders.filter((l) => l.status === 'published').length} people published`,
                         hint: 'This section currently reuses doctor cards on the live site. Publishing entries in Leadership replaces them.',
                     }),
@@ -131,7 +134,7 @@
                     F.media({ name: 'in-practice.photoB', label: 'Photo — right', wide: false }),
                     F.text({ name: 'in-practice.rating', label: 'Rating shown on the badge', placeholder: '4.8' }),
                     F.mirror({
-                        label: 'Quotes', source: 'Testimonials', href: 'testimonials.html',
+                        label: 'Quotes', source: 'Testimonials', href: 'testimonials',
                         value: `${store.allSync('testimonials').filter((t) => t.featured).length} featured quotes`,
                     }),
                 ],
@@ -156,7 +159,7 @@
         page = await store.update('pages', 'about', U.applySections(page, flat, order));
         order = null;
         toast.success('About page saved', {
-            action: { label: 'View page', href: '../../about.html' },
+            action: { label: 'View page', href: `${SITE}about` },
         });
     }
 }());

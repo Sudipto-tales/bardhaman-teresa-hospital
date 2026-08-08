@@ -13,7 +13,7 @@
  * That is resolved server-side into the two selects' values, so the form is
  * already filled in before assets/pages.js runs — and stays filled in for
  * somebody whose scripts never arrive. preselectDoctor() does the same work
- * client-side for the frozen html/ copy.
+ * client-side in the prototype this page was ported from.
  */
 class ContactController extends SiteController
 {

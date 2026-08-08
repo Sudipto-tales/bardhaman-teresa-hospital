@@ -8,14 +8,14 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteRule ^index\.php$ - [L]
 
 # Not for the browser: the CLI entry point, the dev server shim, the
-# environment file, the SQLite database, the design prototype, and anything
-# uploaded. storage/ holds job applicants' CVs — a CV reachable by URL is a
-# named person's address and phone number reachable by URL.
+# environment file, the SQLite database, and anything uploaded. storage/ holds
+# job applicants' CVs — a CV reachable by URL is a named person's address and
+# phone number reachable by URL.
 RewriteRule ^vayu$ - [F,L]
 RewriteRule ^server\.php$ - [F,L]
 RewriteRule ^composer\.(json|lock)$ - [F,L]
 RewriteRule ^\.env - [F,L]
-RewriteRule ^(storage|database|config|core|app|api|vendor|tools|docs|html)/ - [F,L]
+RewriteRule ^(storage|database|config|core|app|api|vendor|tools|docs)/ - [F,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

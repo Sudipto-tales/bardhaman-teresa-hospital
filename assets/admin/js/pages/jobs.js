@@ -4,6 +4,9 @@
 
     const { util: U, store, table, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     window.TMH.boot(init);
 
     async function init() {
@@ -12,9 +15,9 @@
             title: 'Vacancies',
             sub: 'An empty published list is a supported state — the careers page then shows its “nothing open” panel.',
             actions: `
-                <a class="btn btn--ghost" href="../../careers.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}careers" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View careers page</a>
-                <a class="btn btn--primary" href="job-form.html"><i class="fa-solid fa-plus"></i> Post a vacancy</a>`,
+                <a class="btn btn--primary" href="job-form"><i class="fa-solid fa-plus"></i> Post a vacancy</a>`,
         });
 
         const rows = await store.all('jobs');
@@ -85,7 +88,7 @@
                     render: (r) => {
                         const n = store.allSync('applications').filter((a) => a.jobId === r.id).length;
                         return n
-                            ? `<a href="applications.html?jobId=${U.esc(r.id)}">${n}</a>`
+                            ? `<a href="applications?jobId=${U.esc(r.id)}">${n}</a>`
                             : '<span class="muted">None</span>';
                     },
                 },
@@ -97,8 +100,8 @@
                 },
             ],
             rowActions: (row) => [
-                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `job-form.html?id=${encodeURIComponent(row.id)}`; } },
-                { label: 'View applications', icon: 'fa-file-signature', onClick: () => { location.href = `applications.html?jobId=${encodeURIComponent(row.id)}`; } },
+                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `job-form?id=${encodeURIComponent(row.id)}`; } },
+                { label: 'View applications', icon: 'fa-file-signature', onClick: () => { location.href = `applications?jobId=${encodeURIComponent(row.id)}`; } },
                 { divider: true },
                 {
                     label: row.status === 'published' ? 'Close this role' : 'Open this role',
@@ -127,7 +130,7 @@
                             const made = await store.create('jobs', copy);
                             toast.success('Reposted as a draft', {
                                 body: 'Dates moved on by a month. Check the summary before publishing.',
-                                action: { label: 'Edit it', onClick: () => { location.href = `job-form.html?id=${made.id}`; } },
+                                action: { label: 'Edit it', onClick: () => { location.href = `job-form?id=${made.id}`; } },
                             });
                             list.load();
                         } catch (e) {
@@ -144,12 +147,12 @@
                     }),
                 },
             ],
-            onRowClick: (row) => { location.href = `job-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `job-form?id=${encodeURIComponent(row.id)}`; },
             empty: {
                 icon: 'fa-bullhorn', title: 'No vacancies',
                 text: 'The careers page is showing its "nothing open" panel and the HR mailto.',
                 actionLabel: 'Post a vacancy',
-                onAction: () => { location.href = 'job-form.html'; },
+                onAction: () => { location.href = 'job-form'; },
             },
         });
     }

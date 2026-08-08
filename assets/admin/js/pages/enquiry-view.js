@@ -73,7 +73,7 @@
 
         if (!row) {
             document.getElementById('pageHead').innerHTML = layout.pageHead({
-                crumb: [{ label: 'Growth' }, { label: 'Enquiries', href: 'enquiries.html' }, { label: 'Not found' }],
+                crumb: [{ label: 'Growth' }, { label: 'Enquiries', href: 'enquiries' }, { label: 'Not found' }],
                 title: 'Enquiry not found',
             });
             document.getElementById('view').innerHTML = `
@@ -81,7 +81,7 @@
                     <div class="empty__art"><i class="fa-solid fa-envelope-circle-check"></i></div>
                     <h3>This enquiry is gone</h3>
                     <p>It was deleted, or the link is stale.</p>
-                    <a class="btn btn--primary" href="enquiries.html">
+                    <a class="btn btn--primary" href="enquiries">
                         <i class="fa-solid fa-arrow-left"></i> Back to the inbox</a>
                 </div></article>`;
             return;
@@ -105,13 +105,13 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Growth' },
-                { label: 'Enquiries', href: 'enquiries.html' },
+                { label: 'Enquiries', href: 'enquiries' },
                 { label: row.subject || row.name },
             ],
             title: row.subject || '(no subject)',
             sub: `From ${row.name} · ${U.fmtDateTime(row.receivedAt)} · via ${row.source || 'unknown source'}`,
             actions: `
-                <a class="btn btn--ghost" href="enquiries.html"><i class="fa-solid fa-arrow-left"></i> Inbox</a>
+                <a class="btn btn--ghost" href="enquiries"><i class="fa-solid fa-arrow-left"></i> Inbox</a>
                 ${row.status === 'closed'
                     ? '<button type="button" class="btn btn--ghost" data-act="reopen"><i class="fa-solid fa-rotate-left"></i> Reopen</button>'
                     : '<button type="button" class="btn btn--primary" data-act="close"><i class="fa-solid fa-circle-check"></i> Mark closed</button>'}`,
@@ -266,7 +266,7 @@
             ${related.length ? `
                 <div class="col gap-2">
                     ${related.map((e) => `
-                        <a class="row gap-2 row-between" href="enquiry-view.html?id=${U.esc(e.id)}"
+                        <a class="row gap-2 row-between" href="enquiry-view?id=${U.esc(e.id)}"
                            style="padding:var(--s3);border:1px solid var(--hairline);border-radius:var(--radius-sm)">
                             <span class="col">
                                 <span class="text-sm">${U.esc(e.subject || '(no subject)')}</span>
@@ -424,7 +424,7 @@
             /* No Undo offered here: this screen has nothing left to render, so
                it navigates away. The inbox's own delete does offer Undo. */
             toast.success('Enquiry deleted');
-            window.location.href = 'enquiries.html';
+            window.location.href = 'enquiries';
         },
     };
 

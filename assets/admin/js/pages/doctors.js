@@ -11,18 +11,21 @@
 
     const { util: U, store, table, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     window.TMH.boot(init);
 
     function init() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({
-            crumb: [{ label: 'Content', href: 'pages.html' }, { label: 'Doctors' }],
+            crumb: [{ label: 'Content', href: 'pages' }, { label: 'Doctors' }],
             title: 'Doctor',
             accent: 'Records',
             sub: 'Everything on the public doctors page and on each department’s team strip is driven by this list.',
             actions: `
-                <a class="btn btn--ghost" href="../../doctors.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}doctors" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
-                <a class="btn btn--primary" href="doctor-form.html">
+                <a class="btn btn--primary" href="doctor-form">
                     <i class="fa-solid fa-plus"></i> Add doctor</a>`,
         });
 
@@ -58,7 +61,7 @@
                 title: 'No doctors yet',
                 text: 'Add the first consultant and they will appear on the public doctors page straight away.',
                 actionLabel: 'Add doctor',
-                onAction: () => { location.href = 'doctor-form.html'; },
+                onAction: () => { location.href = 'doctor-form'; },
             },
             columns: [
                 {
@@ -114,7 +117,7 @@
                 },
             ],
             rowActions: (row) => [
-                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `doctor-form.html?id=${encodeURIComponent(row.id)}`; } },
+                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `doctor-form?id=${encodeURIComponent(row.id)}`; } },
                 {
                     label: row.status === 'published' ? 'Unpublish' : 'Publish',
                     icon: row.status === 'published' ? 'fa-eye-slash' : 'fa-cloud-arrow-up',
@@ -143,7 +146,7 @@
                     },
                 },
                 { divider: true },
-                { label: 'View on site', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open('../../doctors.html', '_blank') },
+                { label: 'View on site', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(`${SITE}doctors`, '_blank') },
                 { divider: true },
                 {
                     label: 'Delete', icon: 'fa-trash-can', danger: true,
@@ -155,7 +158,7 @@
                     },
                 },
             ],
-            onRowClick: (row) => { location.href = `doctor-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `doctor-form?id=${encodeURIComponent(row.id)}`; },
         });
 
         /* A newly saved record announces itself through the query string, so

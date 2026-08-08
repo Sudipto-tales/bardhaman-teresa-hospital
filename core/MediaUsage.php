@@ -19,7 +19,7 @@
  * rendition of the portrait the gallery holds at 1600px — same photo,
  * different query string. Comparing the URLs as text would report every
  * seeded image as unused and offer to delete it. Same rule as the panel's own
- * scan in html/admin/assets/js/pages/gallery.js.
+ * scan in assets/admin/js/pages/gallery.js.
  * ---------------------------------------------------------------------------
  */
 final class MediaUsage

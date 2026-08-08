@@ -3,7 +3,7 @@
 /**
  * The panel's document shell — <!DOCTYPE> through the opening <body>.
  *
- * A near-copy of the head that html/admin/tools/scaffold.mjs writes, and kept
+ * A near-copy of the head the prototype's scaffolder wrote, and kept
  * matching on purpose: the stylesheet order and the pre-paint theme script are
  * what the prototype was reviewed against, and the panel's CSS depends on both.
  *

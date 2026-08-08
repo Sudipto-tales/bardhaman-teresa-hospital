@@ -12,7 +12,7 @@
  * The first three are the generic controller's, unchanged, which is why this
  * extends it: an application is an ordinary resource with one extra field that
  * cannot be a column — the URL of the endpoint that streams its CV. The panel
- * reads `cvUrl` and opens it (html/admin/assets/js/pages/applications.js), so
+ * reads `cvUrl` and opens it (assets/admin/js/pages/applications.js), so
  * adding it here keeps that screen working without touching its JavaScript.
  *
  * Applications are received, never authored. `create => false` in the registry

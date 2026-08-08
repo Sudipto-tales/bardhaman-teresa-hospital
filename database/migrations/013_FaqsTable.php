@@ -1,7 +1,7 @@
 <?php
 
 /**
- * faqs — §10. Replaces the accordion hardcoded in website.html.
+ * faqs — §10. Replaces the accordion hardcoded in the prototype's home page.
  *
  * `faq_group` says which accordion the question belongs to; `group` is a
  * reserved word in MySQL.

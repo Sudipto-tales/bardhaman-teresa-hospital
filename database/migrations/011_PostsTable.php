@@ -1,7 +1,7 @@
 <?php
 
 /**
- * posts — §7. Replaces POSTS in site-data.mjs, blog.html and blog-post.html.
+ * posts — §7. Replaces POSTS in site-data.mjs, and the prototype's blog index and article pages.
  *
  * post_tags is a real table rather than a JSON array because tags are read
  * across rows: the related-posts strip added in commit a3bb044 finds other

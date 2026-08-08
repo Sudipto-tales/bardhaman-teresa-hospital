@@ -474,8 +474,8 @@ export const DEPARTMENTS = [
 ];
 
 /* ---------------------------------------------------------
-   Blog. The first entry is the one blog-post.html renders in
-   full; the rest are cards on blog.html.
+   Blog. The first entry is the one the article page renders in
+   full; the rest are cards on the blog index.
    --------------------------------------------------------- */
 export const POSTS = [
     {

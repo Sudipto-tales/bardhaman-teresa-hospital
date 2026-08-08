@@ -2,7 +2,7 @@
    Home page — section editor.
 
    One collapsible card per [data-section] block in
-   website.html. Sections can be hidden or reordered; the
+   the home page. Sections can be hidden or reordered; the
    fields inside are whatever that block actually renders.
 
    Blocks that draw from another list (doctors, articles, lab
@@ -16,6 +16,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast, media } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     let page = null;
     let ctrl = null;
     let order = null;
@@ -26,12 +29,12 @@
         page = await store.get('pages', 'home');
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({
-            crumb: [{ label: 'Pages', href: 'pages.html' }, { label: 'Home Page' }],
+            crumb: [{ label: 'Pages', href: 'pages' }, { label: 'Home Page' }],
             title: 'Home',
             accent: 'Page',
-            sub: 'Twelve sections, in the order they appear on website.html. Drag a card to move a section; switch it off to hide it.',
+            sub: 'Twelve sections, in the order they appear on the home page. Drag a card to move a section; switch it off to hide it.',
             actions: `
-                <a class="btn btn--ghost" href="../../website.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>`,
         });
 
@@ -99,7 +102,7 @@
                 fields: [
                     F.text({ name: 'services.title', label: 'Heading' }),
                     F.text({ name: 'services.lead', label: 'Standfirst' }),
-                    linked('Departments', 'departments.html', `${store.allSync('departments').length} departments`),
+                    linked('Departments', 'departments', `${store.allSync('departments').length} departments`),
                 ],
             })}
 
@@ -107,7 +110,7 @@
                 key: 'specialities', label: 'Specialities', enabled: on('specialities'),
                 fields: [
                     F.text({ name: 'specialities.title', label: 'Heading', wide: true }),
-                    linked('Departments', 'departments.html', 'Cards are generated from the department list'),
+                    linked('Departments', 'departments', 'Cards are generated from the department list'),
                 ],
             })}
 
@@ -116,7 +119,7 @@
                 sub: 'The animated counters.',
                 fields: [
                     F.text({ name: 'why-us.title', label: 'Heading', wide: true }),
-                    linked('Counters & Numbers', 'stats.html',
+                    linked('Counters & Numbers', 'stats',
                         `${store.allSync('counters').filter((c) => c.scope === 'home').length} counters scoped to the home page`),
                 ],
             })}
@@ -126,7 +129,7 @@
                 fields: [
                     F.text({ name: 'doctors.title', label: 'Heading' }),
                     F.number({ name: 'doctors.limit', label: 'How many to show', min: 1 }),
-                    linked('Doctors', 'doctors.html',
+                    linked('Doctors', 'doctors',
                         `${store.allSync('doctors').filter((d) => d.status === 'published').length} published doctors`),
                 ],
             })}
@@ -137,7 +140,7 @@
                     F.text({ name: 'lab-tests.title', label: 'Heading' }),
                     F.number({ name: 'lab-tests.limit', label: 'How many to show', min: 1 }),
                     F.text({ name: 'lab-tests.lead', label: 'Standfirst', wide: true }),
-                    linked('Lab Tests', 'lab-tests.html',
+                    linked('Lab Tests', 'lab-tests',
                         `${store.allSync('lab-tests').filter((t) => t.featured).length} tests marked featured`),
                 ],
             })}
@@ -146,7 +149,7 @@
                 key: 'testimonials', label: 'Testimonials', enabled: on('testimonials'),
                 fields: [
                     F.text({ name: 'testimonials.title', label: 'Heading', wide: true }),
-                    linked('Testimonials', 'testimonials.html',
+                    linked('Testimonials', 'testimonials',
                         `${store.allSync('testimonials').filter((t) => t.featured).length} featured quotes`),
                 ],
             })}
@@ -156,7 +159,7 @@
                 fields: [
                     F.text({ name: 'articles.title', label: 'Heading' }),
                     F.number({ name: 'articles.limit', label: 'How many to show', min: 1 }),
-                    linked('Blog', 'blog.html',
+                    linked('Blog', 'blog',
                         `${store.allSync('posts').filter((p) => p.status === 'published').length} published posts`),
                 ],
             })}
@@ -173,7 +176,7 @@
                             { value: 'department', label: 'Department' },
                         ],
                     }),
-                    linked('FAQs', 'faqs.html',
+                    linked('FAQs', 'faqs',
                         `${store.allSync('faqs').filter((f) => f.group === 'home').length} questions in the Home group`),
                 ],
             })}
@@ -182,7 +185,7 @@
                 key: 'contact', label: 'Contact band', enabled: on('contact'),
                 fields: [
                     F.text({ name: 'contact.title', label: 'Heading', wide: true }),
-                    linked('Contact Details', 'settings-contact.html', 'Numbers and address come from Settings'),
+                    linked('Contact Details', 'settings-contact', 'Numbers and address come from Settings'),
                 ],
             })}
 
@@ -200,7 +203,7 @@
         const hidden = page.sections.filter((s) => !s.enabled).length;
         toast.success('Home page saved', {
             body: hidden ? `${hidden} section${hidden === 1 ? '' : 's'} hidden from visitors.` : '',
-            action: { label: 'View page', href: '../../website.html' },
+            action: { label: 'View page', href: `${SITE}` },
         });
     }
 }());

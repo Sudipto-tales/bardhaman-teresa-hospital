@@ -6,6 +6,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const id = U.param('id');
     const isEdit = !!id;
     let record = null;
@@ -21,7 +24,7 @@
                 <article class="card"><div class="empty">
                     <div class="empty__art"><i class="fa-solid fa-bullhorn"></i></div>
                     <h3>That vacancy no longer exists</h3>
-                    <a class="btn btn--primary mt-4" href="jobs.html">Back to vacancies</a>
+                    <a class="btn btn--primary mt-4" href="jobs">Back to vacancies</a>
                 </div></article>`;
             return;
         }
@@ -33,12 +36,12 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Careers' },
-                { label: 'Vacancies', href: 'jobs.html' },
+                { label: 'Vacancies', href: 'jobs' },
                 { label: isEdit ? record.title : 'New vacancy' },
             ],
             title: isEdit ? 'Edit' : 'Post a',
             accent: 'Vacancy',
-            actions: '<a class="btn btn--ghost" href="jobs.html"><i class="fa-solid fa-arrow-left"></i> Back</a>',
+            actions: '<a class="btn btn--ghost" href="jobs"><i class="fa-solid fa-arrow-left"></i> Back</a>',
         });
 
         document.getElementById('view').innerHTML = markup(careersEmail);
@@ -46,7 +49,7 @@
         ctrl = formLib.create({
             el: '#jobForm', bar: '#formBar',
             autosaveKey: `job:${id || 'new'}`,
-            onCancel: () => { location.href = 'jobs.html'; },
+            onCancel: () => { location.href = 'jobs'; },
             onSave: save,
         });
 
@@ -97,7 +100,7 @@
                         fields: [
                             F.text({ name: 'title', label: 'Job title', required: true, placeholder: 'Staff Nurse — Intensive Care' }),
                             F.text({ name: 'id', label: 'URL slug', required: true, rule: 'slug',
-                                hint: 'Used as <code>job.html?id=…</code>.' }),
+                                hint: 'Used as <code>job?id=…</code>.' }),
                             F.select({ name: 'dept', label: 'Department', required: true,
                                 placeholderOption: 'Choose a department',
                                 options: ['Critical Care', 'Anaesthesia', 'Radiology', 'Administration', 'Physiotherapy', ...departments] }),
@@ -171,7 +174,7 @@
                     <dt>Not reviewed</dt><dd>${apps.filter((a) => a.stage === 'new').length}</dd>
                     <dt>Shortlisted</dt><dd>${apps.filter((a) => a.stage === 'shortlisted').length}</dd>
                 </dl>
-                <a class="btn btn--ghost btn--sm mt-4" href="applications.html?jobId=${U.esc(record.id)}">
+                <a class="btn btn--ghost btn--sm mt-4" href="applications?jobId=${U.esc(record.id)}">
                     <i class="fa-solid fa-file-signature"></i> Open applications</a>`
             : '<p class="text-sm muted">No applications yet.</p>';
     }
@@ -189,7 +192,7 @@
         if (isEdit) {
             record = await store.update('jobs', id, payload);
             toast.success(opts.publish ? 'Vacancy published' : 'Changes saved', {
-                action: opts.publish ? { label: 'View careers page', href: '../../careers.html' } : null,
+                action: opts.publish ? { label: 'View careers page', href: `${SITE}careers` } : null,
             });
             if (payload.id !== id) {
                 U.setParams({ id: payload.id });
@@ -198,7 +201,7 @@
         } else {
             record = await store.create('jobs', payload);
             toast.success(opts.publish ? 'Vacancy published' : 'Saved as draft');
-            setTimeout(() => { location.href = 'jobs.html'; }, 600);
+            setTimeout(() => { location.href = 'jobs'; }, 600);
         }
     }
 }());

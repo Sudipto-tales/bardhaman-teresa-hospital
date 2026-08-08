@@ -8,6 +8,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast, media } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const FREQUENCY = [
         { value: 'session', label: 'Once per visit' },
         { value: 'days:1', label: 'Once a day' },
@@ -31,7 +34,7 @@
             accent: 'Cookie Bar',
             sub: 'The two overlays the website shows uninvited. Both can be switched off here without a deploy.',
             actions: `
-                <a class="btn btn--ghost" href="../../website.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>`,
         });
 
@@ -52,7 +55,7 @@
                         F.text({ name: 'cookieDeclineLabel', label: 'Decline button',
                             hint: 'Leave empty to offer no decline button.' }),
                         F.text({ name: 'cookiePolicyUrl', label: 'Policy link', wide: true,
-                            placeholder: '/privacy.html' }),
+                            placeholder: '/privacy' }),
                     ],
                 })}
 
@@ -70,7 +73,7 @@
                         F.textarea({ name: 'adsBody', label: 'Body', rows: 3, max: 300 }),
                         F.media({ name: 'adsImage', label: 'Image', wide: true,
                             hint: 'Landscape, at least 900px wide. The card renders without one if left empty.' }),
-                        F.text({ name: 'adsLink', label: 'Button link', placeholder: 'contact.html' }),
+                        F.text({ name: 'adsLink', label: 'Button link', placeholder: '/contact' }),
                         F.text({ name: 'adsLinkLabel', label: 'Button label', placeholder: 'Book a slot' }),
                         F.date({ name: 'adsStart', label: 'Starts' }),
                         F.date({ name: 'adsEnd', label: 'Ends',

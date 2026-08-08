@@ -1,7 +1,7 @@
 <?php
 
 /**
- * facilities — the twelve cards on facilities.html and the strip on the home
+ * facilities — the twelve cards on /facilities and the strip on the home
  * page.
  */
 

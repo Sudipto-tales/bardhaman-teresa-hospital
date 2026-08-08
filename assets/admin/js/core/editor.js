@@ -7,7 +7,7 @@
    editor gets wrong for this site. Text pasted from Word or
    Google Docs arrives carrying inline font stacks and colour;
    left alone it silently breaks the article typography on
-   blog-post.html.
+   the article page, /blog/{slug}.
 
    Upgrades <div data-editor="body"> in place. core/form.js
    already reads and writes .editor__body, so nothing else

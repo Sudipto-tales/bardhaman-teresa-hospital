@@ -1,7 +1,7 @@
 /* =========================================================
    Field builders.
 
-   doctor-form.html writes its fields as literal HTML — that
+   doctor-form writes its fields as literal HTML — that
    file is the readable reference for what the markup looks
    like. Every other form builds the same markup through these
    helpers, because thirty screens of hand-written <div

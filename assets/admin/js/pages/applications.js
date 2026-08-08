@@ -24,7 +24,7 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Careers' },
-                { label: 'Vacancies', href: 'jobs.html' },
+                { label: 'Vacancies', href: 'jobs' },
                 { label: job ? job.title : 'Applications' },
             ],
             title: 'Applications',
@@ -32,7 +32,7 @@
                 ? `Applications for ${job.title}.`
                 : 'Everyone who has applied, across every vacancy.',
             actions: job
-                ? '<a class="btn btn--ghost" href="applications.html"><i class="fa-solid fa-list"></i> All applications</a>'
+                ? '<a class="btn btn--ghost" href="applications"><i class="fa-solid fa-list"></i> All applications</a>'
                 : '',
         });
 
@@ -78,7 +78,7 @@
                     label: 'Applied for', width: '20%',
                     render: (r) => {
                         const j = store.allSync('jobs').find((x) => x.id === r.jobId);
-                        return j ? `<a href="job-form.html?id=${U.esc(j.id)}">${U.esc(j.title)}</a>`
+                        return j ? `<a href="job-form?id=${U.esc(j.id)}">${U.esc(j.title)}</a>`
                             : '<span class="tag warn">Vacancy deleted</span>';
                     },
                 },

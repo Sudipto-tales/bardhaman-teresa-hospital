@@ -19,6 +19,9 @@
         util: U, store, fields: F, form: formLib, layout, toast, editor,
     } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     /* [stored value, label, icon, subtitle]. The column holds the lower-case
        key the public site reads; the heading is the readable half. */
     const GROUPS = [
@@ -39,7 +42,7 @@
             title: 'FAQs',
             sub: 'Grouped exactly as the public accordions are. Expand a question to edit it; drag to reorder within a group.',
             actions: `
-                <a class="btn btn--ghost" href="../../website.html#faq" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}#faq" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
                 <button type="button" class="btn btn--primary" id="addBtn">
                     <i class="fa-solid fa-plus"></i> Add question</button>`,

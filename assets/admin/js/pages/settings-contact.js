@@ -3,7 +3,7 @@
 
    This is the screen the whole panel exists for. Today
    +91 342 325 4567 and contact@teresamemorial.org are typed
-   into all 20 public .html files — roughly four times each,
+   into all 20 public pages — roughly four times each,
    in the header bar, the mobile dock, the CTA band and the
    footer. Changing a number means a repo-wide find-and-replace
    and a rebuild.
@@ -12,6 +12,9 @@
     'use strict';
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
+
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
 
     let doc = null;
     let ctrl = null;
@@ -27,7 +30,7 @@
             title: 'Contact',
             accent: 'Details',
             sub: 'One place for every phone number, email address and map on the website.',
-            actions: '<a class="btn btn--ghost" href="../../contact.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View contact page</a>',
+            actions: `<a class="btn btn--ghost" href="${SITE}contact" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View contact page</a>`,
         });
 
         document.getElementById('view').innerHTML = `

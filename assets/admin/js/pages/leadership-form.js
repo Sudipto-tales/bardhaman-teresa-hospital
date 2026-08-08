@@ -19,7 +19,7 @@
                 <article class="card"><div class="empty">
                     <div class="empty__art"><i class="fa-solid fa-user-slash"></i></div>
                     <h3>That entry no longer exists</h3>
-                    <a class="btn btn--primary mt-4" href="leadership.html">Back to the list</a>
+                    <a class="btn btn--primary mt-4" href="leadership">Back to the list</a>
                 </div></article>`;
             return;
         }
@@ -29,12 +29,12 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Content' },
-                { label: 'Leadership', href: 'leadership.html' },
+                { label: 'Leadership', href: 'leadership' },
                 { label: isEdit ? record.name : 'New member' },
             ],
             title: isEdit ? 'Edit' : 'Add a',
             accent: 'Leader',
-            actions: '<a class="btn btn--ghost" href="leadership.html"><i class="fa-solid fa-arrow-left"></i> Back</a>',
+            actions: '<a class="btn btn--ghost" href="leadership"><i class="fa-solid fa-arrow-left"></i> Back</a>',
         });
 
         document.getElementById('view').innerHTML = `
@@ -95,7 +95,7 @@
         ctrl = formLib.create({
             el: '#leadForm',
             bar: '#formBar',
-            onCancel: () => { location.href = 'leadership.html'; },
+            onCancel: () => { location.href = 'leadership'; },
             onSave: save,
         });
 
@@ -155,7 +155,7 @@
             toast.success('Deleted', {
                 undo: () => store.restore('leadership', removed.row, removed.index),
             });
-            setTimeout(() => { location.href = 'leadership.html'; }, 900);
+            setTimeout(() => { location.href = 'leadership'; }, 900);
         });
     }
 
@@ -170,7 +170,7 @@
         } else {
             record = await store.create('leadership', payload);
             toast.success(opts.publish ? 'Published' : 'Saved as draft');
-            setTimeout(() => { location.href = 'leadership.html'; }, 600);
+            setTimeout(() => { location.href = 'leadership'; }, 600);
         }
     }
 }());

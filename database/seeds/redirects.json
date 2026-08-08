@@ -7,7 +7,7 @@
     {
       "public_id": "rdr-001",
       "from_path": "/heart.html",
-      "to_path": "/cardiology.html",
+      "to_path": "/cardiology",
       "code": 301,
       "hits": 214,
       "active": 1,
@@ -16,7 +16,7 @@
     {
       "public_id": "rdr-002",
       "from_path": "/our-team.html",
-      "to_path": "/doctors.html",
+      "to_path": "/doctors",
       "code": 301,
       "hits": 88,
       "active": 1,
@@ -25,7 +25,7 @@
     {
       "public_id": "rdr-003",
       "from_path": "/jobs",
-      "to_path": "/careers.html",
+      "to_path": "/careers",
       "code": 301,
       "hits": 41,
       "active": 1,
@@ -34,7 +34,7 @@
     {
       "public_id": "rdr-004",
       "from_path": "/old-blog/chest-pain",
-      "to_path": "/blog-post.html",
+      "to_path": "/blog",
       "code": 301,
       "hits": 12,
       "active": 0,

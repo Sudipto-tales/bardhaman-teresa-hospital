@@ -1,7 +1,7 @@
 <?php
 
 /**
- * jobs — §17. Replaces window.TMH_JOBS in html/assets/jobs.js.
+ * jobs — §17. Replaces window.TMH_JOBS, the prototype's vacancy array.
  *
  * `status = hidden` is how a vacancy closes; nothing is deleted, because the
  * applications already attached to it still have to be readable. An empty

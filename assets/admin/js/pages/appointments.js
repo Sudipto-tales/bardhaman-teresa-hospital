@@ -68,7 +68,7 @@
                 <i class="fa-solid fa-circle-info"></i>
                 <span><b>Nothing here can be changed.</b> Appointments are not taken online. A
                     doctor’s card links to the contact page only when
-                    <a href="doctors.html">Appointments available</a> is on for that doctor, and the
+                    <a href="doctors">Appointments available</a> is on for that doctor, and the
                     desk calls the patient back. These rows are kept for reference.</span>
             </div>
 

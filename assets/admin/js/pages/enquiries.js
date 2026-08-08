@@ -1,5 +1,5 @@
 /* Enquiries — the inbox. Everything the contact form, chat widget and phone
-   desk collect lands here; the detail screen (enquiry-view.html) does the
+   desk collect lands here; the detail screen (enquiry-view) does the
    replying. This screen's job is triage: see what is unanswered, filter it
    down, and move a batch of it in one go. */
 (function () {
@@ -44,7 +44,7 @@
             title: 'Enquiries',
             sub: 'Everything the public forms collect, in one queue.',
             actions: `
-                <a class="btn btn--ghost" href="settings-contact.html">
+                <a class="btn btn--ghost" href="settings-contact">
                     <i class="fa-solid fa-bell"></i> Who gets notified</a>`,
         });
 
@@ -180,7 +180,7 @@
     }
 
     function open(row, reply) {
-        window.location.href = `enquiry-view.html?id=${encodeURIComponent(row.id)}${reply ? '&reply=1' : ''}`;
+        window.location.href = `enquiry-view?id=${encodeURIComponent(row.id)}${reply ? '&reply=1' : ''}`;
     }
 
     /* ---------- single-row actions ---------- */

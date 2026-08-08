@@ -10,7 +10,7 @@
  * markup has a component of its own and the shell above it is as ordinary
  * as any other, so it can be scaffolded like the rest.
  *
- * Copied from html/admin/doctor-form.html unchanged.
+ * Copied from the prototype's doctor-form screen unchanged.
  */
 ?>
                 <div id="pageHead"></div>

@@ -18,6 +18,9 @@
         util: U, store, table, fields: F, form: formLib, layout, toast,
     } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const HOME_BLOCK = 6;
 
     const CATEGORIES = [
@@ -41,7 +44,7 @@
             accent: '& Packages',
             sub: 'The price list behind the diagnostics page and the home page block.',
             actions: `
-                <a class="btn btn--ghost" href="../../lab-diagnostics.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}lab-diagnostics" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
                 <button type="button" class="btn btn--primary" id="addBtn">
                     <i class="fa-solid fa-plus"></i> Add</button>`,

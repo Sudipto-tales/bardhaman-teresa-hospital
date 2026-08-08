@@ -9,7 +9,7 @@
  * the repeater, the media picker and the multi-select when it binds a record;
  * `layout.js` mounts last because it paints the shell from everything above it.
  *
- * The bundles below are the CORE table from `html/admin/tools/scaffold.mjs`,
+ * The bundles below are the CORE table from the prototype's scaffolder,
  * checked against the script list of all 41 prototype screens, and kept as
  * data rather than baked into each shell so that adding a module to every form
  * screen stays a one-line change.
@@ -29,7 +29,7 @@ $bundles = [
 
     /* FAQs edits its answers through the rich-text pad, so it needs the editor
        on top of the list bundle. scaffold.mjs called this one `listeditor` and
-       the checked-in faqs.html carried the extra script — a bundle cannot be
+       the prototype's checked-in FAQs screen carried the extra script — a bundle cannot be
        forgotten, a hand-edited file can. */
     'listeditor' => ['table', 'repeater', 'media', 'multiselect', 'editor', 'fields', 'form'],
 

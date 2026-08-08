@@ -47,7 +47,7 @@ class HomeController extends SiteController
                     . ' &mdash; ' . (string) setting('general', 'tagline', 'Bardhaman'),
                 'description' => 'A 210-bed multispeciality hospital and nursing home in Bardhaman (Burdwan) '
                     . 'with a 24/7 emergency, twelve departments and a same-day laboratory.',
-                /* website.html loads no pages.css — every rule the home page
+                /* The home page loads no pages.css — every rule it
                    needs is in website.css, and pages.css restyles some of the
                    same class names for the inner pages. */
                 'styles' => ['assets/website.css'],

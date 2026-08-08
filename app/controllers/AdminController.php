@@ -48,11 +48,12 @@ class AdminController extends SiteController
      * Where this account opens the panel — the profile screen's "Open the
      * panel on", or the dashboard.
      *
-     * The select there still offers the design's `dashboard.html` spellings,
-     * so the extension is stripped here rather than left for the redirect to
-     * bounce a second time. An unknown value falls back rather than 404s: a
-     * screen can be renamed, and a stale preference should not shut somebody
-     * out of their own panel.
+     * The select stores a bare screen name, and the rows that held the
+     * design's `dashboard.html` spelling were cleaned by migration 025. The
+     * extension is still stripped here because a restored backup predates
+     * that migration, and two characters are cheaper than a support call. An
+     * unknown value falls back rather than 404s: a screen can be renamed, and
+     * a stale preference should not shut somebody out of their own panel.
      */
     private function landingScreen(): string
     {
@@ -170,15 +171,16 @@ class AdminController extends SiteController
      * `doctors.html` → the URL for `doctors`, or null when there is no suffix
      * to strip.
      *
-     * The panel's navigation lives in `assets/admin/js/core/nav.js` and its
-     * links are still `doctors.html`, as are the ones the forty-one page
-     * scripts build — that file and the forty beside it are the reviewed
-     * JavaScript this port exists to keep (docs/php/06-decisions.md §1). So the
-     * router bends instead: the old address is served by redirecting to the new
-     * one, which is then what the address bar and any bookmark hold. Relative
-     * links resolve against `/admin/`, so a page script needs no base and no
-     * helper — `doctor-form.html?id=x` arrives here and leaves as
-     * `/admin/doctor-form?id=x`.
+     * Nothing in the panel emits this spelling any more: `core/nav.js` and
+     * the forty page scripts beside it link to `doctors`, which resolves
+     * against `/admin/` without a base or a helper. What is left is the
+     * bookmark a member of staff made during the prototype era, and the
+     * address in an email somebody sent themselves.
+     *
+     * Kept rather than deleted because it costs nothing — a path that works
+     * never reaches the router's not-found arm — and because a 404 on a
+     * bookmark is a support call. `doctor-form.html?id=x` arrives here and
+     * leaves as `/admin/doctor-form?id=x`.
      */
     private function stripHtmlSuffix(string $screen): ?string
     {

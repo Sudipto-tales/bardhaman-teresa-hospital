@@ -4,6 +4,9 @@
 
     const { util: U, store, table, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     window.TMH.boot(init);
 
     async function init() {
@@ -12,9 +15,9 @@
             title: 'Departments',
             sub: 'Each record drives one public department page, its entry in the mega menu, and a card on the departments index.',
             actions: `
-                <a class="btn btn--ghost" href="../../departments.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}departments" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
-                <a class="btn btn--primary" href="department-form.html">
+                <a class="btn btn--primary" href="department-form">
                     <i class="fa-solid fa-plus"></i> Add department</a>`,
         });
 
@@ -58,7 +61,7 @@
                                 <i class="fa-solid ${U.esc(r.icon || 'fa-hospital')}"></i></span>
                             <span>
                                 <span class="cell-main">${U.mark(r.name, s.q)}</span>
-                                <span class="cell-sub">/${U.esc(r.id)}.html</span>
+                                <span class="cell-sub">/${U.esc(r.id)}</span>
                             </span>
                         </div>`,
                 },
@@ -91,9 +94,9 @@
                 { label: 'Status', sort: 'status', width: '10%', render: (r) => U.statusTag(r.status) },
             ],
             rowActions: (row) => [
-                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `department-form.html?id=${encodeURIComponent(row.id)}`; } },
-                { label: 'Edit counters', icon: 'fa-arrow-up-9-1', onClick: () => { location.href = `department-form.html?id=${encodeURIComponent(row.id)}&tab=tab-stats`; } },
-                { label: 'Manage team', icon: 'fa-user-group', onClick: () => { location.href = `department-form.html?id=${encodeURIComponent(row.id)}&tab=tab-team`; } },
+                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `department-form?id=${encodeURIComponent(row.id)}`; } },
+                { label: 'Edit counters', icon: 'fa-arrow-up-9-1', onClick: () => { location.href = `department-form?id=${encodeURIComponent(row.id)}&tab=tab-stats`; } },
+                { label: 'Manage team', icon: 'fa-user-group', onClick: () => { location.href = `department-form?id=${encodeURIComponent(row.id)}&tab=tab-team`; } },
                 { divider: true },
                 {
                     label: row.showInMenu ? 'Remove from menu' : 'Show in menu', icon: 'fa-bars',
@@ -103,21 +106,21 @@
                         list.load();
                     },
                 },
-                { label: 'Open public page', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(`../../${row.id}.html`, '_blank') },
+                { label: 'Open public page', icon: 'fa-arrow-up-right-from-square', onClick: () => window.open(`${SITE}${row.id}`, '_blank') },
                 { divider: true },
                 {
                     label: 'Delete', icon: 'fa-trash-can', danger: true,
                     onClick: () => list.confirmDelete(row, {
-                        body: `The public page /${row.id}.html stops resolving. Add a redirect afterwards if the address has been shared.`,
+                        body: `The public page /${row.id} stops resolving. Add a redirect afterwards if the address has been shared.`,
                     }),
                 },
             ],
-            onRowClick: (row) => { location.href = `department-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `department-form?id=${encodeURIComponent(row.id)}`; },
             empty: {
                 icon: 'fa-hospital', title: 'No departments yet',
                 text: 'A department gives you a public page, a mega-menu entry and a card on the index.',
                 actionLabel: 'Add department',
-                onAction: () => { location.href = 'department-form.html'; },
+                onAction: () => { location.href = 'department-form'; },
             },
         });
     }

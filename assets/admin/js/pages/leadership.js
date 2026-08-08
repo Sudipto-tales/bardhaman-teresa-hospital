@@ -1,11 +1,14 @@
 /* Leadership — list.
    A separate entity from Doctor because board members and administrators are
-   not clinicians. about.html:378 currently fakes this section by reusing four
+   not clinicians. the about page currently fakes this section by reusing four
    doctor cards. */
 (function () {
     'use strict';
 
     const { util: U, store, table, layout, toast } = window.TMH;
+
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
 
     const CATEGORIES = [
         { value: 'board', label: 'Board of Trustees' },
@@ -21,9 +24,9 @@
             title: 'Leadership',
             sub: 'Board, management and clinical leads for the About page. Separate from the doctor roster — a trustee is not a consultant.',
             actions: `
-                <a class="btn btn--ghost" href="../../about.html#leadership" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}about#leadership" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
-                <a class="btn btn--primary" href="leadership-form.html">
+                <a class="btn btn--primary" href="leadership-form">
                     <i class="fa-solid fa-plus"></i> Add member</a>`,
         });
 
@@ -79,14 +82,14 @@
                         if (!r.linkedDoctorId) return '<span class="muted">—</span>';
                         const d = store.allSync('doctors').find((x) => x.id === r.linkedDoctorId);
                         return d
-                            ? `<a href="doctor-form.html?id=${U.esc(d.id)}">${U.esc(d.name)}</a>`
+                            ? `<a href="doctor-form?id=${U.esc(d.id)}">${U.esc(d.name)}</a>`
                             : '<span class="tag warn">Missing</span>';
                     },
                 },
                 { label: 'Status', sort: 'status', width: '10%', render: (r) => U.statusTag(r.status) },
             ],
             rowActions: (row) => [
-                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `leadership-form.html?id=${encodeURIComponent(row.id)}`; } },
+                { label: 'Edit', icon: 'fa-pen', onClick: () => { location.href = `leadership-form?id=${encodeURIComponent(row.id)}`; } },
                 {
                     label: row.status === 'published' ? 'Unpublish' : 'Publish',
                     icon: row.status === 'published' ? 'fa-eye-slash' : 'fa-cloud-arrow-up',
@@ -103,12 +106,12 @@
                     onClick: () => list.confirmDelete(row, { body: 'They are removed from the About page leadership strip.' }),
                 },
             ],
-            onRowClick: (row) => { location.href = `leadership-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `leadership-form?id=${encodeURIComponent(row.id)}`; },
             empty: {
                 icon: 'fa-user-tie', title: 'Nobody listed yet',
                 text: 'Add the medical director and the board so the About page stops borrowing doctor cards.',
                 actionLabel: 'Add member',
-                onAction: () => { location.href = 'leadership-form.html'; },
+                onAction: () => { location.href = 'leadership-form'; },
             },
         });
     }

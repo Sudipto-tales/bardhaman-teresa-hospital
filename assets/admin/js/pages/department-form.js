@@ -11,6 +11,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast, media } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const id = U.param('id');
     const isEdit = !!id;
     let record = null;
@@ -49,7 +52,7 @@
             el: '#deptForm',
             bar: '#formBar',
             autosaveKey: `department:${id || 'new'}`,
-            onCancel: () => { location.href = 'departments.html'; },
+            onCancel: () => { location.href = 'departments'; },
             onSave: save,
         });
 
@@ -69,7 +72,7 @@
                 <div class="empty__art"><i class="fa-solid fa-hospital"></i></div>
                 <h3>That department no longer exists</h3>
                 <p>It may have been deleted from another tab.</p>
-                <a class="btn btn--primary" href="departments.html">Back to the list</a>
+                <a class="btn btn--primary" href="departments">Back to the list</a>
             </div></article>`;
     }
 
@@ -85,18 +88,18 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Content' },
-                { label: 'Departments', href: 'departments.html' },
+                { label: 'Departments', href: 'departments' },
                 { label: isEdit ? record.name : 'New department' },
             ],
             title: isEdit ? 'Edit' : 'Add a',
             accent: 'Department',
             sub: isEdit
-                ? `Everything on /${record.id}.html is edited here.`
+                ? `Everything on /${record.id} is edited here.`
                 : 'A department creates a public page, a mega-menu entry and a card on the departments index.',
             actions: `
-                ${isEdit ? `<a class="btn btn--ghost" href="../../${U.esc(record.id)}.html" target="_blank" rel="noopener">
+                ${isEdit ? `<a class="btn btn--ghost" href="${SITE}${U.esc(record.id)}" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>` : ''}
-                <a class="btn btn--ghost" href="departments.html"><i class="fa-solid fa-arrow-left"></i> Back</a>`,
+                <a class="btn btn--ghost" href="departments"><i class="fa-solid fa-arrow-left"></i> Back</a>`,
         });
     }
 
@@ -120,7 +123,7 @@
                             sub: 'The name, address and menu entry for this department.',
                             fields: [
                                 F.text({ name: 'name', label: 'Department name', required: true, placeholder: 'Cardiology' }),
-                                F.text({ name: 'id', label: 'URL slug', required: true, rule: 'slug', placeholder: 'cardiology', hint: 'Becomes <code>/cardiology.html</code>. Changing it on a live department breaks existing links.' }),
+                                F.text({ name: 'id', label: 'URL slug', required: true, rule: 'slug', placeholder: 'cardiology', hint: 'Becomes <code>/cardiology</code>. Changing it on a live department breaks existing links.' }),
                                 F.icon({ name: 'icon', label: 'Icon', required: true, hint: 'Any Font Awesome solid name, e.g. <code>fa-heart-pulse</code>.' }),
                                 F.text({ name: 'menuNote', label: 'Mega-menu note', placeholder: '6+ Doctors Available' }),
                                 F.select({ name: 'status', label: 'Status', options: [
@@ -165,7 +168,7 @@
                                         { key: 'label', label: 'Label', placeholder: 'Procedures a year' },
                                         { key: 'note', label: 'Note', placeholder: '18% more than 2024' },
                                     ],
-                                    hint: 'These rows also appear on <a href="stats.html">Counters &amp; Numbers</a>, scoped to this department.' }),
+                                    hint: 'These rows also appear on <a href="stats">Counters &amp; Numbers</a>, scoped to this department.' }),
                             ],
                         })}
                     </div>
@@ -241,7 +244,7 @@
                                     placeholder: 'Choose consultants',
                                     searchPlaceholder: 'Search doctors',
                                     options: doctors.map((d) => ({ value: d.id, label: `${d.name} — ${d.role}` })),
-                                    hint: 'A doctor can belong to several departments. <a href="doctors.html">Manage doctors</a>.',
+                                    hint: 'A doctor can belong to several departments. <a href="doctors">Manage doctors</a>.',
                                 }),
                             ],
                         })}
@@ -267,7 +270,7 @@
             slug.addEventListener('focus', async () => {
                 const ok = await window.TMH.confirm({
                     title: 'Change the URL slug?',
-                    body: `The page currently lives at /${record.id}.html. Renaming breaks every existing link to it.`,
+                    body: `The page currently lives at /${record.id}. Renaming breaks every existing link to it.`,
                     icon: 'fa-link-slash',
                     confirmLabel: 'I understand',
                     cancelLabel: 'Leave it alone',
@@ -304,7 +307,7 @@
             const slugChanged = payload.id && payload.id !== id;
             record = await store.update('departments', id, payload);
             toast.success(opts.publish ? `${record.name} published` : 'Changes saved', {
-                action: opts.publish ? { label: 'View page', href: `../../${record.id}.html` } : null,
+                action: opts.publish ? { label: 'View page', href: `${SITE}${record.id}` } : null,
             });
             if (slugChanged) {
                 await offerRedirect(id, payload.id);
@@ -316,8 +319,8 @@
             toast.success(opts.publish ? `${record.name} published` : 'Saved as draft');
             setTimeout(() => {
                 location.href = opts.publish
-                    ? `departments.html?created=${encodeURIComponent(record.id)}`
-                    : `department-form.html?id=${encodeURIComponent(record.id)}`;
+                    ? `departments?created=${encodeURIComponent(record.id)}`
+                    : `department-form?id=${encodeURIComponent(record.id)}`;
             }, 600);
         }
     }
@@ -328,17 +331,21 @@
     async function offerRedirect(from, to) {
         const ok = await window.TMH.confirm({
             title: 'Add a redirect?',
-            body: `Point /${from}.html at /${to}.html so old links keep working.`,
+            body: `Point /${from} at /${to} so old links keep working.`,
             icon: 'fa-right-left',
             confirmLabel: 'Create the redirect',
             cancelLabel: 'No thanks',
         });
         if (!ok) return;
+        /* Clean paths on both sides. An old `/${from}` link still lands:
+           it misses every route, ErrorController strips the extension and
+           301s to `/${from}`, which is the row created here. Two hops, and
+           only for the spelling nothing emits any more. */
         await store.create('redirects', {
-            from: `/${from}.html`, to: `/${to}.html`, code: 301, hits: 0, status: 'published',
+            from: `/${from}`, to: `/${to}`, code: 301, hits: 0, status: 'published',
         });
         toast.success('Redirect created', {
-            action: { label: 'Manage redirects', onClick: () => { location.href = 'redirects.html'; } },
+            action: { label: 'Manage redirects', onClick: () => { location.href = 'redirects'; } },
         });
     }
 }());

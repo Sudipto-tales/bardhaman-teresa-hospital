@@ -22,17 +22,17 @@
     {
       "group_name": "general",
       "setting_key": "logo",
-      "value": "\"../../assets/logo-teresa.png\""
+      "value": "\"/assets/logo-teresa.png\""
     },
     {
       "group_name": "general",
       "setting_key": "logoDark",
-      "value": "\"../../assets/logo-nobg.png\""
+      "value": "\"/assets/logo-nobg.png\""
     },
     {
       "group_name": "general",
       "setting_key": "favicon",
-      "value": "\"../../assets/logo-teresa.png\""
+      "value": "\"/assets/logo-teresa.png\""
     },
     {
       "group_name": "general",
@@ -307,7 +307,7 @@
     {
       "group_name": "popups",
       "setting_key": "cookiePolicyUrl",
-      "value": "\"contact.html\""
+      "value": "\"/contact\""
     },
     {
       "group_name": "popups",
@@ -337,7 +337,7 @@
     {
       "group_name": "popups",
       "setting_key": "adsLink",
-      "value": "\"contact.html\""
+      "value": "\"/contact\""
     },
     {
       "group_name": "popups",

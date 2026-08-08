@@ -3,11 +3,11 @@
 /**
  * The Doctors list screen's markup.
  *
- * doctors.html was one of the two screens scaffold.mjs never generated,
+ * Doctors was one of the two screens the prototype scaffolder never generated,
  * because its <main> is not the empty #pageHead / #view pair: doctors.js
  * paints a stat strip above the table and mounts the table into #listCard.
- * Copied from html/admin/doctors.html unchanged — the ids are what the page
- * script looks for.
+ * Copied from the prototype's doctors screen unchanged — the ids are what
+ * the page script looks for.
  */
 ?>
                 <div id="pageHead"></div>

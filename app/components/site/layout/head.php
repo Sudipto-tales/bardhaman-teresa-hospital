@@ -81,6 +81,13 @@ $jsonLd = Schema::graph((array) ($schema ?? []));
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- The site may be installed in a subdirectory, and /blog/{slug},
+         /careers/{slug} and /departments/{slug} are two segments deep, so a
+         relative href built in JavaScript resolves against the wrong folder.
+         assets/pages.js reads this the way assets/admin/js/core/api.js does. -->
+    <meta name="app-base" content="<?= e(rtrim(base_url('/'), '/')) ?>/">
+
     <title><?= $documentTitle ?></title>
     <meta name="description" content="<?= e($description) ?>">
 <?php if (trim((string) ($keywords ?? '')) !== ''): ?>

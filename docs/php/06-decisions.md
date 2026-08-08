@@ -55,6 +55,13 @@ PHP page has something to diff against while it is being built — the Phase 6
 verification depends on it. A frozen copy also lives on `design/html`, so
 deleting it later loses nothing.
 
+> **Superseded.** `html/` was deleted after Phase 9, along with the
+> `tools/build-pages.mjs`, `tools/rewire-home.mjs` and `tools/seed-export.mjs`
+> generators that read and wrote it. The reason above held while pages were
+> being built; once they were, a 2.8M folder blocked by `.htaccess` was a
+> second copy of the site that nothing diffed against. It is on `design/html`,
+> which is where the last sentence said it would end up.
+
 ---
 
 ## 4. Server-rendered PHP, not static regeneration

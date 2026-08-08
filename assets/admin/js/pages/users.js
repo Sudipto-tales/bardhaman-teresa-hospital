@@ -38,9 +38,9 @@
             accent: '& Roles',
             sub: 'Who can sign in to this panel, and how much of it they can reach.',
             actions: `
-                <a class="btn btn--ghost" href="activity-log.html">
+                <a class="btn btn--ghost" href="activity-log">
                     <i class="fa-solid fa-clock-rotate-left"></i> Activity log</a>
-                <a class="btn btn--primary" href="user-form.html">
+                <a class="btn btn--primary" href="user-form">
                     <i class="fa-solid fa-user-plus"></i> Add user</a>`,
         });
 
@@ -141,12 +141,12 @@
             </div>`;
 
         document.getElementById('addSuperBtn').addEventListener('click', () => {
-            location.href = `user-form.html?role=${encodeURIComponent(session.SUPER_ROLE)}`;
+            location.href = `user-form?role=${encodeURIComponent(session.SUPER_ROLE)}`;
         });
 
         document.querySelectorAll('[data-open-user]').forEach((btn) => {
             btn.addEventListener('click', () => {
-                location.href = `user-form.html?id=${encodeURIComponent(btn.dataset.openUser)}`;
+                location.href = `user-form?id=${encodeURIComponent(btn.dataset.openUser)}`;
             });
         });
     }
@@ -176,7 +176,7 @@
                 title: 'No accounts yet',
                 text: 'Add the first person who should be able to sign in to this panel.',
                 actionLabel: 'Add user',
-                onAction: () => { location.href = 'user-form.html'; },
+                onAction: () => { location.href = 'user-form'; },
             },
             columns: [
                 {
@@ -224,7 +224,7 @@
                 },
             ],
             rowActions: (row) => rowActions(row),
-            onRowClick: (row) => { location.href = `user-form.html?id=${encodeURIComponent(row.id)}`; },
+            onRowClick: (row) => { location.href = `user-form?id=${encodeURIComponent(row.id)}`; },
         });
 
         const created = U.param('created');
@@ -259,7 +259,7 @@
         const out = [
             {
                 label: 'Edit', icon: 'fa-pen',
-                onClick: () => { location.href = `user-form.html?id=${encodeURIComponent(row.id)}`; },
+                onClick: () => { location.href = `user-form?id=${encodeURIComponent(row.id)}`; },
             },
             {
                 label: isSuper ? 'Remove super admin' : 'Make super admin',
@@ -484,7 +484,7 @@
                         ${members.length ? `
                             <div class="card__foot row gap-2" style="flex-wrap:wrap">
                                 ${members.map((m) => `
-                                    <a class="chip" href="user-form.html?id=${encodeURIComponent(m.id)}">
+                                    <a class="chip" href="user-form?id=${encodeURIComponent(m.id)}">
                                         ${U.esc(m.name)}
                                         ${m.status === 'active' ? '' : `<span class="muted">· ${U.esc((session.USER_STATUS[m.status] || {}).label || m.status)}</span>`}
                                     </a>`).join('')}
@@ -501,7 +501,7 @@
         const addSuper = document.querySelector('[data-add-super]');
         if (addSuper) {
             addSuper.addEventListener('click', () => {
-                location.href = `user-form.html?role=${encodeURIComponent(session.SUPER_ROLE)}`;
+                location.href = `user-form?role=${encodeURIComponent(session.SUPER_ROLE)}`;
             });
         }
 

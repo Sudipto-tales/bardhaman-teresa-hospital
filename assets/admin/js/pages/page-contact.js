@@ -7,6 +7,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     let page = null;
     let settings = null;
     let ctrl = null;
@@ -19,13 +22,13 @@
         settings = await store.getDoc('settings');
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({
-            crumb: [{ label: 'Pages', href: 'pages.html' }, { label: 'Contact Page' }],
+            crumb: [{ label: 'Pages', href: 'pages' }, { label: 'Contact Page' }],
             title: 'Contact',
             accent: 'Page',
             sub: 'Headings, the appointment form and the map block. Numbers and addresses come from Contact Details.',
             actions: `
-                <a class="btn btn--ghost" href="settings-contact.html"><i class="fa-solid fa-address-book"></i> Contact details</a>
-                <a class="btn btn--ghost" href="../../contact.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="settings-contact"><i class="fa-solid fa-address-book"></i> Contact details</a>
+                <a class="btn btn--ghost" href="${SITE}contact" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>`,
         });
 
@@ -60,9 +63,9 @@
                 fields: [
                     F.text({ name: 'reach-us.title', label: 'Heading' }),
                     F.text({ name: 'reach-us.lead', label: 'Standfirst' }),
-                    F.mirror({ label: 'Primary phone', value: primary.number || '—', href: 'settings-contact.html', source: 'Contact Details' }),
-                    F.mirror({ label: 'Address', value: `${address}, ${c.city} ${c.pincode}`, href: 'settings-contact.html', source: 'Contact Details' }),
-                    F.mirror({ label: 'Department direct lines', value: `${(c.departmentLines || []).length} lines listed`, href: 'settings-contact.html', source: 'Contact Details' }),
+                    F.mirror({ label: 'Primary phone', value: primary.number || '—', href: 'settings-contact', source: 'Contact Details' }),
+                    F.mirror({ label: 'Address', value: `${address}, ${c.city} ${c.pincode}`, href: 'settings-contact', source: 'Contact Details' }),
+                    F.mirror({ label: 'Department direct lines', value: `${(c.departmentLines || []).length} lines listed`, href: 'settings-contact', source: 'Contact Details' }),
                 ],
             })}
 
@@ -79,7 +82,7 @@
                     F.textarea({ name: 'appointment.confirmation', label: 'Confirmation message', rows: 2,
                         hint: 'Shown after submitting. Say when somebody will actually call back.' }),
                     F.mirror({
-                        label: 'Where submissions go', source: 'Appointments', href: 'appointments.html',
+                        label: 'Where submissions go', source: 'Appointments', href: 'appointments',
                         value: `${store.allSync('appointments').length} requests received`,
                         hint: 'The live form posts nowhere today. Phase 2 wires it to /api/public/appointment.',
                     }),
@@ -90,8 +93,8 @@
                 key: 'location', label: 'Map and directions', enabled: on('location'),
                 fields: [
                     F.text({ name: 'location.title', label: 'Heading', wide: true }),
-                    F.mirror({ label: 'Map embed', value: c.mapEmbed ? 'Set' : 'Not set', href: 'settings-contact.html', source: 'Contact Details' }),
-                    F.mirror({ label: 'Directions', value: c.directions || '—', href: 'settings-contact.html', source: 'Contact Details' }),
+                    F.mirror({ label: 'Map embed', value: c.mapEmbed ? 'Set' : 'Not set', href: 'settings-contact', source: 'Contact Details' }),
+                    F.mirror({ label: 'Directions', value: c.directions || '—', href: 'settings-contact', source: 'Contact Details' }),
                 ],
             })}
 
@@ -100,7 +103,7 @@
                 fields: [
                     F.text({ name: 'cta.title', label: 'Heading', wide: true }),
                     F.textarea({ name: 'cta.body', label: 'Body', rows: 2 }),
-                    F.mirror({ label: 'Emergency number', value: c.emergencyNumber || '—', href: 'settings-contact.html', source: 'Contact Details' }),
+                    F.mirror({ label: 'Emergency number', value: c.emergencyNumber || '—', href: 'settings-contact', source: 'Contact Details' }),
                 ],
             })}
 
@@ -115,7 +118,7 @@
         page = await store.update('pages', 'contact', U.applySections(page, flat, order));
         order = null;
         toast.success('Contact page saved', {
-            action: { label: 'View page', href: '../../contact.html' },
+            action: { label: 'View page', href: `${SITE}contact` },
         });
     }
 }());

@@ -1551,7 +1551,7 @@ tr.drop-target td {
 }
 
 /* =========================================================
-   SECTION EDITOR (page-*.html)
+   SECTION EDITOR (the page-* screens)
    ========================================================= */
 .sect {
     border: 1px solid var(--hairline);
@@ -2883,8 +2883,8 @@ body.is-file-drag .dropzone {
 
 /* =========================================================
    USERS & ROLES
-   The two panels behind users.html's tabs, plus the account
-   cards on profile.html. Both live inside a .card--flush, so
+   The two panels behind the users screen's tabs, plus the account
+   cards on the profile screen. Both live inside a .card--flush, so
    they own their own padding.
    ========================================================= */
 .user-band {
@@ -2909,7 +2909,7 @@ body.is-file-drag .dropzone {
     line-height: 1.1;
 }
 
-/* The permission matrix on user-form.html. Modules down the side,
+/* The permission matrix on the user-form screen. Modules down the side,
    actions across — a wide table that must stay readable when the
    window is narrow, hence the scroll wrapper. */
 .perm-matrix {
@@ -2979,7 +2979,7 @@ body.is-file-drag .dropzone {
 .pw-meter[data-score='3'] span:nth-child(-n+3) { background: var(--warn); }
 .pw-meter[data-score='4'] span { background: var(--good); }
 
-/* profile.html puts its forms straight inside a .card--flush, which has no
+/* The profile screen puts its forms straight inside a .card--flush, which has no
    padding of its own — the tabs have to sit flush to the card edge. */
 .profile-panel {
     padding: var(--s5);

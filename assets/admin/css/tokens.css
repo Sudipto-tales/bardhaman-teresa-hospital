@@ -4,7 +4,7 @@
    defines no raw colour of its own.
 
    Values carried over from the public site and the original
-   panel mockup (../../style.css) so the two read as one
+   panel mockup (the public site's stylesheet) so the two read as one
    product. See docs/06-design-tokens.md.
    ========================================================= */
 
@@ -49,7 +49,7 @@
 
     /* ---- type ----
        One family for body and headings, exactly as the mockup
-       (../../style.css) does. Baloo 2 is the brand lockup only;
+       (the site's own stylesheet) does. Baloo 2 is the brand lockup only;
        Noto Sans Bengali carries the logo slogan, which loses its
        conjuncts in a Latin face. */
     --font-head: 'Poppins', system-ui, -apple-system, sans-serif;

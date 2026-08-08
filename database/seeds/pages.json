@@ -7,56 +7,56 @@
     {
       "slug": "home",
       "title": "Home",
-      "path": "website.html",
+      "path": "/",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "about",
       "title": "About",
-      "path": "about.html",
+      "path": "/about",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "contact",
       "title": "Contact",
-      "path": "contact.html",
+      "path": "/contact",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "careers",
       "title": "Careers",
-      "path": "careers.html",
+      "path": "/careers",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "departments",
       "title": "Departments",
-      "path": "departments.html",
+      "path": "/departments",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "doctors",
       "title": "Doctors",
-      "path": "doctors.html",
+      "path": "/doctors",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "facilities",
       "title": "Facilities",
-      "path": "facilities.html",
+      "path": "/facilities",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     },
     {
       "slug": "blog",
       "title": "Blog",
-      "path": "blog.html",
+      "path": "/blog",
       "status": "published",
       "updated_at": "2026-08-04 18:29:00"
     }

@@ -5,7 +5,7 @@
  * belongs to.
  *
  * `seo_meta` is one table for doctors, departments, posts and pages
- * (docs/php/02-schema.md §14), so that seo.html is one query rather than a
+ * (docs/php/02-schema.md §14), so that the SEO screen is one query rather than a
  * four-way union. The forms that edit it do not know that: a doctor's editor
  * shows "Meta title" beside "Qualification" and posts them together. So the
  * columns are merged into the record on the way out and split off again on the

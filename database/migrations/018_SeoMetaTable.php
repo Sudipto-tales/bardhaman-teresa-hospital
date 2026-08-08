@@ -4,7 +4,7 @@
  * seo_meta — §14. Attached to doctors, departments, posts and pages.
  *
  * One polymorphic table rather than six columns repeated on four tables,
- * because seo.html edits every entity's metadata in one list — and that screen
+ * because the SEO screen edits every entity's metadata in one list — and that screen
  * is a single query here and a four-way UNION otherwise.
  *
  * The trade is the usual one: no foreign key can span entity types, so a

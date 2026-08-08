@@ -1,16 +1,22 @@
 # Teresa Memorial Hospital
 
-Website and admin panel for Teresa Memorial Hospital, Bardhaman.
+Website and admin panel for Teresa Memorial Hospital, Bardhaman. A PHP
+application on the Vayu micro-framework, with a SQLite or MySQL database.
 
 ## Layout
 
 ```
-html/            the design set — open any file from disk, no server needed
-  *.html         the 20 public pages (website.html is the home page)
-  assets/        their CSS, JS, images, and the jobs + popups config files
-  admin/         the 43-screen admin panel prototype
+index.php        the single entry point; .htaccess routes everything here
+app/             routes (view.php), controllers, models, page templates, components
+api/             the JSON API the admin panel talks to
+core/            the framework — routing, auth, validation, schema, mail
+config/          bootstrap, environment, database, migrations
+database/        migrations, JSON seeds, and the SQLite file
+assets/          the public site's CSS and JS; assets/admin/ is the panel's
+storage/         uploads, applicant CVs, logs — never served
 docs/            what the panel is, screen by screen and field by field
-tools/           generators — the public pages are built, not hand-edited
+tools/           maintenance scripts
+vayu             the CLI
 ```
 
 ## Branches
@@ -18,29 +24,46 @@ tools/           generators — the public pages are built, not hand-edited
 | Branch | What is on it |
 |---|---|
 | `main` | the state before the PHP conversion started |
-| `design/html` | the frozen, signed-off design set — HTML, CSS and JS only |
-| `development` | the PHP application, with `html/` kept alongside as the reference to diff against |
+| `design/html` | the frozen, signed-off design set — the HTML/CSS/JS prototype and its generators |
+| `development` | the PHP application |
 
-## Working on the design set
+The prototype used to sit in `html/` on this branch as something to diff
+against. Phase 9 finished, so it was deleted — it lives on `design/html`, along
+with the `build-pages.mjs`, `rewire-home.mjs` and `seed-export.mjs` generators
+that read and wrote it.
 
-The public pages are generated. Editing `html/cardiology.html` by hand is
-wasted work — the next build overwrites it. Change the copy in
-`tools/site-data.mjs` or the markup in `tools/build-pages.mjs`, then:
-
-```bash
-node tools/build-pages.mjs      # rewrites the 20 public pages into html/
-```
-
-The admin panel's 43 page shells are generated the same way, from one table:
+## Running it
 
 ```bash
-node html/admin/tools/scaffold.mjs           # writes any missing shell
-node html/admin/tools/scaffold.mjs --force   # rewrites them all
+php vayu setup      # first-run wizard
+php vayu migrate    # apply any pending migrations
+php vayu run        # dev server
 ```
 
-Adding an admin screen means one row in that table and one line in
-`html/admin/assets/js/core/nav.js` — not editing 43 files.
+`php vayu seed` loads `database/seeds/*.json`. **It empties every seeded table
+first**, so it is for a fresh install only — running it against real content
+destroys that content, and the `redirects.hits` counters with it. A deploy is
+`php vayu migrate` and nothing else.
+
+## URLs
+
+Public pages are clean paths: `/`, `/about`, `/doctors`, `/cardiology`,
+`/blog/{slug}`, `/careers/{slug}`. The admin panel is `/admin/{screen}`, one
+shell per file in `app/page/admin/`.
+
+The old static site's `.html` addresses still resolve. `ErrorController` 301s
+any unmatched `*.html` path to its clean equivalent, and the `redirects` table
+covers the ones that also moved (`/heart.html` → `/cardiology`). Nothing in the
+application *emits* that spelling any more — if you find one, it is a bug.
+
+## Adding an admin screen
+
+One row in the table in `tools/scaffold-admin.php`, one file in
+`app/page/admin/`, and one line in `assets/admin/js/core/nav.js`.
 
 ## Documentation
 
-Start at [`docs/00-overview.md`](docs/00-overview.md). It maps the rest.
+Start at [`docs/00-overview.md`](docs/00-overview.md). It maps the rest. Note
+that `docs/` is partly a historical record — `docs/php/PROGRESS.md` and
+`docs/php/00-plan.md` describe decisions as they were made, not the tree as it
+stands today.

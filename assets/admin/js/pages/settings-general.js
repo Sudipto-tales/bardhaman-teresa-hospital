@@ -17,7 +17,7 @@
             title: 'General',
             accent: 'Settings',
             sub: 'Identity, logos and opening hours. Phone numbers and addresses live in Contact Details.',
-            actions: '<a class="btn btn--ghost" href="settings-contact.html"><i class="fa-solid fa-address-book"></i> Contact details</a>',
+            actions: '<a class="btn btn--ghost" href="settings-contact"><i class="fa-solid fa-address-book"></i> Contact details</a>',
         });
 
         document.getElementById('view').innerHTML = `

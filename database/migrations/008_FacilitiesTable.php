@@ -1,7 +1,7 @@
 <?php
 
 /**
- * facilities — §5. Replaces FACILITIES in site-data.mjs and facilities.html.
+ * facilities — §5. Replaces FACILITIES in site-data.mjs and the prototype's facilities page.
  */
 class FacilitiesTable extends Migration
 {

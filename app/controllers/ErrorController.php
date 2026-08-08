@@ -48,9 +48,9 @@ class ErrorController extends SiteController
          * A `.html` path with no row of its own is still the old site's
          * address for something. Every page here was a file once —
          * `/about.html`, `/cardiology.html`, `/blog-post.html` — and site_url()
-         * already knows how one of those maps onto a route, because the panel
-         * stores links in exactly that spelling and every template resolves
-         * them through it. The redirects table stays for the addresses that
+         * already knows how one of those maps onto a route: its SITE_PAGE_ROUTES
+         * table is what the stored rows were cleaned against in migration 025,
+         * and it is the same answer either way. The redirects table stays for the addresses that
          * moved (`/heart.html` → `/cardiology`); this is for the ones that only
          * lost an extension, which is all of them.
          *

@@ -23,7 +23,7 @@
         "titleStrong": "every single day",
         "lead": "A 210-bed multi-speciality hospital with a 24/7 emergency, twelve departments and a laboratory that reports the same day.",
         "primaryLabel": "Book an appointment",
-        "primaryHref": "contact.html#book",
+        "primaryHref": "/contact#book",
         "ghostLabel": "Call emergency",
         "ghostHref": "tel:+913423259999",
         "image": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop"

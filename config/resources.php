@@ -11,7 +11,7 @@
  *
  * The panel is already written and is not changing (docs/php/06-decisions.md
  * §1), so the field names below are not a choice — they are what
- * html/admin/assets/js/pages/*.js reads. Every row the API returns has:
+ * assets/admin/js/pages/*.js reads. Every row the API returns has:
  *
  *     id          the public key, a slug or a d-001 style string
  *     order       sort position
@@ -579,9 +579,8 @@ return [
             'twoFactor' => 'bool',
             'lastActiveAt' => ['type' => 'datetime', 'readonly' => true],
             /* The profile screen's preferences. `landingPage` is the screen
-               `/admin` opens on; it is stored as the select's own
-               `dashboard.html` spelling and AdminController strips the
-               extension, like every other admin URL. */
+               `/admin` opens on — a bare screen name like `dashboard`, which
+               AdminController checks against the shells on disk. */
             'landingPage' => 'string',
             'language' => 'string',
             'timezone' => 'string',

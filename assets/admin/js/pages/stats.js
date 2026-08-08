@@ -3,7 +3,7 @@
 
    Every animated figure on the public site in one table, so
    "640 beds" is changed once rather than hunted through
-   website.html, about.html and twelve department pages.
+   the home page, the about page and twelve department pages.
 
    Values are edited inline: click, type, tab out, toast. A
    modal for changing one number is friction with no payoff.
@@ -91,7 +91,7 @@
                                             style="width:100%;padding:5px 8px;border:1px solid transparent;border-radius:var(--radius-xs);background:transparent;color:var(--text-mid)">
                                     </td>
                                     ${scope === 'department' ? `<td data-label="Department">${dept
-                                        ? `<a href="department-form.html?id=${U.esc(dept.id)}&tab=tab-stats">${U.esc(dept.name)}</a>`
+                                        ? `<a href="department-form?id=${U.esc(dept.id)}&tab=tab-stats">${U.esc(dept.name)}</a>`
                                         : '<span class="tag warn">Orphaned</span>'}</td>` : ''}
                                     <td class="cell-actions" data-label="">
                                         <button type="button" class="icon-btn" data-edit="${U.esc(r.id)}" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>

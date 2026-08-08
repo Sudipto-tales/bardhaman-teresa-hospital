@@ -11,6 +11,9 @@
 
     const { util: U, store, form: formLib, layout, toast, media } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const id = U.param('id');
     const isEdit = !!id;
     let record = null;
@@ -30,7 +33,7 @@
                     <div class="empty__art"><i class="fa-solid fa-user-slash"></i></div>
                     <h3>That doctor no longer exists</h3>
                     <p>It may have been deleted from another tab.</p>
-                    <a class="btn btn--primary" href="doctors.html">Back to the list</a>
+                    <a class="btn btn--primary" href="doctors">Back to the list</a>
                 </div>`;
             return;
         }
@@ -39,7 +42,7 @@
             el: '#doctorForm',
             bar: '#formBar',
             autosaveKey: `doctor:${id || 'new'}`,
-            onCancel: () => { location.href = 'doctors.html'; },
+            onCancel: () => { location.href = 'doctors'; },
             onSave: save,
         });
 
@@ -71,8 +74,8 @@
     function paintHead() {
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
-                { label: 'Content', href: 'pages.html' },
-                { label: 'Doctors', href: 'doctors.html' },
+                { label: 'Content', href: 'pages' },
+                { label: 'Doctors', href: 'doctors' },
                 { label: isEdit ? 'Edit' : 'New doctor' },
             ],
             title: isEdit ? 'Edit' : 'Add a',
@@ -80,7 +83,7 @@
             sub: isEdit
                 ? 'Changes go live the moment you publish.'
                 : 'A new doctor starts as a draft — nothing appears on the website until you publish.',
-            actions: `<a class="btn btn--ghost" href="doctors.html">
+            actions: `<a class="btn btn--ghost" href="doctors">
                 <i class="fa-solid fa-arrow-left"></i> Back to list</a>`,
         });
     }
@@ -201,7 +204,7 @@
             },
         });
         ctrl.clearDraft();
-        setTimeout(() => { location.href = 'doctors.html'; }, 900);
+        setTimeout(() => { location.href = 'doctors'; }, 900);
     }
 
     /* An autosaved draft that is newer than the stored record means the tab
@@ -238,7 +241,7 @@
             record = await store.update('doctors', id, payload);
             toast.success(opts.publish ? `${record.name} published` : 'Changes saved', {
                 action: opts.publish
-                    ? { label: 'View on site', href: '../../doctors.html' }
+                    ? { label: 'View on site', href: `${SITE}doctors` }
                     : null,
             });
             paintMeta();
@@ -255,7 +258,7 @@
                keep filling it in. */
             if (opts.publish) {
                 setTimeout(() => {
-                    location.href = `doctors.html?created=${encodeURIComponent(record.id)}`;
+                    location.href = `doctors?created=${encodeURIComponent(record.id)}`;
                 }, 600);
             } else {
                 U.setParams({ id: record.id });

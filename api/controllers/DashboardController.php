@@ -273,7 +273,7 @@ class DashboardController extends ApiController
             [
                 'key' => 'settings',
                 'label' => 'Fill in the hospital\'s name and contact details',
-                'href' => 'settings-general.html',
+                'href' => 'settings-general',
                 /* `phones` is a repeater of {label, number} rather than one
                    string — a hospital has a reception line, an emergency line
                    and a line per department. One entry is enough to say the
@@ -287,7 +287,7 @@ class DashboardController extends ApiController
             [
                 'key' => 'departments',
                 'label' => 'Publish your departments',
-                'href' => 'departments.html',
+                'href' => 'departments',
                 'done' => (int) db_scalar(
                     'SELECT COUNT(*) FROM departments WHERE deleted_at IS NULL AND status = \'published\''
                 ) > 0,
@@ -295,7 +295,7 @@ class DashboardController extends ApiController
             [
                 'key' => 'doctors',
                 'label' => 'Publish your consultants',
-                'href' => 'doctors.html',
+                'href' => 'doctors',
                 'done' => (int) db_scalar(
                     'SELECT COUNT(*) FROM doctors WHERE deleted_at IS NULL AND status = \'published\''
                 ) > 0,

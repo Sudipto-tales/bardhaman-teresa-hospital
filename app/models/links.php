@@ -6,13 +6,15 @@
  * The panel stores links as a person typed them, and what a person typed was
  * usually one of the design's filenames: `contact.html` in the cookie policy
  * field, `website.html` in a nav item, `../../assets/logo-teresa.png` in the
- * logo field — that last one relative to `html/admin/`, where it was picked.
+ * logo field — that last one relative to the folder the picker stood in.
  * None of those resolve on the live site, which serves `/contact`, `/` and
  * `/assets/logo-teresa.png`.
  *
- * Rewriting the rows is 6.4 and only fixes the rows that exist today; a person
- * types `contact.html` again next week. So the translation lives here, at the
- * moment a stored value becomes an href, and the rows are tidied separately.
+ * Migration 025 cleaned the rows that existed, and the panel no longer offers
+ * that spelling anywhere. But rewriting rows only fixes the rows of the day: a
+ * person types `contact.html` again next week, and ErrorController hands this
+ * function the raw `.html` request path when a legacy URL arrives. So the
+ * translation stays here, at the moment a stored value becomes an href.
  *
  * Nothing here guesses. A path that is already absolute, already a scheme, or
  * already an anchor is returned untouched — the one thing worse than a stale
@@ -48,9 +50,10 @@ function site_url(?string $stored, string $fallback = ''): string
         return $value;
     }
 
-    /* `../../assets/x.png` was written from inside html/admin/. Every leading
-       traversal is dropped rather than resolved: there is nothing above the
-       document root to resolve to, and the remainder is always a path from it. */
+    /* `../../assets/x.png` was written from inside the panel's own folder.
+       Every leading traversal is dropped rather than resolved: there is
+       nothing above the document root to resolve to, and the remainder is
+       always a path from it. */
     $value = preg_replace('#^(?:\.\./)+#', '', $value) ?? $value;
     $value = ltrim($value, '/');
 

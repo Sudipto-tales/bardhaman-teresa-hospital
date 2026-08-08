@@ -6,7 +6,7 @@
  *     php tools/scaffold-admin.php          # writes any missing shell
  *     php tools/scaffold-admin.php --force  # rewrites them all
  *
- * The PHP twin of html/admin/tools/scaffold.mjs, and the table below is that
+ * The PHP twin of the prototype's scaffold.mjs, and the table below is that
  * file's PAGES table with the two hand-written screens folded back in.
  * Everything a screen renders still lives in assets/admin/js/pages/<file>.js;
  * this only decides which core modules it needs and what goes in the title bar.
@@ -19,7 +19,7 @@
  *    regenerating them would have destroyed the markup; here that markup sits
  *    in a component of its own — app/components/admin/body/ — and the shell
  *    above it is as ordinary as any other.
- * 2. `faqs` is `listeditor`, which is what the checked-in faqs.html actually
+ * 2. `faqs` is `listeditor`, which is what the prototype's checked-in FAQs screen actually
  *    loads. The .mjs table said `listform` and the extra <script> was added to
  *    the file by hand, which held until the next --force run took it away.
  *

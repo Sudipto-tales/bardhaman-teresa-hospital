@@ -81,7 +81,7 @@
                     <article class="card card--quiet">
                         <p class="text-sm mid">Bengali and Hindi have no glyphs in Inter or Sora. The public site already
                         loads Noto Sans Bengali before first paint when the language is Bangla — see the head script in
-                        <code>website.html</code>. Adding a language here does not add that font; that is a Phase 3 change.</p>
+                        <code>the home page</code>. Adding a language here does not add that font; that is a Phase 3 change.</p>
                     </article>
                 </aside>
             </div>`;

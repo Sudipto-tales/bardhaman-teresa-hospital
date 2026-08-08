@@ -11,6 +11,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast, media, editor } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     const id = U.param('id');
     const isEdit = !!id;
     let record = null;
@@ -26,7 +29,7 @@
                 <article class="card"><div class="empty">
                     <div class="empty__art"><i class="fa-solid fa-file-circle-xmark"></i></div>
                     <h3>That post no longer exists</h3>
-                    <a class="btn btn--primary mt-4" href="blog.html">Back to the list</a>
+                    <a class="btn btn--primary mt-4" href="blog">Back to the list</a>
                 </div></article>`;
             return;
         }
@@ -44,7 +47,7 @@
             el: '#postForm',
             bar: '#formBar',
             autosaveKey: `post:${id || 'new'}`,
-            onCancel: () => { location.href = 'blog.html'; },
+            onCancel: () => { location.href = 'blog'; },
             onSave: save,
         });
 
@@ -72,12 +75,12 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [
                 { label: 'Content' },
-                { label: 'Blog & News', href: 'blog.html' },
+                { label: 'Blog & News', href: 'blog' },
                 { label: isEdit ? 'Edit post' : 'New post' },
             ],
             title: isEdit ? 'Edit' : 'Write a',
             accent: 'Post',
-            actions: '<a class="btn btn--ghost" href="blog.html"><i class="fa-solid fa-arrow-left"></i> Back to posts</a>',
+            actions: '<a class="btn btn--ghost" href="blog"><i class="fa-solid fa-arrow-left"></i> Back to posts</a>',
         });
     }
 
@@ -118,7 +121,7 @@
                             ] })}
                             ${F.text({ name: 'publishedAt', type: 'date', label: 'Publish date' })}
                             ${F.toggle({ name: 'featured', label: 'Featured post',
-                                hint: 'Only one post can be featured — it is the article blog-post.html renders in full.' })}
+                                hint: 'Only one post can be featured — it is the article /blog/{slug} renders in full.' })}
                         </div>
                     </article>
 
@@ -222,7 +225,7 @@
                     undo: () => store.restore('posts', removed.row, removed.index),
                 });
                 ctrl.clearDraft();
-                setTimeout(() => { location.href = 'blog.html'; }, 900);
+                setTimeout(() => { location.href = 'blog'; }, 900);
             });
         }
     }
@@ -268,7 +271,7 @@
         if (isEdit) {
             record = await store.update('posts', id, payload);
             toast.success(opts.publish ? 'Post published' : 'Changes saved', {
-                action: opts.publish ? { label: 'View on site', href: '../../blog-post.html' } : null,
+                action: opts.publish ? { label: 'View on site', href: `${SITE}blog` } : null,
             });
             if (payload.id !== id) {
                 U.setParams({ id: payload.id });
@@ -279,8 +282,8 @@
             toast.success(opts.publish ? 'Post published' : 'Saved as draft');
             setTimeout(() => {
                 location.href = opts.publish
-                    ? `blog.html?created=${encodeURIComponent(record.id)}`
-                    : `blog-form.html?id=${encodeURIComponent(record.id)}`;
+                    ? `blog?created=${encodeURIComponent(record.id)}`
+                    : `blog-form?id=${encodeURIComponent(record.id)}`;
             }, 600);
         }
     }

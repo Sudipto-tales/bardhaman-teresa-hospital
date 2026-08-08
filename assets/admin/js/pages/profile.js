@@ -3,11 +3,11 @@
 
    Three tabs: who they are, how they sign in, and how the
    panel behaves for them. The password form lives here rather
-   than on user-form.html because changing your own password
+   than on user-form because changing your own password
    asks for the current one, and overriding somebody else's
    does not — two different flows that only look alike.
 
-   profile.html?tab=security opens straight on the password
+   profile?tab=security opens straight on the password
    form; the account menu in the topbar links to it.
    ========================================================= */
 (function () {
@@ -41,7 +41,7 @@
             accent: 'Profile',
             sub: 'Your own account. Everyone else is managed under Users & Roles.',
             actions: session.isSuper(me)
-                ? `<a class="btn btn--ghost" href="users.html">
+                ? `<a class="btn btn--ghost" href="users">
                        <i class="fa-solid fa-user-shield"></i> Manage users</a>`
                 : '',
         });
@@ -166,10 +166,10 @@
                                         F.select({
                                             name: 'landingPage', label: 'Open the panel on',
                                             options: [
-                                                { value: 'dashboard.html', label: 'Dashboard' },
-                                                { value: 'enquiries.html', label: 'Enquiries' },
-                                                { value: 'appointments.html', label: 'Appointments' },
-                                                { value: 'blog.html', label: 'Blog & News' },
+                                                { value: 'dashboard', label: 'Dashboard' },
+                                                { value: 'enquiries', label: 'Enquiries' },
+                                                { value: 'appointments', label: 'Appointments' },
+                                                { value: 'blog', label: 'Blog & News' },
                                             ],
                                         }),
                                         F.select({
@@ -208,7 +208,7 @@
         formLib.bind(document.getElementById('prefForm'), {
             language: me.language || 'en',
             timezone: me.timezone || 'Asia/Kolkata',
-            landingPage: me.landingPage || 'dashboard.html',
+            landingPage: me.landingPage || 'dashboard',
             emailDigest: me.emailDigest || 'daily',
         });
 
@@ -420,7 +420,7 @@
                     <p class="text-sm mid">${supers.length === 1
                         ? 'You are the only active super admin. If you lose this account, nobody can manage the panel.'
                         : `${supers.length} super admins can manage the panel.`}</p>
-                    <a class="btn btn--soft btn--sm mt-2" href="user-form.html?role=${U.esc(session.SUPER_ROLE)}">
+                    <a class="btn btn--soft btn--sm mt-2" href="user-form?role=${U.esc(session.SUPER_ROLE)}">
                         <i class="fa-solid fa-user-plus"></i> Add another super admin</a>
                 </div>` : `
                 <div class="card__foot">

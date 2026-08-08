@@ -18,7 +18,7 @@
  * because a template and a route exist for it, which is a deploy, not a form.
  *
  * The panel reads a page as one record with `sections` on it
- * (html/admin/assets/js/core/util.js `applySections`), so that is the shape
+ * (assets/admin/js/core/util.js `applySections`), so that is the shape
  * this returns and accepts, whatever the two tables underneath look like.
  */
 class PageController extends ApiController

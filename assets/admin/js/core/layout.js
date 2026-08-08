@@ -19,6 +19,13 @@
 
     const esc = (s) => (root.TMH.util ? root.TMH.util.esc(s) : String(s));
 
+    /* The public site's root, absolute. Panel screens are all served from
+       /admin/, so a link to a *sibling* screen stays relative — but a link
+       out to the site cannot be, because the site may sit in a subdirectory
+       and its pages are not all one segment deep. core/api.js reads the base
+       from <meta name="app-base"> and parses before this file. */
+    const SITE = root.TMH.api.base;
+
     const THEME_KEY = 'tmh-admin-theme';
     const COLLAPSE_KEY = 'tmh-admin-collapsed';
 
@@ -130,8 +137,8 @@
        when the record has one, otherwise its list page
        pre-filtered through ?q= so the row is on screen on arrival.
        --------------------------------------------------------- */
-    const form = (page) => (r) => `${page}.html?id=${encodeURIComponent(r.id)}`;
-    const listAt = (page) => (r, q) => `${page}.html?q=${encodeURIComponent(q)}`;
+    const form = (page) => (r) => `${page}?id=${encodeURIComponent(r.id)}`;
+    const listAt = (page) => (r, q) => `${page}?q=${encodeURIComponent(q)}`;
 
     const SEARCH_SOURCES = {
         doctors: { group: 'Doctors', icon: 'fa-user-doctor', href: form('doctor-form') },
@@ -152,8 +159,8 @@
         'nav-items': { group: 'Navigation', icon: 'fa-sitemap', href: listAt('navigation') },
         redirects: { group: 'Redirects', icon: 'fa-right-left', href: listAt('redirects') },
         media: { group: 'Media', icon: 'fa-images', href: listAt('gallery') },
-        users: { group: 'Users', icon: 'fa-user-shield', href: () => 'users.html' },
-        roles: { group: 'Roles', icon: 'fa-user-shield', href: () => 'users.html' },
+        users: { group: 'Users', icon: 'fa-user-shield', href: () => 'users' },
+        roles: { group: 'Roles', icon: 'fa-user-shield', href: () => 'users' },
     };
 
     const SEARCH_LIMIT = 8;
@@ -369,10 +376,10 @@
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
                 <div class="menu hidden" id="accountMenu" role="menu">
-                    <a href="profile.html" role="menuitem"><i class="fa-solid fa-circle-user"></i> My profile</a>
-                    <a href="profile.html?tab=security" role="menuitem"><i class="fa-solid fa-key"></i> Change password</a>
-                    <a href="settings-general.html" role="menuitem"><i class="fa-solid fa-sliders"></i> Settings</a>
-                    <a href="../../website.html" target="_blank" rel="noopener" role="menuitem"><i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>
+                    <a href="profile" role="menuitem"><i class="fa-solid fa-circle-user"></i> My profile</a>
+                    <a href="profile?tab=security" role="menuitem"><i class="fa-solid fa-key"></i> Change password</a>
+                    <a href="settings-general" role="menuitem"><i class="fa-solid fa-sliders"></i> Settings</a>
+                    <a href="${SITE}" target="_blank" rel="noopener" role="menuitem"><i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>
                     <hr>
                     <!-- "Reset demo data" was here, and is gone with the mock
                          it emptied. There is no demo data to go back to now,
@@ -513,7 +520,7 @@
 
                 root.TMH.toast.info(`${unread} new enquir${unread === 1 ? 'y' : 'ies'}`, {
                     body: 'Nobody has replied to these yet.',
-                    action: { label: 'Open enquiries', onClick: () => { location.href = 'enquiries.html'; } },
+                    action: { label: 'Open enquiries', onClick: () => { location.href = 'enquiries'; } },
                 });
             });
         }

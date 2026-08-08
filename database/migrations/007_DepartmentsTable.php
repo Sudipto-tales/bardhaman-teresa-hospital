@@ -3,7 +3,7 @@
 /**
  * departments — §4. The largest record: one row fills one public page.
  * Replaces DEPARTMENTS in tools/site-data.mjs, 12 records driving 12 pages
- * plus the mega menu and departments.html.
+ * plus the mega menu and the departments index.
  *
  * The repeaters — chips, intro paragraphs, tick list, procedure cards,
  * condition chips — are JSON columns. Each is edited as a block on one tab of

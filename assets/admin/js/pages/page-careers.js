@@ -6,6 +6,9 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
 
+    /* The public site's root, absolute — see core/layout.js. */
+    const SITE = window.TMH.api.base;
+
     let page = null;
     let ctrl = null;
     let order = null;
@@ -19,13 +22,13 @@
         const openJobs = jobs.filter((j) => j.status === 'published');
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({
-            crumb: [{ label: 'Pages', href: 'pages.html' }, { label: 'Careers Page' }],
+            crumb: [{ label: 'Pages', href: 'pages' }, { label: 'Careers Page' }],
             title: 'Careers',
             accent: 'Page',
             sub: 'The copy around the vacancy list. The vacancies themselves are managed separately.',
             actions: `
-                <a class="btn btn--ghost" href="jobs.html"><i class="fa-solid fa-bullhorn"></i> Vacancies</a>
-                <a class="btn btn--ghost" href="../../careers.html" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="jobs"><i class="fa-solid fa-bullhorn"></i> Vacancies</a>
+                <a class="btn btn--ghost" href="${SITE}careers" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View page</a>`,
         });
 
@@ -34,7 +37,7 @@
             <div class="banner banner--warn">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span class="grow">No published vacancies. The careers page is showing its "nothing open" panel — the message below is what visitors read.</span>
-                <a class="btn btn--soft btn--sm" href="job-form.html">Post a vacancy</a>
+                <a class="btn btn--soft btn--sm" href="job-form">Post a vacancy</a>
             </div>` : ''}
             ${markup(openJobs)}`;
 
@@ -91,7 +94,7 @@
                     F.textarea({ name: 'openings.emptyMessage', label: 'Message when nothing is open', rows: 2,
                         hint: 'An empty vacancy list is a supported state — this is what the page shows instead.' }),
                     F.mirror({
-                        label: 'Vacancies', source: 'Vacancies', href: 'jobs.html',
+                        label: 'Vacancies', source: 'Vacancies', href: 'jobs',
                         value: `${openJobs.length} published`,
                     }),
                 ],
@@ -117,7 +120,7 @@
         page = await store.update('pages', 'careers', U.applySections(page, flat, order));
         order = null;
         toast.success('Careers page saved', {
-            action: { label: 'View page', href: '../../careers.html' },
+            action: { label: 'View page', href: `${SITE}careers` },
         });
     }
 }());

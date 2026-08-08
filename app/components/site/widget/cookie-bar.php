@@ -7,7 +7,7 @@
  * whether to insert one at all by reading the consent cookie, and a bar that
  * was printed server-side and then hidden still costs a screen-reader user a
  * tab stop. What this component contributes is the configuration popups.js
- * reads, which used to come from assets/popups-config.js and now comes from
+ * reads, which used to come from a checked-in config file and now comes from
  * the settings record.
  *
  * It merges rather than assigns, so the ads widget can write the other half of
