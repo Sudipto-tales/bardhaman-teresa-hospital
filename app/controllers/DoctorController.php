@@ -23,6 +23,7 @@ class DoctorController extends SiteController
                 'title' => 'Our Doctors',
                 'description' => 'Meet the consultants of Teresa Memorial Hospital — cardiology, '
                     . 'neurosurgery, orthopedics, obstetrics, nephrology, pediatrics and more.',
+                'schema' => [$this->crumbs(['Doctors' => 'doctors'])],
             ]),
             'doctors' => $doctors,
             'counters' => counters_for_scope('home', 4),

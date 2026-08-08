@@ -20,6 +20,7 @@ class DepartmentController extends SiteController
             'head' => $this->seoHead('page', 'departments', [
                 'title' => 'Our Departments',
                 'description' => 'Every speciality at Teresa Memorial Hospital, and the consultants behind it.',
+                'schema' => [$this->crumbs(['Departments' => 'departments'])],
             ]),
             'departments' => $departments,
             'counters' => counters_for_scope('home', 4),
@@ -69,18 +70,29 @@ class DepartmentController extends SiteController
             return;
         }
 
+        $faqs = faqs_for_department($slug);
+        $url = Schema::siteUrl($slug);
+
         $this->page('department', [
             'head' => $this->seoHead('department', $slug, [
                 'title' => $department['name'] ?? '',
                 'description' => $this->summarise($department['lead'] ?? ''),
                 'ogImage' => $department['banner'] ?? '',
+                'schema' => [
+                    Schema::medicalClinic($department, $url),
+                    $this->crumbs([
+                        'Departments' => 'departments',
+                        (string) ($department['name'] ?? '') => $slug,
+                    ]),
+                    Schema::faqPage($faqs, $url),
+                ],
             ]),
             'department' => $department,
             /* A department's own numbers where it has them; the hospital's
                where it does not, so the band never renders as an empty strip. */
             'counters' => counters_for_department($slug, 4) ?: counters_for_scope('home', 4),
             'doctors' => doctors_for_department($slug),
-            'faqs' => faqs_for_department($slug),
+            'faqs' => $faqs,
         ]);
     }
 }

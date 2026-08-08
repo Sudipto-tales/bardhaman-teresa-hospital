@@ -27,8 +27,14 @@ $siteName = $siteName ?? 'Teresa Memorial Hospital';
 $styles = $styles ?? ['assets/website.css', 'assets/pages.css'];
 
 /* The escaped <title> and the raw string og:title needs are the same text; the
-   dash is an entity in one and a character in the other. */
-$shareTitle = $titleFull ?? (($title ?? '') === '' ? $siteName : $title . ' — ' . $siteName);
+   dash is an entity in one and a character in the other. `titleFull` is printed
+   into <title> as markup and may carry `&mdash;`, so it is decoded before being
+   escaped again — otherwise a shared link reads "&amp;mdash;". */
+$shareTitle = html_entity_decode(
+    $titleFull ?? (($title ?? '') === '' ? $siteName : $title . ' — ' . $siteName),
+    ENT_QUOTES | ENT_HTML5,
+    'UTF-8'
+);
 $documentTitle = $titleFull ?? (($title ?? '') === ''
     ? $siteName
     : e($title) . ' &mdash; ' . e($siteName));

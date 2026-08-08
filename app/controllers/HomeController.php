@@ -37,6 +37,7 @@ class HomeController extends SiteController
 
         $departments = departments_published();
         $doctors = doctors_published($doctorLimit);
+        $faqs = faqs_for_group($faqGroup);
 
         $this->page('home', [
             'head' => $this->seoHead('page', 'home', [
@@ -50,6 +51,10 @@ class HomeController extends SiteController
                    needs is in website.css, and pages.css restyles some of the
                    same class names for the inner pages. */
                 'styles' => ['assets/website.css'],
+
+                /* No breadcrumb: the home page is the root, and a trail of
+                   itself is what Schema::breadcrumbs() refuses to build. */
+                'schema' => [Schema::faqPage($faqs, Schema::siteUrl())],
             ]),
 
             /* The home page is driven entirely by website.js; pages.js is for
@@ -63,7 +68,7 @@ class HomeController extends SiteController
             'labTests' => lab_tests_featured($labLimit),
             'testimonials' => testimonials_published(),
             'counters' => counters_for_scope('home', 4),
-            'faqs' => faqs_for_group($faqGroup),
+            'faqs' => $faqs,
             'posts' => posts_published(['limit' => $postLimit]),
             'postTotal' => count(posts_published()),
 

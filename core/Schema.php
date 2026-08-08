@@ -9,8 +9,8 @@
  * nodes costs no more than a page that emits one.
  *
  * Nodes carry `@id` so they can point at each other rather than repeat: a
- * doctor's `worksFor` is a reference to the hospital node already in the
- * graph, not a second copy of the hospital.
+ * department's `parentOrganization` is a reference to the hospital node already
+ * in the graph, not a second copy of the hospital.
  */
 final class Schema
 {
@@ -20,7 +20,7 @@ final class Schema
     /**
      * The graph, ready for a <script type="application/ld+json">.
      *
-     * Empty nodes are dropped rather than emitted hollow — a `Physician` with
+     * Empty nodes are dropped rather than emitted hollow — an `Article` with
      * nothing but an `@type` tells a crawler less than no node at all.
      */
     public static function graph(array $nodes): string
@@ -32,9 +32,9 @@ final class Schema
         }
 
         /* HEX_TAG and HEX_AMP are the reason this is not plain json_encode:
-           the result is printed inside a <script>, and a bio containing
-           "</script>" would otherwise close it and leave the rest as markup.
-           Escaped as < they stay valid JSON and inert HTML. */
+           the result is printed inside a <script>, and an article excerpt
+           containing "</script>" would otherwise close it and leave the rest as
+           markup. Escaped as < they stay valid JSON and inert HTML. */
         return (string) json_encode(
             ['@context' => 'https://schema.org', '@graph' => $nodes],
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP
@@ -177,69 +177,6 @@ final class Schema
         return ['@type' => 'BreadcrumbList', 'itemListElement' => $items];
     }
 
-    /**
-     * One consultant.
-     *
-     * This is the node a name search needs: a page whose subject is one person,
-     * saying what they practise and where. `worksFor` and `address` both point
-     * at the hospital, because that is where they are found.
-     */
-    public static function physician(array $doctor, string $url): array
-    {
-        $node = [
-            '@type' => ['Physician', 'Person'],
-            '@id' => $url . '#physician',
-            'name' => (string) ($doctor['name'] ?? ''),
-            'url' => $url,
-            'worksFor' => ['@id' => self::id('organisation')],
-            'address' => self::postalAddress(),
-            'areaServed' => self::AREA_SERVED,
-        ];
-
-        foreach ([
-            'jobTitle' => 'role',
-            'description' => 'bio',
-            'image' => 'photo',
-        ] as $key => $field) {
-            $value = trim(strip_tags((string) ($doctor[$field] ?? '')));
-
-            if ($value !== '') {
-                $node[$key] = $key === 'description' ? self::clip($value, 300) : $value;
-            }
-        }
-
-        if (($qualification = trim((string) ($doctor['qualification'] ?? ''))) !== '') {
-            $node['hasCredential'] = $qualification;
-        }
-
-        if (($speciality = trim((string) ($doctor['speciality'] ?? ''))) !== '') {
-            $node['medicalSpecialty'] = $speciality;
-        }
-
-        if ($names = self::departmentNames($doctor)) {
-            $node['memberOf'] = array_map(
-                static fn (string $name): array => ['@type' => 'MedicalOrganization', 'name' => $name],
-                $names
-            );
-        }
-
-        if ($languages = array_filter(array_map('trim', (array) ($doctor['languages'] ?? [])))) {
-            $node['knowsLanguage'] = array_values($languages);
-        }
-
-        if (($registration = trim((string) ($doctor['registrationNo'] ?? ''))) !== '') {
-            $node['identifier'] = ['@type' => 'PropertyValue', 'name' => 'Medical registration', 'value' => $registration];
-        }
-
-        $phone = site_primary_phone();
-
-        if ($phone['number'] !== '') {
-            $node['telephone'] = $phone['number'];
-        }
-
-        return $node;
-    }
-
     /** One department, as a unit of the hospital. */
     public static function medicalClinic(array $department, string $url): array
     {
@@ -344,15 +281,28 @@ final class Schema
             $node['description'] = self::clip($summary, 500);
         }
 
-        foreach ([
-            'employmentType' => 'employmentType',
-            'occupationalCategory' => 'category',
-        ] as $key => $field) {
-            $value = trim((string) ($job[$field] ?? ''));
+        if (($location = trim((string) ($job['location'] ?? ''))) !== '') {
+            $node['jobLocation']['name'] = $location;
+        }
 
-            if ($value !== '') {
-                $node[$key] = $value;
-            }
+        if (($type = self::employmentType((string) ($job['type'] ?? ''))) !== '') {
+            $node['employmentType'] = $type;
+        }
+
+        if (($dept = trim((string) ($job['dept'] ?? ''))) !== '') {
+            $node['occupationalCategory'] = $dept;
+        }
+
+        if (($openings = (int) ($job['openings'] ?? 0)) > 0) {
+            $node['totalJobOpenings'] = $openings;
+        }
+
+        if (($experience = trim((string) ($job['experience'] ?? ''))) !== '') {
+            $node['experienceRequirements'] = $experience;
+        }
+
+        if ($salary = self::salary($job)) {
+            $node['baseSalary'] = $salary;
         }
 
         foreach (['datePosted' => 'postedAt', 'validThrough' => 'closesAt'] as $key => $field) {
@@ -364,6 +314,61 @@ final class Schema
         }
 
         return $node;
+    }
+
+    /**
+     * "Full time" → FULL_TIME.
+     *
+     * The column is free text a panel user types, and schema.org takes an
+     * enumeration. Anything outside it is dropped rather than passed through:
+     * an invalid employmentType invalidates the whole posting, and no value at
+     * all is valid.
+     */
+    private static function employmentType(string $stored): string
+    {
+        $key = strtoupper(preg_replace('/[^a-z]+/i', '_', trim($stored)) ?? '');
+
+        foreach ([
+            'FULL_TIME' => ['FULL_TIME', 'FULLTIME', 'PERMANENT'],
+            'PART_TIME' => ['PART_TIME', 'PARTTIME'],
+            'CONTRACTOR' => ['CONTRACTOR', 'CONTRACT', 'LOCUM'],
+            'TEMPORARY' => ['TEMPORARY', 'TEMP', 'RELIEF'],
+            'INTERN' => ['INTERN', 'INTERNSHIP', 'TRAINEE'],
+            'VOLUNTEER' => ['VOLUNTEER'],
+        ] as $value => $prefixes) {
+            foreach ($prefixes as $prefix) {
+                if (str_starts_with($key, $prefix)) {
+                    return $value;
+                }
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * The pay band, monthly.
+     *
+     * `salaryNote` is deliberately not folded in — "Plus night differential" is
+     * a sentence, and MonetaryAmount has nowhere truthful to put it.
+     */
+    private static function salary(array $job): array
+    {
+        $from = (int) ($job['salaryFrom'] ?? 0);
+        $to = (int) ($job['salaryTo'] ?? 0);
+
+        if ($from <= 0 && $to <= 0) {
+            return [];
+        }
+
+        $value = array_filter([
+            '@type' => 'QuantitativeValue',
+            'minValue' => $from ?: null,
+            'maxValue' => $to ?: null,
+            'unitText' => 'MONTH',
+        ], static fn ($v) => $v !== null);
+
+        return ['@type' => 'MonetaryAmount', 'currency' => 'INR', 'value' => $value];
     }
 
     /**
@@ -534,24 +539,6 @@ final class Schema
         }
 
         return array_values(array_unique($names));
-    }
-
-    /** A doctor's departments as names, whichever shape the join returned. */
-    private static function departmentNames(array $doctor): array
-    {
-        $out = [];
-
-        foreach ((array) ($doctor['departments'] ?? []) as $entry) {
-            $name = is_array($entry)
-                ? trim((string) ($entry['name'] ?? $entry['label'] ?? ''))
-                : trim((string) $entry);
-
-            if ($name !== '') {
-                $out[] = $name;
-            }
-        }
-
-        return array_values(array_unique($out));
     }
 
     /** Trimmed at a word, for the fields with a length a crawler respects. */

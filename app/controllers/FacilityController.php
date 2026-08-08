@@ -15,6 +15,7 @@ class FacilityController extends SiteController
                 'title' => 'Facilities',
                 'description' => 'Emergency, intensive care, modular theatres, laboratory, imaging, '
                     . 'pharmacy and ambulance services at Teresa Memorial Hospital.',
+                'schema' => [$this->crumbs(['Facilities' => 'facilities'])],
             ]),
             'facilities' => facilities_published(),
             'counters' => counters_for_scope('global', 4) ?: counters_for_scope('home', 4),

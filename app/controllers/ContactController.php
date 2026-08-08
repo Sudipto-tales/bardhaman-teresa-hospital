@@ -44,6 +44,7 @@ class ContactController extends SiteController
                 'title' => 'Contact',
                 'description' => 'Book an appointment, ask a question, or come straight in. '
                     . 'Emergency and ambulance lines are staffed every hour of the year.',
+                'schema' => [$this->crumbs(['Contact' => 'contact'])],
             ]),
 
             'sections' => $sections,

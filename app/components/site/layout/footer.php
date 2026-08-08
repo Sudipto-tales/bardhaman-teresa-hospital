@@ -123,10 +123,14 @@ $developer = $developer ?? ['name' => 'Promix', 'url' => 'https://promix.tech/',
         <!-- already Bengali; left to the widget it gets round-tripped -->
         <p class="ft__bottom-tag" lang="bn" translate="no"><?= e($tagline ?? 'মানুষের সাথে ..... মানুষের পাশে') ?></p>
 <?php if (!empty($developer['url'])): ?>
+        <!-- The anchor text is the logo's alt, so it says who and what rather
+             than just the name; the link stays followed, and Schema::website()
+             names the same organisation as `creator`. -->
         <a class="ft__dev" href="<?= e($developer['url']) ?>" target="_blank" rel="noopener noreferrer" data-tip="<?= e($developer['name'] ?? '') ?>"
-            aria-label="Developed by <?= e($developer['name'] ?? '') ?>">
+            title="Website designed and developed by <?= e($developer['name'] ?? '') ?>">
             <span>Developed by</span>
-            <img src="<?= e($developer['logo'] ?? '') ?>" alt="<?= e($developer['name'] ?? '') ?>" loading="lazy">
+            <img src="<?= e($developer['logo'] ?? '') ?>"
+                alt="<?= e($developer['name'] ?? '') ?> — website design and development" loading="lazy">
         </a>
 <?php endif; ?>
     </div>

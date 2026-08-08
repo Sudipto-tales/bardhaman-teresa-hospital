@@ -35,6 +35,7 @@ class AboutController extends SiteController
                 'title' => 'About Us',
                 'description' => 'Teresa Memorial Hospital — 210 beds, 20 units and three decades of '
                     . 'care for Bardhaman and the districts around it.',
+                'schema' => [$this->crumbs(['About Us' => 'about'])],
             ]),
 
             'sections' => $sections,

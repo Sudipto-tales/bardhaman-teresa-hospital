@@ -25,6 +25,7 @@ class CareersController extends SiteController
         $this->page('careers', [
             'head' => $this->seoHead('page', 'careers', [
                 'title' => 'Careers',
+                'schema' => [$this->crumbs(['Careers' => 'careers'])],
                 'description' => 'Consultant, nursing, technician and administrative roles at '
                     . 'Teresa Memorial Hospital — funded training, honest rosters, internal-first promotion.',
             ]),
@@ -66,6 +67,10 @@ class CareersController extends SiteController
             'head' => $this->seoHead('job', $slug, [
                 'title' => (string) ($job['title'] ?? ''),
                 'description' => $this->summarise($job['summary'] ?? ''),
+                'schema' => [
+                    Schema::jobPosting($job, Schema::siteUrl('careers/' . $slug)),
+                    $this->crumbs(['Careers' => 'careers', (string) ($job['title'] ?? '') => 'careers/' . $slug]),
+                ],
             ]),
 
             'job' => $job,

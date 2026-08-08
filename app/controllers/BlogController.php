@@ -28,6 +28,7 @@ class BlogController extends SiteController
                 'title' => 'Blog',
                 'description' => 'Health writing by the consultants of Teresa Memorial Hospital — '
                     . 'written or reviewed in the clinic, not syndicated.',
+                'schema' => [$this->crumbs(['Blog' => 'blog'])],
             ]),
 
             'posts' => array_map([$this, 'card'], $posts),
@@ -56,12 +57,18 @@ class BlogController extends SiteController
         }
 
         $category = (string) ($post['categoryName'] ?? '');
+        $url = Schema::siteUrl('blog/' . $slug);
 
         $this->page('blog-post', [
             'head' => $this->seoHead('post', $slug, [
                 'title' => (string) ($post['title'] ?? ''),
                 'description' => (string) ($post['excerpt'] ?? '') ?: $this->summarise($post['body'] ?? ''),
                 'ogImage' => (string) ($post['coverImage'] ?? ''),
+                'ogType' => 'article',
+                'schema' => [
+                    Schema::article($post, $url, (array) ($post['author'] ?? [])),
+                    $this->crumbs(['Blog' => 'blog', (string) ($post['title'] ?? '') => 'blog/' . $slug]),
+                ],
             ]),
 
             'post' => $post,
