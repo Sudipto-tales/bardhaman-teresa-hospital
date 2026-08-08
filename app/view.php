@@ -44,6 +44,12 @@ class ViewRouteProvider extends RouteProvider
             'careers' => ['CareersController', 'index'],
             'careers/{slug}' => ['CareersController', 'show'],
 
+            /* Neither exists on disk, so the rewrite hands both here. Both are
+               generated per request: a sitemap rebuilt nightly is a sitemap
+               that is wrong for the rest of the day. */
+            'sitemap.xml' => ['SitemapController', 'index'],
+            'robots.txt' => ['SitemapController', 'robots'],
+
             /* The panel. `admin/{screen}` is the whole of it — a screen exists
                if app/page/admin/<screen>.php does, so adding one is never also
                remembering to add a route. The two literals above it are the
