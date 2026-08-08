@@ -41,9 +41,9 @@ class ContactController extends SiteController
 
         $this->page('contact', [
             'head' => $this->seoHead('page', 'contact', [
-                'title' => 'Contact',
-                'description' => 'Book an appointment, ask a question, or come straight in. '
-                    . 'Emergency and ambulance lines are staffed every hour of the year.',
+                'title' => 'Contact & Appointments, Bardhaman',
+                'description' => 'Book an appointment, ask a question, or come straight in to Teresa Memorial '
+                    . 'Hospital, Bardhaman (Burdwan). Emergency and ambulance lines staffed 24/7.',
                 'schema' => [$this->crumbs(['Contact' => 'contact'])],
             ]),
 

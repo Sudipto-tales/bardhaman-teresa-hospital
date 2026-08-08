@@ -26,7 +26,7 @@ class BlogController extends SiteController
         $this->page('blog', [
             'head' => $this->seoHead('page', 'blog', [
                 'title' => 'Blog',
-                'description' => 'Health writing by the consultants of Teresa Memorial Hospital — '
+                'description' => 'Health writing by the consultants of Teresa Memorial Hospital, Bardhaman — '
                     . 'written or reviewed in the clinic, not syndicated.',
                 'schema' => [$this->crumbs(['Blog' => 'blog'])],
             ]),

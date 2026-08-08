@@ -12,9 +12,9 @@ class FacilityController extends SiteController
     {
         $this->page('facilities', [
             'head' => $this->seoHead('page', 'facilities', [
-                'title' => 'Facilities',
-                'description' => 'Emergency, intensive care, modular theatres, laboratory, imaging, '
-                    . 'pharmacy and ambulance services at Teresa Memorial Hospital.',
+                'title' => 'Facilities — ICU, Theatres & Lab in Bardhaman',
+                'description' => 'Emergency, intensive care, modular theatres, laboratory, imaging, pharmacy '
+                    . 'and ambulance services at Teresa Memorial Hospital, Bardhaman (Burdwan).',
                 'schema' => [$this->crumbs(['Facilities' => 'facilities'])],
             ]),
             'facilities' => facilities_published(),

@@ -18,8 +18,9 @@ class DepartmentController extends SiteController
 
         $this->page('departments', [
             'head' => $this->seoHead('page', 'departments', [
-                'title' => 'Our Departments',
-                'description' => 'Every speciality at Teresa Memorial Hospital, and the consultants behind it.',
+                'title' => 'Departments — Multispeciality Care in Bardhaman',
+                'description' => 'Every speciality at Teresa Memorial Hospital, Bardhaman (Burdwan) — '
+                    . 'and the consultants behind each one.',
                 'schema' => [$this->crumbs(['Departments' => 'departments'])],
             ]),
             'departments' => $departments,

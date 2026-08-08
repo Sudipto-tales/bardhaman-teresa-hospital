@@ -20,9 +20,9 @@ class DoctorController extends SiteController
 
         $this->page('doctors', [
             'head' => $this->seoHead('page', 'doctors', [
-                'title' => 'Our Doctors',
-                'description' => 'Meet the consultants of Teresa Memorial Hospital — cardiology, '
-                    . 'neurosurgery, orthopedics, obstetrics, nephrology, pediatrics and more.',
+                'title' => 'Our Doctors — Consultants in Bardhaman',
+                'description' => 'Meet the consultants of Teresa Memorial Hospital, Bardhaman (Burdwan) — '
+                    . 'cardiology, neurosurgery, orthopedics, obstetrics, nephrology and pediatrics.',
                 'schema' => [$this->crumbs(['Doctors' => 'doctors'])],
             ]),
             'doctors' => $doctors,
