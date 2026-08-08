@@ -36,7 +36,10 @@ abstract class SiteController extends BaseController
      */
     protected function page(string $body, array $data = []): void
     {
-        $head = array_merge($this->head(), $data['head'] ?? []);
+        /* Through head() rather than merged over it: the page's own schema
+           nodes have to be appended to the site-wide graph, and a merge here
+           would replace it — leaving a Physician with no hospital to work for. */
+        $head = $this->head($data['head'] ?? []);
         $header = array_merge($this->header(), $data['header'] ?? []);
         $footer = array_merge($this->footer(), $data['footer'] ?? []);
         $scripts = array_merge(['pages' => true], $data['scripts'] ?? []);
@@ -98,17 +101,71 @@ abstract class SiteController extends BaseController
     {
         $seo = settings_group('seo');
 
-        return array_merge([
+        $head = array_merge([
             'siteName' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
             'description' => (string) ($seo['defaultDescription'] ?? ''),
+            'keywords' => (string) ($seo['defaultKeywords'] ?? ''),
             'ogImage' => (string) ($seo['defaultOgImage'] ?? ''),
+            'ogType' => 'website',
             'canonical' => $this->canonical(),
+            'robots' => (string) ($seo['robots'] ?? 'index, follow'),
             'noindex' => str_contains(strtolower((string) ($seo['robots'] ?? '')), 'noindex'),
+            'verification' => (string) ($seo['googleVerification'] ?? ''),
+            'twitterSite' => (string) ($seo['twitterSite'] ?? ''),
+            'favicon' => site_url((string) setting('general', 'favicon', ''), base_url('assets/logo-teresa.png')),
+            'themeColor' => (string) setting('theme', 'primaryColor', '#0d9488'),
             /* 'system' is a browser decision, and the server cannot make it —
                the pre-paint script in the component reads the OS. What the
                setting can decide is the value before any of that runs. */
             'theme' => ((string) setting('theme', 'defaultTheme', 'system')) === 'dark' ? 'dark' : 'light',
-        ], $overrides);
+        ], $this->geoMeta(), $overrides);
+
+        /* Every page carries the hospital and the site; a page that has its own
+           nodes — a doctor, a department — appends rather than replaces, so the
+           graph is never a Physician with no employer in it. */
+        $head['schema'] = array_merge(
+            [Schema::organisation(), Schema::website()],
+            (array) ($overrides['schema'] ?? [])
+        );
+
+        return $head;
+    }
+
+    /**
+     * The three geo metas, from the same contact settings the map reads.
+     *
+     * Long superseded by the `Hospital` node's `geo` — kept because they cost
+     * nothing, some local directories still parse them, and this hospital is
+     * exactly the one-town case they were written for.
+     */
+    protected function geoMeta(): array
+    {
+        $city = trim((string) setting('contact', 'city', ''));
+        $state = trim((string) setting('contact', 'state', ''));
+        $lat = (float) setting('contact', 'mapLat', 0);
+        $lng = (float) setting('contact', 'mapLng', 0);
+
+        return [
+            'geoRegion' => 'IN-WB',
+            'geoPlacename' => trim($city . ($state !== '' ? ', ' . $state : '')),
+            'geoPosition' => ($lat !== 0.0 && $lng !== 0.0) ? $lat . ';' . $lng : '',
+        ];
+    }
+
+    /**
+     * The breadcrumb node for a page below the home page.
+     *
+     * @param array $trail label => path, without the home entry
+     */
+    protected function crumbs(array $trail): array
+    {
+        $items = ['Home' => Schema::siteUrl()];
+
+        foreach ($trail as $label => $path) {
+            $items[$label] = Schema::siteUrl($path);
+        }
+
+        return Schema::breadcrumbs($items);
     }
 
     protected function header(array $overrides = []): array
@@ -369,6 +426,16 @@ abstract class SiteController extends BaseController
             ?: (string) ($defaults['description'] ?? '');
         $head['ogImage'] = trim((string) ($row['ogImage'] ?? ''))
             ?: (string) ($defaults['ogImage'] ?? '');
+        $head['keywords'] = trim((string) ($row['keywords'] ?? ''))
+            ?: (string) ($defaults['keywords'] ?? '');
+
+        /* Not filtered below, and deliberately: 'website' is a real value the
+           caller may have chosen, and an array of nodes is neither '' nor null. */
+        foreach (['ogType', 'schema'] as $passthrough) {
+            if (isset($defaults[$passthrough])) {
+                $head[$passthrough] = $defaults[$passthrough];
+            }
+        }
 
         if (trim((string) ($row['canonical'] ?? '')) !== '') {
             $head['canonical'] = (string) $row['canonical'];

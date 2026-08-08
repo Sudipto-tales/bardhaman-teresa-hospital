@@ -393,6 +393,21 @@
       "group_name": "seo",
       "setting_key": "canonicalDomain",
       "value": "\"https://teresamemorial.org\""
+    },
+    {
+      "group_name": "seo",
+      "setting_key": "googleVerification",
+      "value": "\"m_SRPbBmHs92iJ6Ur7YTBaOFtbAN5jNKTm5g93Qz1Kc\""
+    },
+    {
+      "group_name": "seo",
+      "setting_key": "defaultKeywords",
+      "value": "\"best hospital in Bardhaman, best nursing home in Bardhaman, hospital in Burdwan, nursing home in Burdwan, multispeciality hospital Bardhaman, 24x7 emergency hospital Bardhaman, best doctors in Bardhaman, ICU and critical care Bardhaman, maternity hospital Burdwan, cardiology hospital Bardhaman, pathology lab Bardhaman, Teresa Memorial Hospital\""
+    },
+    {
+      "group_name": "seo",
+      "setting_key": "twitterSite",
+      "value": "\"\""
     }
   ]
 }
