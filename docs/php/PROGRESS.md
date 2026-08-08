@@ -1,8 +1,9 @@
 # Progress — HTML → Vayu PHP conversion
 
-**Next action:** 8.1 — the security pass. Phases 4, 5, 6 and 7 are done: the
-public site is served from the database and the panel's 41 screens read and
-write through `/api/*`. Phase 8 is all that is left.
+**Next action:** 8.1 — the security pass. Phases 4 through 7 and phase 9 are
+done: the public site is served from the database, the panel's 41 screens read
+and write through `/api/*`, and the site is indexable. Phase 8 is all that is
+left.
 
 This file is the resume point. If a session dies, read it top to bottom and
 start at the next `todo`. Every numbered step below is one commit, and the row
@@ -675,6 +676,140 @@ first line. It stays for the static design copy, like the two literal blocks in
 | 7.2 | Application: CV upload, HR mail, applicant ack | done | Row first, mail second — a failed send must not lose the application |
 | 7.3 | Doctor appointment link behaviour | done in 6.3 | Nine of ten published doctors carry `?doctor=`; the tenth has booking off and carries none |
 | 7.4 | Cookie bar + ads popup from the database | done in 6.3 | `SiteController::popups()`, from the `popups` settings group |
+
+## Phase 9 — SEO
+
+Done before phase 8, out of order, because the site was live and unfindable.
+
+| # | Task | Status | Notes |
+|---|---|---|---|
+| 9.1 | The document head, in full | done | OG, Twitter, keywords, verification, and `core/Schema.php` |
+| 9.3 | Structured data per page type | done | MedicalClinic, Article, JobPosting, FAQPage, BreadcrumbList |
+| 9.4 | `sitemap.xml` and `robots.txt` | done | Generated per request; 33 URLs, all answering 200 |
+| 9.5 | The local keyword pass | done | Bardhaman and Burdwan, in both the meta and the schema |
+| 9.6 | Verified end to end | done | 33 pages, no duplicate title or description among them |
+
+There is no 9.2. It was a page per doctor — the reversal of §20 of
+[`02-content-model.md`](../02-content-model.md) — and the client dropped it
+after it was written. It is recorded here rather than renumbered away because
+the gap it leaves is real: a search for a consultant's name has nothing on this
+site to land on, and `seo_meta` still carries `doctor` rows nothing reads.
+
+### 9.6
+
+Every URL in the sitemap was fetched and checked: 33 pages, one `ld+json` block
+each, all parsing, every one carrying a `Hospital` node whose address is
+Bardhaman 713101, and every one carrying `og:title`, `og:description`,
+`og:url`, `og:type`, `twitter:card`, a canonical and the verification tag.
+
+**No two pages share a title, and no two share a description.** That was the
+check worth running — duplicate metadata across a site is the ordinary way this
+work goes wrong, and it is invisible until a crawler reports it.
+
+Both Search Console methods answer: the meta tag on every page, and
+`googlea372147cf2362119.html` at the root returning its token with a 200. The
+`.html` → clean-URL redirect added in phase 5 does not touch it, because that
+fallback only runs for paths that reach `index.php` and this one is a real file
+the rewrite hands over first. `/about.html` still 301s, so the redirect is
+intact.
+
+No regressions: `php tools/check-resources.php` still resolves all 369
+references, all 42 admin shells still route (302 while signed out, which is the
+guard doing its job), and the sign-in page still says `noindex,nofollow` — the
+panel is the one part of this site that must not be indexed.
+
+### 9.5
+
+The eight fixed pages and two departments carried seeded `seo_meta` rows that
+won over every controller default, and most named no place at all — "Our
+Doctors — Teresa Memorial Hospital", "Twelve departments, from cardiology to
+dental care". A hospital that serves one town was competing for nothing.
+
+Every title and description now carries Bardhaman, with Burdwan beside it.
+Keywords are filled in for the first time, one line per page. **Stated plainly
+because it belongs on the record: Google has ignored meta keywords since 2009.**
+They are populated because the column exists, the panel edits it and Bing still
+reads it — not because they will move a ranking. The titles, the descriptions
+and the `Hospital` node are what carry the local intent.
+
+Applied to the seed *and* the live database. `migrate:fresh` drops every table,
+and rebuilding 372 rows of content for a metadata edit is not a trade worth
+making.
+
+### 9.4
+
+`seo.sitemapUrl` had been seeded as `/sitemap.xml` and `seo.robots` as
+`index, follow` since phase 3, and neither file existed — the panel's SEO
+screen edited two values nothing read.
+
+Both are generated per request rather than written to disk. A file would need
+something to rewrite it every time the panel publishes a department, and a
+sitemap regenerated nightly is a sitemap that is wrong for the rest of the day.
+It is three queries.
+
+33 URLs: eight fixed pages, eleven departments, nine posts, five vacancies,
+each with its row's own `updated_at` as `lastmod`. **No doctors** — the roster
+is one page, so a URL per doctor would be a sitemap entry that 404s.
+
+`robots.txt` disallows `/admin/`, `/api/` and `/storage/`. Not a second lock —
+`.htaccess` already refuses all three — but it stops a crawler spending its
+budget on 403s. A `noindex` policy in the settings disallows everything
+instead: a site that has asked not to be indexed has asked not to be crawled.
+
+### 9.3
+
+Every page already carried `Hospital` and `WebSite` from 9.1. Each now adds its
+own node: `MedicalClinic` on a department, `Article` on a post, `JobPosting` on
+a vacancy, `FAQPage` wherever an accordion already answers questions, and a
+`BreadcrumbList` on everything below the home page. They reference the hospital
+by `@id` rather than repeating it.
+
+`JobPosting` is built against the columns the `jobs` table actually has —
+`type`, `dept`, `salaryFrom`/`salaryTo`, `openings`, `experience` — not the
+names schema.org uses. `type` is free text a panel user types and
+`employmentType` is an enumeration, so anything outside it is dropped: an
+invalid value invalidates the whole posting, and no value at all is valid.
+`salaryNote` is left out for the same reason — "Plus night differential" is a
+sentence, and `MonetaryAmount` has nowhere truthful to put it.
+
+The footer's Promix link was already followed. It now says what it is in the
+logo's `alt` and its `title`, and `Schema::website()` names the same
+organisation as `creator` — the anchor is what a person follows, the node is
+what a crawler reads.
+
+Also fixed here: `titleFull` is printed into `<title>` as markup and the home
+page's carried `&mdash;`, so `og:title` read "&amp;mdash;". It is decoded
+before being escaped again.
+
+### 9.1
+
+`head.php` emitted `og:image` and nothing else, so a shared link rendered as a
+picture over a bare URL. It now carries the full Open Graph set, the Twitter
+card, the keywords `seo_meta` has always had a column for, an explicit robots
+policy, the favicon, `theme-color` and the geo trio.
+
+The Search Console token is a `seo` setting rather than a literal in the
+component — the panel's SEO screen is where somebody would go to change it, and
+a verification tag hardcoded into a template is one nobody can rotate.
+
+`core/Schema.php` builds the JSON-LD, beside `SeoMeta` and `MediaUsage` where
+the shared logic already lives. It reads the settings the footer and contact
+page already read, so the hospital's address exists in one place. Nodes carry
+`@id` and reference each other, which is why `head()` appends to the site-wide
+graph rather than letting a page replace it, and why `page()` routes through
+`head()` instead of merging over it.
+
+`json_encode` gets `HEX_TAG` and `HEX_AMP`: the graph is printed inside a
+`<script>`, and an excerpt containing `</script>` would otherwise close it.
+
+**Still a stub:** the panel's SEO Manager screen. `seo`, `analytics`,
+`navigation` and `redirects` were stubs on the design branch and are stubs now.
+The consequence for this phase is worth naming — the `seo` settings this phase
+added have no UI behind them yet, so the verification token and the default
+keywords are editable through `PATCH /api/settings/seo` and not through a
+screen.
+
+---
 
 ## Phase 8 — Hardening and handover
 

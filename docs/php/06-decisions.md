@@ -158,3 +158,37 @@ no per-entity branches.
 controller — auth, settings, media upload, page sections, public intake, the CV
 stream. Forcing those through the registry would be the same mistake in the
 other direction.
+
+---
+
+## 10. SEO is server-rendered, and the panel owns the copy
+
+**Decision.** Every meta tag, the JSON-LD graph, `sitemap.xml` and `robots.txt`
+are produced by PHP from the database. Nothing is a literal in a template — the
+Search Console token is a `seo` setting, the sitemap is three queries per
+request, and the titles and descriptions come from `seo_meta` rows the panel
+edits.
+
+**Why.** The alternative is a file somebody regenerates. A sitemap rebuilt
+nightly is wrong for the rest of the day, and a verification tag hardcoded into
+a component is one nobody can rotate without a deploy. Two of these were
+already half-built: `seo.sitemapUrl` and `seo.robots` had been seeded since
+phase 3 and nothing read them, which is exactly the failure mode this avoids.
+
+**Meta keywords are ignored by Google, and are populated anyway.** They have
+been dead as a ranking signal since 2009. The column exists, the panel edits
+it, Bing still parses it, and the cost is one tag. What is *not* claimed is
+that filling them in does anything for a Google ranking: the titles, the
+descriptions and the `Hospital` node with a real postal address are what carry
+the local intent, and those are where the work went.
+
+**Both spellings, everywhere.** Bardhaman and Burdwan are the same town.
+`areaServed` carries both, and so does every page description, because a
+patient searching for the hospital may only know it by the other one.
+
+**No page per doctor.** Reversing §20 of `02-content-model.md` was planned and
+dropped at the client's direction. The consequence is worth writing down rather
+than discovering later: a search for a consultant's name has nothing on this
+site to rank, because a card in a grid of twelve is not a page about that
+person. `seo_meta` still holds `doctor` rows from the seed, unread, if that is
+ever revisited.
