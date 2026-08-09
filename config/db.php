@@ -87,6 +87,39 @@ switch ($db_type) {
                 . 'Reads will work and every write will fail.');
         }
 
+        /**
+         * Existing is not the same as populated, and the check above only
+         * proves the first. An empty SQLite database is a perfectly real file
+         * — PDO creates one the moment anything connects to a path that is not
+         * there, and it is roughly 4 KB once the WAL header is written, so
+         * neither is_file() nor a size test tells it apart from the real
+         * thing. What separates them is whether a schema was ever built.
+         *
+         * Without this the symptom is "no such table: pages" from wherever the
+         * first query happens to live, which points at the model rather than
+         * at an upload that never landed.
+         */
+        if (!$creatingIsAllowed) {
+            $hasSchema = $pdo
+                ->query("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'migrations' LIMIT 1")
+                ->fetchColumn();
+
+            if ($hasSchema === false) {
+                $bytes = @filesize($sqliteFile);
+
+                $message = "SQLite database has no schema: {$sqliteFile} "
+                    . '(' . ($bytes === false ? 'unreadable' : number_format($bytes) . ' bytes') . '). '
+                    . 'The file exists but no migration has ever run against it, which means '
+                    . 'it is the empty one PDO created rather than the database you meant. '
+                    . 'Either the upload has not happened, or it landed somewhere other than '
+                    . 'this path. Replace it, or run `php vayu migrate` over SSH.';
+
+                error_log('[Vayu] ' . $message);
+
+                throw new RuntimeException($message);
+            }
+        }
+
         /* Off by default in SQLite, which means a stale doctor_id in
            department_doctors would sit there unnoticed until a page rendered
            a blank card. */
