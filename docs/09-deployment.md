@@ -59,7 +59,7 @@ Copy `.env.example` and change the keys that differ in production:
 ```ini
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://teresamemorial.org
+APP_URL=<the URL you actually type in the browser>
 
 DB_TYPE=sqlite
 DB_DATABASE=
@@ -69,6 +69,19 @@ JWT_SECRET=<a different one>
 ```
 
 Generate the two secrets on your own machine and paste the results in.
+
+`APP_URL` is not decoration. `base_url()` is built from it and every stylesheet,
+script and link on the site is an absolute URL built by `base_url()` — so an
+`APP_URL` naming a domain that is not serving the page produces markup that
+loads its CSS from somewhere else entirely, and the site renders as unstyled
+HTML. While the site is on a temporary `*.hostingersite.com` address, that
+address is the value; **change this line when the real domain is attached**, or
+the assets break again the same way. Include the scheme, and no trailing slash.
+
+Left empty it is derived from the `Host` header, which is right often enough to
+be tempting and guesses the scheme from `$_SERVER['HTTPS']` — on a host that
+terminates TLS upstream without setting it, that guess is `http://` on an
+`https://` page and the browser blocks every asset as mixed content. Set it.
 
 `APP_DEBUG=false` matters: with it on, a fatal prints the absolute server paths
 and the failing query to whoever loaded the page.
