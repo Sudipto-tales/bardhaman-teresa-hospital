@@ -185,6 +185,38 @@ return [
         'required' => ['icon', 'title', 'text'],
     ],
 
+    /* The public gallery — /gallery, and the `gallery-items` screen.
+       Distinct from `media`, which is the asset library every picker reads
+       (GET api/media, its own controller): this is the curated wall.
+
+       `videoPath` is written by POST api/gallery/video and never typed. The
+       upload endpoint transcodes, extracts a poster and probes the result, and
+       the form saves what it hands back — which is why `duration` and
+       `sizeBytes` are ordinary fields rather than anything derived here. */
+    'gallery' => [
+        'table' => 'gallery',
+        'key' => 'slug',
+        'label' => 'title',
+        'search' => ['title', 'caption', 'album'],
+        'sort' => ['title', 'album', 'order', 'status', 'updatedAt'],
+        'fields' => [
+            'type' => ['type' => 'string', 'enum' => ['image', 'video', 'youtube']],
+            'album' => 'string',
+            'title' => 'string',
+            'caption' => 'text',
+            'image' => 'string',
+            'videoPath' => 'string',
+            'youtubeId' => 'string',
+            'duration' => 'int',
+            'sizeBytes' => 'int',
+        ],
+        'filters' => [
+            'type' => ['type' => 'string'],
+            'album' => ['type' => 'string'],
+        ],
+        'required' => ['title'],
+    ],
+
     'lab-tests' => [
         'table' => 'lab_tests',
         'key' => 'slug',

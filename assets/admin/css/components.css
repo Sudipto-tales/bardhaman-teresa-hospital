@@ -2448,6 +2448,22 @@ tr.drop-target td {
     font-size: 16px;
 }
 
+/* The same slot as .tile__icon, for a card whose record *is* a picture — a
+   gallery item is chosen by looking at it, and an icon says nothing about
+   which photograph this one is. */
+.tile__thumb {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-xs);
+    background: var(--surface-3);
+}
+
+.tile--muted .tile__thumb {
+    opacity: .62;
+}
+
 .tile__body h4 {
     font-family: var(--font-head);
     font-size: var(--fs-h3);

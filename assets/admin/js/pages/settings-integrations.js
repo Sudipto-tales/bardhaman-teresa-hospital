@@ -76,6 +76,24 @@
                 ${F.divider()}
 
                 ${F.section({
+                    title: 'Google reviews', icon: 'fa-star',
+                    sub: 'The rating tile on the home page and the About page. With a key and a place ID it shows the live Google figures, refreshed twice a day; without them it shows the two fallback numbers below.',
+                    fields: [
+                        F.text({ name: 'googlePlacesApiKey', label: 'Places API key', type: 'password',
+                            hint: '<button type="button" class="btn btn--link text-xs" data-reveal="googlePlacesApiKey">Reveal</button>' }),
+                        F.text({ name: 'googlePlaceId', label: 'Place ID', placeholder: 'ChIJ…',
+                            hint: 'From the hospital\'s Google Business Profile, or Google\'s Place ID Finder.' }),
+                        F.text({ name: 'googleRating', label: 'Fallback rating', placeholder: '4.4',
+                            hint: 'Shown until the first live reading arrives, and if Google is unreachable.' }),
+                        F.number({ name: 'googleReviewCount', label: 'Fallback review count', min: 0, placeholder: '0' }),
+                        F.text({ name: 'googleReviewsUrl', label: 'Reviews link', wide: true,
+                            hint: 'Optional. Leave empty and the link is built from the Place ID.' }),
+                    ],
+                })}
+
+                ${F.divider()}
+
+                ${F.section({
                     title: 'Live chat', icon: 'fa-comments',
                     fields: [
                         F.select({ name: 'liveChatProvider', label: 'Provider', options: ['None', 'Tawk.to', 'Crisp', 'WhatsApp Business', 'Custom'] }),

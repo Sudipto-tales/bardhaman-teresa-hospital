@@ -41,6 +41,11 @@
         if (o.min !== undefined) out.push(`min="${esc(o.min)}" data-min="${esc(o.min)}"`);
         if (o.step) out.push(`step="${esc(o.step)}"`);
         if (o.placeholder) out.push(`placeholder="${esc(o.placeholder)}"`);
+        /* The id of a <datalist> the caller printed beside the field: a free
+           text box that still suggests the values already in use. Not a
+           select — the gallery's albums are invented by whoever is filing the
+           photographs, and a fixed list would mean a code change to add one. */
+        if (o.list) out.push(`list="${esc(o.list)}"`);
         if (o.matchAfter) out.push(`data-match-after="${esc(o.matchAfter)}"`);
         if (o.readonly) out.push('readonly');
         if (o.disabled) out.push('disabled');

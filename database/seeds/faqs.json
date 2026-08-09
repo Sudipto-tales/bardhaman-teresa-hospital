@@ -59,7 +59,7 @@
       "question": "Do you offer home sample collection?",
       "answer": "<p>For most routine blood tests, yes, within Bardhaman town. Book by phone before 9am for a same-day visit.</p>",
       "faq_group": "contact",
-      "department_id": "lab-diagnostics",
+      "department_id": "pathology",
       "sort_order": 6,
       "status": "published"
     },

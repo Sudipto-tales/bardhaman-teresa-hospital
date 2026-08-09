@@ -24,6 +24,8 @@ composer.phar
 # that stops an upload being executed has to ship with the directory.
 /storage/uploads/*
 /storage/cv/*
+# Fetched from Google and rebuilt on demand; nothing in here is authored.
+/storage/cache/*
 !/storage/**/.gitkeep
 /assets/uploads/*
 !/assets/uploads/.gitkeep

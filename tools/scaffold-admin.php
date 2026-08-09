@@ -55,6 +55,9 @@ $pages = [
     ['testimonials',          'testimonials',     'Testimonials',         'listform'],
     ['faqs',                  'faqs',             'FAQs',                 'listeditor'],
     ['gallery',               'gallery',          'Media Gallery',        'media'],
+    /* The public wall at /gallery — a curated, ordered, published list.
+       `gallery` above it is the asset library every picker reads. */
+    ['gallery-items',         'gallery-items',    'Our Gallery',          'listform'],
 
     ['pages',                 'pages',            'All Pages',            'list'],
     ['page-home',             'page-home',        'Home Page',            'form'],

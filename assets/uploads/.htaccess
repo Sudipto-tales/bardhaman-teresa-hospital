@@ -1,10 +1,10 @@
 # Uploaded media. Public by design — these are the pictures the site renders —
 # but nothing in here is ever code.
 #
-# core/Upload.php already refuses anything that is not an image, by extension
-# and by the file's own bytes, and stores it under a random name. This is the
-# second lock: if that check is ever loosened, or a file arrives some other
-# way, the server still refuses to run it.
+# core/Upload.php already refuses anything that is not an image or a gallery
+# video, by extension and by the file's own bytes, and stores it under a random
+# name. This is the second lock: if that check is ever loosened, or a file
+# arrives some other way, the server still refuses to run it.
 
 <FilesMatch "\.(?i:php|php[0-9]|phtml|phps|phar|inc|cgi|pl|py|rb|sh|bash|exe|so)$">
     Require all denied

@@ -1,0 +1,92 @@
+{
+  "table": "gallery",
+  "key": "slug",
+  "refs": {},
+  "json": [],
+  "rows": [
+    {
+      "slug": "gal-001",
+      "type": "image",
+      "album": "The Hospital",
+      "title": "Main entrance",
+      "caption": "The Station Road entrance, open to visitors from 8am.",
+      "image": "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop",
+      "video_path": null,
+      "youtube_id": null,
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 1,
+      "status": "published"
+    },
+    {
+      "slug": "gal-002",
+      "type": "image",
+      "album": "The Hospital",
+      "title": "Inpatient ward",
+      "caption": "One of the general wards, with nursing stations at both ends.",
+      "image": "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1600&auto=format&fit=crop",
+      "video_path": null,
+      "youtube_id": null,
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 2,
+      "status": "published"
+    },
+    {
+      "slug": "gal-003",
+      "type": "image",
+      "album": "Theatres & ICU",
+      "title": "Modular theatre",
+      "caption": "Laminar airflow, and a scrub area that opens straight onto it.",
+      "image": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?q=80&w=1600&auto=format&fit=crop",
+      "video_path": null,
+      "youtube_id": null,
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 3,
+      "status": "published"
+    },
+    {
+      "slug": "gal-004",
+      "type": "image",
+      "album": "Theatres & ICU",
+      "title": "Intensive care",
+      "caption": "Central monitoring, one nurse to one bed through the night.",
+      "image": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1600&auto=format&fit=crop",
+      "video_path": null,
+      "youtube_id": null,
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 4,
+      "status": "published"
+    },
+    {
+      "slug": "gal-005",
+      "type": "image",
+      "album": "Laboratory",
+      "title": "Sample processing",
+      "caption": "Routine bloods are reported the same day they are drawn.",
+      "image": "https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1600&auto=format&fit=crop",
+      "video_path": null,
+      "youtube_id": null,
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 5,
+      "status": "published"
+    },
+    {
+      "slug": "gal-006",
+      "type": "youtube",
+      "album": "Talks & Camps",
+      "title": "What to expect from a health check-up",
+      "caption": "Our physicians walk through the full-body package, start to finish.",
+      "image": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+      "video_path": null,
+      "youtube_id": "aqz-KE-bpKQ",
+      "duration": null,
+      "size_bytes": null,
+      "sort_order": 6,
+      "status": "published"
+    }
+  ]
+}

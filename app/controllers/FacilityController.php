@@ -22,7 +22,7 @@ class FacilityController extends SiteController
             'bannerImage' => media_url('ward.jpg', $this->defaultImage()),
             'introImage' => media_url('theatre.jpg', $this->defaultImage()),
             'introImageAlt' => media_alt('theatre.jpg', 'A modular operating theatre at Teresa Memorial Hospital'),
-            'labDiagnostics' => department_by_slug('lab-diagnostics') !== null,
+            'labDiagnostics' => department_by_slug('pathology') !== null,
         ]);
     }
 }

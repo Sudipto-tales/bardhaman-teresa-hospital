@@ -784,12 +784,182 @@
         });
     };
 
+    /* ---------------------------------------------------------
+       Gallery — /gallery.
+
+       Two jobs: the album chips, and the viewer.
+
+       The viewer is built on open and torn down on close, every
+       time. That is not tidiness — a YouTube iframe left in the
+       document goes on playing its audio behind a closed dialog,
+       and thirty <video> elements with a src are thirty range
+       requests on a page nobody has clicked yet. The grid is
+       posters only; a player exists for exactly as long as
+       somebody is looking at it.
+       --------------------------------------------------------- */
+    const initGallery = () => {
+        const grid = $('#galGrid');
+        if (!grid) return;
+
+        const tiles = $$('.gal-tile', grid);
+        const chips = $$('#galTags .pg-tag');
+        const none = $('#galNone');
+
+        const box = $('#galLightbox');
+        const stage = $('#lbStage');
+        const titleEl = $('#lbTitle');
+        const capEl = $('#lbCaption');
+        const countEl = $('#lbCount');
+        const closeBtn = $('#lbClose');
+        const prevBtn = $('#lbPrev');
+        const nextBtn = $('#lbNext');
+
+        /* The arrows walk the filtered set, not the whole grid: pressing
+           `next` inside an album should not wander out of it. */
+        let shown = tiles.slice();
+        let at = -1;
+        let opener = null;
+
+        /* --- chips --- */
+
+        const filter = (album) => {
+            shown = tiles.filter((tile) => {
+                const hit = !album || tile.dataset.album === album;
+                tile.hidden = !hit;
+                return hit;
+            });
+
+            if (none) none.hidden = shown.length > 0;
+        };
+
+        chips.forEach((chip) => {
+            chip.addEventListener('click', () => {
+                chips.forEach((c) => c.classList.toggle('is-active', c === chip));
+                filter(chip.dataset.album || '');
+            });
+        });
+
+        /* --- the viewer --- */
+
+        if (!box) return;
+
+        const player = (tile) => {
+            const d = tile.dataset;
+
+            if (d.type === 'youtube' && d.youtube) {
+                /* -nocookie, and no `origin`: the embed sets nothing until it
+                   is played. autoplay is honest here — the visitor pressed a
+                   play button to get this far. */
+                return `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(d.youtube)}?autoplay=1&rel=0&modestbranding=1"
+                    title="${esc(d.title)}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+            }
+
+            if (d.type === 'video' && d.src) {
+                return `<video src="${esc(d.src)}" poster="${esc(d.poster)}" controls autoplay playsinline
+                    preload="metadata"></video>`;
+            }
+
+            return `<img src="${esc(d.src || d.poster)}" alt="${esc(d.title)}">`;
+        };
+
+        const show = (i) => {
+            at = (i + shown.length) % shown.length;
+
+            const tile = shown[at];
+            const d = tile.dataset;
+
+            stage.innerHTML = player(tile);
+            if (titleEl) titleEl.textContent = d.title || '';
+            if (capEl) capEl.textContent = d.caption || '';
+            if (countEl) countEl.textContent = `${at + 1} of ${shown.length}`;
+
+            const many = shown.length > 1;
+            if (prevBtn) prevBtn.hidden = !many;
+            if (nextBtn) nextBtn.hidden = !many;
+        };
+
+        const close = () => {
+            box.hidden = true;
+            /* Emptied, not hidden: see the note at the top of this block. */
+            stage.innerHTML = '';
+            document.body.classList.remove('lb-open');
+            at = -1;
+
+            if (opener) {
+                opener.focus();
+                opener = null;
+            }
+        };
+
+        const open = (tile) => {
+            const i = shown.indexOf(tile);
+            if (i < 0) return;
+
+            opener = tile;
+            box.hidden = false;
+            document.body.classList.add('lb-open');
+            show(i);
+            if (closeBtn) closeBtn.focus();
+        };
+
+        tiles.forEach((tile) => tile.addEventListener('click', () => open(tile)));
+
+        if (closeBtn) closeBtn.addEventListener('click', close);
+        if (prevBtn) prevBtn.addEventListener('click', () => show(at - 1));
+        if (nextBtn) nextBtn.addEventListener('click', () => show(at + 1));
+
+        /* The backdrop closes; anything inside the figure does not. */
+        box.addEventListener('click', (e) => {
+            if (e.target === box) close();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (box.hidden) return;
+
+            if (e.key === 'Escape') {
+                close();
+                return;
+            }
+
+            if (shown.length < 2) return;
+
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                show(at - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                show(at + 1);
+            }
+        });
+
+        /* Tab stays inside the dialog. Three controls, so the trap is the
+           three of them in order rather than a query for everything
+           focusable — the <video> element's own controls are reached with
+           the arrow keys the browser already gives them. */
+        box.addEventListener('keydown', (e) => {
+            if (e.key !== 'Tab') return;
+
+            const stops = [closeBtn, prevBtn, nextBtn].filter((b) => b && !b.hidden);
+            if (!stops.length) return;
+
+            const i = stops.indexOf(document.activeElement);
+            const next = e.shiftKey
+                ? stops[(i <= 0 ? stops.length : i) - 1]
+                : stops[(i + 1) % stops.length];
+
+            e.preventDefault();
+            next.focus();
+        });
+    };
+
     const boot = () => {
         initBanner();
         initPostHero();
         initStats();
         initBlogFilter();
         initQuotes();
+        initGallery();
         initCareers();
         /* fills #jobDetail, so it has to run before the reveals measure it */
         initJob();

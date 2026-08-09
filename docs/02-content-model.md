@@ -85,6 +85,8 @@ social row in `FOOTER`.
 | `smtp` | group `{host, port, user, pass, fromName, fromEmail, secure}` |
 | `notifyEnquiryTo` | repeater `{email}` — who gets the contact-form mail |
 | `recaptchaSiteKey` / `recaptchaSecret` | text |
+| `googlePlacesApiKey` / `googlePlaceId` | text — the live Google rating tile; empty turns it off |
+| `googleRating` / `googleReviewCount` / `googleReviewsUrl` | text — shown until the first Places API reading, and whenever Google is unreachable |
 | `liveChat` | group `{provider, embedCode, hoursFrom, hoursTo, enabled}` |
 
 ### 1e. Theme — `settings-theme.html`
@@ -277,6 +279,38 @@ each post.
 
 **Replaces:** the `IMG` Unsplash pool at `site-data.mjs:13-23`. `usedBy` is what
 makes deletion safe — the confirm modal lists every record referencing the file.
+
+---
+
+## 11b. Gallery item — `gallery-items.html`
+
+The public wall at `/gallery`, and deliberately **not** §11 above. That one is
+the asset library — every file anybody has uploaded, addressed by picker, with
+no order and no publish state. This is a curated, ordered, published list, and
+the two have different lifetimes: hiding a gallery item must not delete the
+photograph a doctor's profile is also using.
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` (slug), `title` **req** | | |
+| `type` | enum | `image` \| `video` \| `youtube` — what the lightbox opens |
+| `album` | string | Free text; the distinct values become the page's filter chips, in grid order |
+| `caption` | text | Under the tile, and again in the viewer |
+| `image` | string | The photograph, **or** the poster for a video or YouTube row. One column, because every type needs exactly one still and two would go stale against each other |
+| `videoPath` | string | Root-relative, written by `POST api/gallery/video`, never typed |
+| `youtubeId` | string | Extracted from a pasted watch / share / embed link |
+| `duration`, `sizeBytes` | int | Filled by `ffprobe` after the transcode; displayed in the panel only |
+| `order`, `status` | | |
+
+**Video uploads** go to `POST api/gallery/video` rather than `POST api/media`:
+the media endpoint feeds every picker in the panel and widening it to accept
+video would put a 40 MB clip in front of a screen asking for a logo. The
+endpoint stores the file, re-encodes it with ffmpeg (720p H.264, CRF 28,
+faststart — `core/VideoTranscode.php`), extracts a poster frame, probes it, and
+answers with the four values the form saves. Every step degrades rather than
+fails: no ffmpeg, or a failed encode, keeps the file exactly as uploaded and
+says so in the panel. Ceilings are `UPLOAD_MAX_VIDEO_MB` **and** PHP's own
+`upload_max_filesize` / `post_max_size`, whichever is smallest.
 
 ---
 

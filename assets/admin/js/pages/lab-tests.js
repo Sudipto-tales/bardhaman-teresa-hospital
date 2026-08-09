@@ -44,7 +44,7 @@
             accent: '& Packages',
             sub: 'The price list behind the diagnostics page and the home page block.',
             actions: `
-                <a class="btn btn--ghost" href="${SITE}lab-diagnostics" target="_blank" rel="noopener">
+                <a class="btn btn--ghost" href="${SITE}pathology" target="_blank" rel="noopener">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View on site</a>
                 <button type="button" class="btn btn--primary" id="addBtn">
                     <i class="fa-solid fa-plus"></i> Add</button>`,

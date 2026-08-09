@@ -48,10 +48,17 @@ $phone = trim((string) ($phone ?? ''));
     <div class="mobile-menu" id="mobileMenu">
         <a href="<?= e(base_url('/')) ?>">Home</a>
         <a href="<?= e(base_url('about')) ?>">About Us</a>
+        <!-- the same three the desktop About drop carries; flat and indented
+             rather than collapsible, because the overlay has the room -->
+        <a href="<?= e(base_url('about')) ?>" class="is-sub">Our Story</a>
+        <a href="<?= e(base_url('doctors')) ?>" class="is-sub">Our Doctors</a>
+        <a href="<?= e(base_url('blog')) ?>" class="is-sub is-sub-end">Our Blog</a>
         <a href="<?= e(base_url('departments')) ?>">Our Department</a>
         <a href="<?= e(base_url('facilities')) ?>">Facilities</a>
-        <a href="<?= e(base_url('doctors')) ?>">Doctors</a>
-        <a href="<?= e(base_url('blog')) ?>">Blog</a>
+        <!-- the Facilities drop, flattened the same way -->
+        <a href="<?= e(base_url('facilities')) ?>" class="is-sub">Our Facilities</a>
+        <a href="<?= e(base_url('/')) ?>#lab" class="is-sub">Lab Test</a>
+        <a href="<?= e(base_url('gallery')) ?>" class="is-sub is-sub-end">Our Gallery</a>
         <a href="<?= e(base_url('careers')) ?>">Careers</a>
         <a href="<?= e(base_url('contact')) ?>">Contact</a>
     </div>

@@ -51,6 +51,7 @@ window.TMH_NAV = [
             { key: 'blog-categories', label: 'Categories', icon: 'fa-tags', href: 'blog-categories' },
             { key: 'testimonials', label: 'Testimonials', icon: 'fa-comment-medical', href: 'testimonials' },
             { key: 'faqs', label: 'FAQs', icon: 'fa-circle-question', href: 'faqs' },
+            { key: 'gallery-items', label: 'Our Gallery', icon: 'fa-photo-film', href: 'gallery-items' },
             { key: 'gallery', label: 'Media Gallery', icon: 'fa-images', href: 'gallery' },
         ],
     },

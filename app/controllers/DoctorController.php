@@ -10,9 +10,11 @@
  */
 class DoctorController extends SiteController
 {
-    /* The design lights "Our Department" for this page: a doctor is reached
-       through a speciality, and the nav has no Doctors link of its own. */
-    protected string $active = 'departments';
+    /* "About Us", which is where the nav now reaches this page from — its drop
+       carries Our Doctors. It used to light "Our Department" instead, on the
+       reasoning that a doctor is reached through a speciality; the roster has
+       its own nav item now, so the pill follows it. */
+    protected string $active = 'about';
 
     public function index(): void
     {

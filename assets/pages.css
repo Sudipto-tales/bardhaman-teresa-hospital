@@ -229,6 +229,14 @@
     margin-bottom: var(--sp-section);
 }
 
+/* Inside a normal section the band has no banner foot to straddle, and the
+   section already pays the gutter — so no pull, no double padding. */
+.pg-stats--flow {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: clamp(32px, 4vw, 56px);
+}
+
 .pg-stats__grid {
     max-width: 1360px;
     margin-inline: auto;
@@ -590,9 +598,16 @@
 /* ---------------------------------------------------------
    7. TEAM
    --------------------------------------------------------- */
+/* The track is capped rather than 1fr. auto-fit with a 1fr maximum hands the
+   whole row to however many cards there are, so a department with one
+   consultant rendered a full-width card — and .pg-doc__img is 4/4.4, so that
+   photo came out taller than the viewport. A bounded track keeps the card the
+   same size whether the strip carries one doctor or nine; justify-content
+   centres the short rows instead of leaving them hugging the left edge. */
 .pg-team {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 260px));
+    justify-content: center;
     gap: var(--sp-gap);
     margin-top: clamp(28px, 3vw, 44px);
 }
@@ -1847,20 +1862,52 @@ a.pg-tag:hover {
     margin-bottom: 0;
 }
 
-.ab-rating__score {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--font-head);
-    font-size: clamp(1.8rem, 1.2rem + 1.6vw, 2.6rem);
-    font-weight: 800;
-    line-height: 1;
+/* The tile is widget/google-rating (base rules in website.css). Here it sits
+   on the mint panel rather than the cool gradient, so the greens and the
+   knocked-back track come from this side. */
+.grating--mosaic {
+    --grating-star: #2E9E6B;
+    --grating-empty: rgb(20 40 32 / .16);
+
     color: var(--ink);
 }
 
-.ab-rating__score i {
+.grating--mosaic .grating__label {
+    color: var(--ink-soft);
+    opacity: 1;
+}
+
+.grating--mosaic .grating__score {
+    font-size: clamp(1.8rem, 1.2rem + 1.6vw, 2.6rem);
+}
+
+.grating--mosaic .grating__score i {
     font-size: .8em;
-    color: #2E9E6B;
+}
+
+.grating--mosaic .grating__bar {
+    background: rgb(20 40 32 / .1);
+}
+
+/* The mint panel is near-black in dark, so an ink-coloured empty star and an
+   ink-coloured bar track both disappear into it. */
+[data-theme="dark"] .grating--mosaic {
+    --grating-star: #58C99A;
+    --grating-empty: rgb(230 236 246 / .22);
+}
+
+[data-theme="dark"] .grating--mosaic .grating__bar {
+    background: rgb(230 236 246 / .16);
+}
+
+.grating--mosaic .grating__count {
+    color: var(--ink-soft);
+    opacity: 1;
+}
+
+.grating--mosaic .grating__link {
+    color: var(--action);
+    opacity: 1;
 }
 
 /* --- testimonial carousel --- */
@@ -2395,7 +2442,287 @@ a.pg-tag:hover {
 }
 
 /* ---------------------------------------------------------
-   15. RESPONSIVE
+   15. GALLERY + LIGHTBOX
+   The filter chips are .blog-tags — borrowed outright rather
+   than restyled, because a second chip shape on the same site
+   would only be the first one drifting.
+   --------------------------------------------------------- */
+.gal-tags {
+    justify-content: center;
+    margin-top: clamp(20px, 2.4vw, 32px);
+}
+
+.gal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: var(--sp-gap);
+    margin-top: clamp(24px, 3vw, 40px);
+}
+
+/* A <button>, so every one of these is a reset */
+.gal-tile {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    background: var(--surface);
+    overflow: hidden;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+}
+
+.gal-tile:hover,
+.gal-tile:focus-visible {
+    transform: translateY(-6px);
+    border-color: transparent;
+    box-shadow: var(--sh-lg);
+}
+
+.gal-tile__frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--surface-alt);
+}
+
+.gal-tile__frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform .6s var(--ease);
+}
+
+.gal-tile:hover .gal-tile__frame img {
+    transform: scale(1.06);
+}
+
+/* Sits over the poster on video and YouTube rows — the one thing that says
+   this tile opens a player rather than a photograph. */
+.gal-tile__play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(18, 41, 79, .12), rgba(18, 41, 79, .5));
+}
+
+.gal-tile__play i {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    padding-left: 4px;
+    border-radius: 50%;
+    background: var(--crimson);
+    box-shadow: 0 10px 26px rgba(18, 41, 79, .35);
+    font-size: 1.1rem;
+    transition: transform .4s var(--ease);
+}
+
+.gal-tile:hover .gal-tile__play i {
+    transform: scale(1.08);
+}
+
+.gal-tile__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: var(--r-pill);
+    background: rgba(12, 31, 62, .78);
+    color: #fff;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+}
+
+.gal-tile__txt {
+    display: grid;
+    gap: 4px;
+    padding: 16px 18px 18px;
+}
+
+.gal-tile__txt strong {
+    font-family: var(--font-head);
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.gal-tile__txt span {
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+    color: var(--ink-soft);
+}
+
+.gal-empty,
+.gal-none {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    margin-top: clamp(24px, 3vw, 40px);
+    padding: clamp(36px, 5vw, 64px);
+    border: 1px dashed var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface-alt);
+    text-align: center;
+}
+
+.gal-empty i,
+.gal-none i {
+    font-size: 2rem;
+    color: var(--ink-mute);
+}
+
+.gal-empty h3,
+.gal-none h3 {
+    font-family: var(--font-head);
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.gal-empty p,
+.gal-none p {
+    max-width: 52ch;
+    color: var(--ink-soft);
+}
+
+/* --- the viewer --- */
+/* Lenis lives inside website.js and is not reachable from here, so the page
+   is pinned rather than paused. The dialog covers the viewport either way. */
+body.lb-open {
+    overflow: hidden;
+}
+
+.lb {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: clamp(16px, 4vw, 56px);
+    background: rgba(8, 18, 36, .93);
+    animation: lbIn .25s var(--ease);
+}
+
+@keyframes lbIn {
+    from {
+        opacity: 0;
+    }
+}
+
+.lb__figure {
+    display: grid;
+    gap: 14px;
+    width: min(1100px, 100%);
+    max-height: 100%;
+}
+
+/* Fixed aspect, so swapping a portrait photo for a 16:9 video does not make
+   the whole viewer jump size between arrow presses. */
+.lb__stage {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    max-height: 74vh;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: #000;
+}
+
+.lb__stage img,
+.lb__stage video,
+.lb__stage iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: contain;
+    background: #000;
+}
+
+.lb__cap {
+    display: grid;
+    gap: 3px;
+    color: #fff;
+    text-align: center;
+}
+
+.lb__cap strong {
+    font-family: var(--font-head);
+    font-size: 1.06rem;
+    font-weight: 700;
+}
+
+.lb__cap span {
+    font-size: var(--fs-sm);
+    color: rgba(255, 255, 255, .72);
+}
+
+.lb__count {
+    font-size: var(--fs-xs);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .5);
+}
+
+.lb__close,
+.lb__nav {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .1);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .3s var(--ease), transform .3s var(--ease);
+}
+
+.lb__close:hover,
+.lb__nav:hover {
+    background: var(--crimson);
+    border-color: transparent;
+    transform: scale(1.06);
+}
+
+.lb__close {
+    top: clamp(12px, 2vw, 24px);
+    right: clamp(12px, 2vw, 24px);
+}
+
+.lb__nav {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lb__nav:hover {
+    transform: translateY(-50%) scale(1.06);
+}
+
+.lb__nav--prev {
+    left: clamp(8px, 2vw, 24px);
+}
+
+.lb__nav--next {
+    right: clamp(8px, 2vw, 24px);
+}
+
+/* ---------------------------------------------------------
+   16. RESPONSIVE
    --------------------------------------------------------- */
 @media (max-width: 1024px) {
 
@@ -2454,7 +2781,7 @@ a.pg-tag:hover {
         padding-bottom: clamp(76px, 8vh, 100px);
     }
 
-    .pg-stats {
+    .pg-stats:not(.pg-stats--flow) {
         margin-top: clamp(-52px, -4vw, -32px);
     }
 
@@ -2491,6 +2818,20 @@ a.pg-tag:hover {
         grid-template-columns: minmax(0, 1fr);
     }
 
+    /* The arrows would sit on top of the picture at this width. They go to the
+       bottom corners, beside the caption, where a thumb is anyway. */
+    .lb__nav {
+        top: auto;
+        bottom: clamp(12px, 4vw, 24px);
+        width: 42px;
+        height: 42px;
+        transform: none;
+    }
+
+    .lb__nav:hover {
+        transform: scale(1.06);
+    }
+
     /* no room to keep the photo readable beside the copy — flood the
        whole tile instead of washing only the left third */
     .ab-banner::before {
@@ -2521,7 +2862,7 @@ a.pg-tag:hover {
         display: none;
     }
 
-    .pg-stats {
+    .pg-stats:not(.pg-stats--flow) {
         margin-top: -28px;
     }
 
@@ -2571,7 +2912,7 @@ a.pg-tag:hover {
 }
 
 /* ---------------------------------------------------------
-   16. PRINT
+   17. PRINT
    The article page carries a print button, so paper is a real
    target: drop the chrome and everything that is navigation
    rather than content.

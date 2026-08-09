@@ -17,9 +17,10 @@
 $siteName = $siteName ?? 'Teresa Memorial Hospital';
 $address = $address ?? ['G.T. Road, Bardhaman,', 'West Bengal 713101'];
 
+/* Every day carries the same value, so it collapses to one range — the same
+   shape SiteController::openingHours() produces from the settings panel. */
 $hours = $hours ?? [
-    ['label' => 'Sunday', 'value' => '08:00 AM &ndash; 10:00 PM'],
-    ['label' => 'Monday &ndash; Friday', 'value' => '06:00 AM &ndash; 12:00 AM'],
+    ['label' => 'Monday – Sunday', 'value' => 'Open 24 hours'],
 ];
 
 $columns = $columns ?? [
@@ -43,7 +44,7 @@ $columns = $columns ?? [
         ['label' => 'Donate', 'href' => base_url('contact')],
         /* Department pages sit at the root, not under /departments/ — the
            design names them that way and the redirects follow it. */
-        ['label' => 'Online Services', 'href' => base_url('lab-diagnostics')],
+        ['label' => 'Online Services', 'href' => base_url('pathology')],
         ['label' => 'Pay Your Bills', 'href' => base_url('contact')],
     ]],
 ];
@@ -83,7 +84,7 @@ $developer = $developer ?? ['name' => 'Promix', 'url' => 'https://promix.tech/',
                     <p><strong>Location:</strong> <?= implode('<br>', array_map('e', $address)) ?></p>
                     <p><strong>Visiting Hours:</strong><br>
 <?php foreach ($hours as $row): ?>
-                        <?= e($row['label'] ?? '') ?>: <?= $row['value'] ?? '' ?><br>
+                        <?= e($row['label'] ?? '') ?>: <?= e($row['value'] ?? '') ?><br>
 <?php endforeach; ?>
                     </p>
                 </div>

@@ -37,6 +37,7 @@ class ViewRouteProvider extends RouteProvider
             'departments/{slug}' => ['DepartmentController', 'legacy'],
             'doctors' => ['DoctorController', 'index'],
             'facilities' => ['FacilityController', 'index'],
+            'gallery' => ['GalleryPageController', 'index'],
 
             'blog' => ['BlogController', 'index'],
             'blog/{slug}' => ['BlogController', 'show'],

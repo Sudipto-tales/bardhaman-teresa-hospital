@@ -436,6 +436,7 @@
              title: 'Add facility', icon: 'fa-bed-pulse',
              html: TMH.fields.section({fields: […]}),
              record,                       // null = create
+             onReady(scope) { … },         // optional; after fields are bound
          });
          // -> collected data object, or undefined if cancelled
        --------------------------------------------------------- */
@@ -463,6 +464,14 @@
                 bind(scope, o.record || o.defaults || {});
                 if (root.TMH.fields) root.TMH.fields.wirePreviews(scope);
                 if (root.TMH.media) root.TMH.media.wire(scope);
+
+                /* For a dialog whose fields depend on each other — the gallery
+                   asks for a YouTube id or a video file or neither, depending
+                   on what kind of item it is. Called after binding, so the
+                   hook sees the record's own values and can hide the two
+                   thirds of the form that do not apply to it. Screens without
+                   that problem pass nothing and never notice. */
+                if (typeof o.onReady === 'function') o.onReady(scope, panel);
 
                 scope.addEventListener('blur', (e) => {
                     const c = e.target;

@@ -39,6 +39,69 @@
       "hits": 12,
       "active": 0,
       "sort_order": 4
+    },
+    {
+      "public_id": "rdr-005",
+      "from_path": "/neuro-surgery",
+      "to_path": "/neurology",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 5
+    },
+    {
+      "public_id": "rdr-006",
+      "from_path": "/prenatal-care",
+      "to_path": "/gynecology",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 6
+    },
+    {
+      "public_id": "rdr-007",
+      "from_path": "/dental-care",
+      "to_path": "/maxillofacial-surgery",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 7
+    },
+    {
+      "public_id": "rdr-008",
+      "from_path": "/lab-diagnostics",
+      "to_path": "/pathology",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 8
+    },
+    {
+      "public_id": "rdr-009",
+      "from_path": "/nutrition",
+      "to_path": "/dietetics",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 9
+    },
+    {
+      "public_id": "rdr-010",
+      "from_path": "/pediatric-surgery",
+      "to_path": "/departments",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 10
+    },
+    {
+      "public_id": "rdr-011",
+      "from_path": "/ophthalmology",
+      "to_path": "/departments",
+      "code": 301,
+      "hits": 0,
+      "active": 1,
+      "sort_order": 11
     }
   ]
 }

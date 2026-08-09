@@ -47,7 +47,7 @@
     {
       "group_name": "general",
       "setting_key": "openingHours",
-      "value": "[{\"day\":\"Monday\",\"from\":\"08:00\",\"to\":\"20:00\",\"closed\":false},{\"day\":\"Tuesday\",\"from\":\"08:00\",\"to\":\"20:00\",\"closed\":false},{\"day\":\"Wednesday\",\"from\":\"08:00\",\"to\":\"20:00\",\"closed\":false},{\"day\":\"Thursday\",\"from\":\"08:00\",\"to\":\"20:00\",\"closed\":false},{\"day\":\"Friday\",\"from\":\"08:00\",\"to\":\"20:00\",\"closed\":false},{\"day\":\"Saturday\",\"from\":\"08:00\",\"to\":\"17:00\",\"closed\":false},{\"day\":\"Sunday\",\"from\":\"09:00\",\"to\":\"13:00\",\"closed\":false}]"
+      "value": "[{\"day\":\"Monday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Tuesday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Wednesday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Thursday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Friday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Saturday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false},{\"day\":\"Sunday\",\"from\":\"00:00\",\"to\":\"23:59\",\"closed\":false}]"
     },
     {
       "group_name": "general",
@@ -222,6 +222,31 @@
     {
       "group_name": "integrations",
       "setting_key": "recaptchaSecret",
+      "value": "\"\""
+    },
+    {
+      "group_name": "integrations",
+      "setting_key": "googlePlacesApiKey",
+      "value": "\"\""
+    },
+    {
+      "group_name": "integrations",
+      "setting_key": "googlePlaceId",
+      "value": "\"\""
+    },
+    {
+      "group_name": "integrations",
+      "setting_key": "googleRating",
+      "value": "\"4.9\""
+    },
+    {
+      "group_name": "integrations",
+      "setting_key": "googleReviewCount",
+      "value": "0"
+    },
+    {
+      "group_name": "integrations",
+      "setting_key": "googleReviewsUrl",
       "value": "\"\""
     },
     {

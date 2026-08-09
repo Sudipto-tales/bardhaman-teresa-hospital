@@ -14,63 +14,183 @@
   "json": [],
   "rows": [
     {
+      "department_id": "cardio-thoracic-vascular-surgery",
+      "doctor_id": "dr-saptarshi-roy",
+      "sort_order": 0
+    },
+    {
+      "department_id": "cardio-thoracic-vascular-surgery",
+      "doctor_id": "dr-siddhant-rajendra-vairagar",
+      "sort_order": 1
+    },
+    {
       "department_id": "cardiology",
-      "doctor_id": "dr-jonathon-ronan",
+      "doctor_id": "dr-ritendranath-talapatra",
       "sort_order": 0
     },
     {
       "department_id": "cardiology",
-      "doctor_id": "dr-anita-sharma",
+      "doctor_id": "dr-sandipan-sarkar",
+      "sort_order": 1
+    },
+    {
+      "department_id": "cardiology",
+      "doctor_id": "dr-chanchal-mahapatra",
+      "sort_order": 2
+    },
+    {
+      "department_id": "medicine",
+      "doctor_id": "dr-arnab-maji",
+      "sort_order": 0
+    },
+    {
+      "department_id": "medicine",
+      "doctor_id": "dr-kaustav-dey",
+      "sort_order": 1
+    },
+    {
+      "department_id": "orthopedics",
+      "doctor_id": "dr-vinay-jain-k",
       "sort_order": 0
     },
     {
       "department_id": "orthopedics",
-      "doctor_id": "dr-victor-james",
-      "sort_order": 0
+      "doctor_id": "dr-biswajit-biswas",
+      "sort_order": 1
     },
     {
       "department_id": "orthopedics",
-      "doctor_id": "dr-rahul-dey",
-      "sort_order": 0
+      "doctor_id": "dr-kuldeep-mukherjee",
+      "sort_order": 2
     },
     {
-      "department_id": "prenatal-care",
-      "doctor_id": "dr-philips-rownd",
-      "sort_order": 0
-    },
-    {
-      "department_id": "nutrition",
-      "doctor_id": "dr-jane-ronan",
-      "sort_order": 0
-    },
-    {
-      "department_id": "neuro-surgery",
-      "doctor_id": "dr-sourav-mitra",
-      "sort_order": 0
-    },
-    {
-      "department_id": "nephrology",
-      "doctor_id": "dr-debjani-roy",
+      "department_id": "general-surgery",
+      "doctor_id": "dr-madhusudhan-saha",
       "sort_order": 0
     },
     {
       "department_id": "general-surgery",
-      "doctor_id": "dr-arindam-basu",
+      "doctor_id": "dr-sourav-khamaru",
+      "sort_order": 1
+    },
+    {
+      "department_id": "gynecology",
+      "doctor_id": "dr-balaram-ghosh",
       "sort_order": 0
     },
     {
-      "department_id": "pediatric-surgery",
-      "doctor_id": "dr-meera-chatterjee",
+      "department_id": "urology",
+      "doctor_id": "dr-sushanta-kumar-das",
       "sort_order": 0
     },
     {
-      "department_id": "ophthalmology",
-      "doctor_id": "dr-imran-haque",
+      "department_id": "urology",
+      "doctor_id": "dr-souvik-maity",
+      "sort_order": 1
+    },
+    {
+      "department_id": "nephrology",
+      "doctor_id": "dr-manas-goswami",
       "sort_order": 0
     },
     {
-      "department_id": "dental-care",
-      "doctor_id": "dr-sneha-pal",
+      "department_id": "ent",
+      "doctor_id": "dr-saswata-sarkar",
+      "sort_order": 0
+    },
+    {
+      "department_id": "ent",
+      "doctor_id": "dr-jyotirmoy-roy",
+      "sort_order": 1
+    },
+    {
+      "department_id": "neurology",
+      "doctor_id": "dr-bitoti-chatterjee",
+      "sort_order": 0
+    },
+    {
+      "department_id": "neurology",
+      "doctor_id": "dr-chowdhury-sirajul-islam",
+      "sort_order": 1
+    },
+    {
+      "department_id": "neurology",
+      "doctor_id": "dr-snigdhendu-ghosh",
+      "sort_order": 2
+    },
+    {
+      "department_id": "neurology",
+      "doctor_id": "dr-kartikueyan-r",
+      "sort_order": 3
+    },
+    {
+      "department_id": "neurology",
+      "doctor_id": "dr-parmita-mukherjee",
+      "sort_order": 4
+    },
+    {
+      "department_id": "gastroenterology",
+      "doctor_id": "dr-jaydeep-sarkar",
+      "sort_order": 0
+    },
+    {
+      "department_id": "gastroenterology",
+      "doctor_id": "dr-saptarshi-bishnu",
+      "sort_order": 1
+    },
+    {
+      "department_id": "gastroenterology",
+      "doctor_id": "dr-vitor-roy",
+      "sort_order": 2
+    },
+    {
+      "department_id": "plastic-surgery",
+      "doctor_id": "dr-kushal-priya-anand",
+      "sort_order": 0
+    },
+    {
+      "department_id": "maxillofacial-surgery",
+      "doctor_id": "dr-lalita-ghosh",
+      "sort_order": 0
+    },
+    {
+      "department_id": "maxillofacial-surgery",
+      "doctor_id": "dr-deep-chakrabortty",
+      "sort_order": 1
+    },
+    {
+      "department_id": "radiology",
+      "doctor_id": "dr-anusha-b-k",
+      "sort_order": 0
+    },
+    {
+      "department_id": "pathology",
+      "doctor_id": "dr-shreyashi-roy",
+      "sort_order": 0
+    },
+    {
+      "department_id": "general-physician",
+      "doctor_id": "dr-ambarish-biswas",
+      "sort_order": 0
+    },
+    {
+      "department_id": "general-physician",
+      "doctor_id": "dr-ahijit-biswas",
+      "sort_order": 1
+    },
+    {
+      "department_id": "general-physician",
+      "doctor_id": "dr-niloy-kundu",
+      "sort_order": 2
+    },
+    {
+      "department_id": "physiotherapy",
+      "doctor_id": "dr-madhuri-roy",
+      "sort_order": 0
+    },
+    {
+      "department_id": "dietetics",
+      "doctor_id": "dr-sanjukta-roy",
       "sort_order": 0
     }
   ]

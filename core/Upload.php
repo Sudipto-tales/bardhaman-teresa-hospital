@@ -8,6 +8,12 @@
  *   media  — images for the gallery and every media picker in the panel.
  *            Public. Lands under assets/uploads/<year>/<month>/ and is served
  *            by URL, beside the site's other images.
+ *   video  — gallery clips. Public, and stored beside the images for the same
+ *            reason. Its own kind rather than a wider extension list on media,
+ *            because the two differ in more than type: a video arrives from a
+ *            phone at a couple of hundred megabytes, so the ceiling is its own
+ *            (UPLOAD_MAX_VIDEO_MB), and what lands is then handed to
+ *            VideoTranscode before anything records it.
  *   cv     — job applicants' CVs. Not public, not served by URL, and never
  *            reachable by guessing one; storage/cv/ is denied by .htaccess and
  *            the file only comes back through an authenticated endpoint. A CV
@@ -27,13 +33,33 @@
 class Upload
 {
     public const MEDIA = 'media';
+    public const VIDEO = 'video';
     public const CV = 'cv';
 
+    /* `maxEnv` names the environment variable holding this kind's ceiling in
+       megabytes, and `maxMb` is what applies when it is unset. One number for
+       every kind would have to be the video number, which is not a size any
+       screen should be allowed to accept a JPEG at. */
     private const RULES = [
         self::MEDIA => [
             'dir' => 'assets/uploads',
             'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif'],
             'mimes' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/avif'],
+            'maxEnv' => 'UPLOAD_MAX_MB',
+            'maxMb' => 8,
+        ],
+        self::VIDEO => [
+            'dir' => 'assets/uploads',
+            'extensions' => ['mp4', 'mov', 'webm', 'mkv', 'm4v'],
+            'mimes' => [
+                'video/mp4',
+                'video/quicktime',
+                'video/webm',
+                'video/x-matroska',
+                'video/x-m4v',
+            ],
+            'maxEnv' => 'UPLOAD_MAX_VIDEO_MB',
+            'maxMb' => 128,
         ],
         self::CV => [
             'dir' => 'storage/cv',
@@ -46,6 +72,8 @@ class Upload
                 'application/rtf',
                 'text/rtf',
             ],
+            'maxEnv' => 'UPLOAD_MAX_MB',
+            'maxMb' => 8,
         ],
     ];
 
@@ -83,9 +111,9 @@ class Upload
             return null;
         }
 
-        $maxBytes = ((int) env('UPLOAD_MAX_MB', 8)) * 1024 * 1024;
+        $maxBytes = self::maxBytes($kind);
         if ($file['size'] > $maxBytes) {
-            self::$lastError = 'That file is larger than ' . env('UPLOAD_MAX_MB', 8) . ' MB';
+            self::$lastError = 'That file is larger than ' . self::megabytes($maxBytes);
             return null;
         }
 
@@ -106,7 +134,7 @@ class Upload
         }
 
         $relativeDir = $rules['dir'];
-        if ($kind === self::MEDIA) {
+        if ($kind === self::MEDIA || $kind === self::VIDEO) {
             $relativeDir .= '/' . date('Y') . '/' . date('m');
         }
 
@@ -145,6 +173,58 @@ class Upload
             'width' => $width,
             'height' => $height,
         ];
+    }
+
+    /**
+     * The real ceiling for a kind, in bytes.
+     *
+     * Whichever is smallest of the kind's own limit, `upload_max_filesize` and
+     * `post_max_size`. Configuring UPLOAD_MAX_VIDEO_MB=128 against a PHP that
+     * refuses anything over 8 MB does not accept 128 MB uploads — it accepts
+     * 8 MB and reports the wrong number for everything above it, which is a
+     * bug report about the panel rather than about php.ini.
+     */
+    public static function maxBytes(string $kind = self::MEDIA): int
+    {
+        $rules = self::RULES[$kind] ?? self::RULES[self::MEDIA];
+
+        $limits = [(int) env($rules['maxEnv'], $rules['maxMb']) * 1024 * 1024];
+
+        foreach (['upload_max_filesize', 'post_max_size'] as $setting) {
+            $bytes = self::iniBytes((string) ini_get($setting));
+
+            /* 0 or -1 means unlimited, and is not a candidate for the minimum. */
+            if ($bytes > 0) {
+                $limits[] = $bytes;
+            }
+        }
+
+        return min($limits);
+    }
+
+    /** '8M' → 8388608. The shorthand php.ini uses and nothing else parses. */
+    private static function iniBytes(string $value): int
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return 0;
+        }
+
+        $number = (int) $value;
+
+        return match (strtolower(substr($value, -1))) {
+            'g' => $number * 1024 * 1024 * 1024,
+            'm' => $number * 1024 * 1024,
+            'k' => $number * 1024,
+            default => $number,
+        };
+    }
+
+    /** For the message only: 134217728 → '128 MB'. */
+    private static function megabytes(int $bytes): string
+    {
+        return round($bytes / 1024 / 1024, 1) . ' MB';
     }
 
     /** Deletes a stored file. Missing is not an error — the goal is "gone". */

@@ -252,9 +252,17 @@ abstract class SiteController extends BaseController
                 continue;
             }
 
+            $from = trim((string) ($day['from'] ?? ''));
+            $to = trim((string) ($day['to'] ?? ''));
+
+            /* A round-the-clock day is stored as the widest span the panel can
+               express, which is also what schema.org wants. Nobody reads
+               "00:00 – 23:59" as "always open", so say it in words. */
+            $isAllDay = $from === '00:00' && in_array($to, ['23:59', '24:00'], true);
+
             $value = !empty($day['closed'])
                 ? 'Closed'
-                : trim((string) ($day['from'] ?? '')) . ' &ndash; ' . trim((string) ($day['to'] ?? ''));
+                : ($isAllDay ? 'Open 24 hours' : $from . ' – ' . $to);
 
             $last = count($rows) - 1;
 
@@ -270,7 +278,9 @@ abstract class SiteController extends BaseController
             $days = $row['days'];
             $label = count($days) === 1
                 ? $days[0]
-                : $days[0] . ' &ndash; ' . $days[count($days) - 1];
+                /* A literal dash, not `&ndash;` — the footer runs the label
+                   through e() and an entity would come out double-escaped. */
+                : $days[0] . ' – ' . $days[count($days) - 1];
 
             return ['label' => $label, 'value' => $row['value']];
         }, $rows);

@@ -36,6 +36,15 @@ if ($qualification !== '' && $years !== null && $years !== '' && !isset($doctor[
     $qualification .= ' · ' . $years . ' yrs';
 }
 
+$role = $doctor['role'] ?? '';
+
+/* There are no consultant photographs yet, and an empty frame reads as a
+   broken image rather than as a card still being filled in. A row with no
+   photo gets a monogram instead — the first letter of the name with the
+   honorific stripped off, over the doctor's title. */
+$bare = preg_replace('/^\s*(?:dr|prof|mr|mrs|ms)\.?\s+/iu', '', $name);
+$initial = mb_strtoupper(mb_substr($bare !== '' ? $bare : $name, 0, 1));
+
 $enabled = $doctor['appointmentEnabled'] ?? $doctor['appointment_enabled'] ?? $doctor['appt'] ?? true;
 $canBook = $slug !== '' && !in_array($enabled, [false, 0, '0', '', null], true);
 $appointment = $href ?? (base_url('contact') . '?doctor=' . rawurlencode($slug) . '#book');
@@ -43,7 +52,16 @@ $appointment = $href ?? (base_url('contact') . '?doctor=' . rawurlencode($slug) 
 <?php if ($variant === 'carousel'): ?>
                     <div class="doc__card" data-specialty="<?= e($doctor['specialty'] ?? $doctor['speciality'] ?? '') ?>">
                         <div class="doc__card-img">
+<?php if ($photo !== ''): ?>
                             <img src="<?= e($photo) ?>" alt="<?= e($name) ?>" loading="lazy">
+<?php else: ?>
+                            <div class="doc-mono" role="img" aria-label="<?= e($name) ?>">
+                                <span class="doc-mono__letter" aria-hidden="true"><?= e($initial) ?></span>
+<?php if ($role !== ''): ?>
+                                <span class="doc-mono__title" aria-hidden="true"><?= e($role) ?></span>
+<?php endif; ?>
+                            </div>
+<?php endif; ?>
 <?php if ($canBook): ?>
                             <a href="<?= e($appointment) ?>" class="doc__book">
                                 <span class="doc__book-icon"><i class="fa-solid fa-arrow-right"></i></span>
@@ -59,11 +77,20 @@ $appointment = $href ?? (base_url('contact') . '?doctor=' . rawurlencode($slug) 
 <?php else: ?>
                     <article class="pg-doc">
                         <div class="pg-doc__img img-stretch">
+<?php if ($photo !== ''): ?>
                             <img src="<?= e($photo) ?>" alt="<?= e($name) ?>" loading="lazy">
+<?php else: ?>
+                            <div class="doc-mono doc-mono--tall" role="img" aria-label="<?= e($name) ?>">
+                                <span class="doc-mono__letter" aria-hidden="true"><?= e($initial) ?></span>
+<?php if ($role !== ''): ?>
+                                <span class="doc-mono__title" aria-hidden="true"><?= e($role) ?></span>
+<?php endif; ?>
+                            </div>
+<?php endif; ?>
                         </div>
                         <div class="pg-doc__body">
                             <h4><?= e($name) ?></h4>
-                            <p><?= e($doctor['role'] ?? '') ?></p>
+                            <p><?= e($role) ?></p>
                             <span class="pg-doc__qual"><?= e($qualification) ?></span>
 <?php if ($canBook): ?>
                             <a class="pg-doc__appt" href="<?= e($appointment) ?>">

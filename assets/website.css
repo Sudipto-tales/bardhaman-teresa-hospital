@@ -217,6 +217,17 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
+/* The `hidden` attribute is display:none in the UA sheet, and any rule of ours
+   that names a display beats it — every element toggled by script that also
+   carries a layout mode was therefore never actually hidden. The careers page
+   showed its vacancies and "Nothing open right now" underneath them for
+   exactly that reason: .cr-jobs and .cr-empty are both display:grid. Stated
+   once here rather than as a [hidden] pair beside each of them, because the
+   next component to be toggled would have had the same bug waiting. */
+[hidden] {
+    display: none !important;
+}
+
 body {
     font-family: var(--font-body);
     font-size: var(--fs-body);
@@ -746,10 +757,15 @@ ul {
     position: relative;
 }
 
+/* `right` is measured from the trigger, and the trigger sits at the left end of
+   a nav pill that hugs the right gutter — so the panel used to hang a long way
+   to the left of the link that opened it and read as lopsided. website.js
+   overwrites --mega-right on resize with the offset that centres the panel in
+   the viewport; the -8px fallback is what a no-JS render gets. */
 .nav-mega {
     position: absolute;
     top: calc(100% + 18px);
-    right: -8px;
+    right: var(--mega-right, -8px);
     width: min(880px, 92vw);
     padding: 18px;
     display: grid;
@@ -796,6 +812,127 @@ ul {
     background: var(--crimson-50);
     border-color: rgba(193, 39, 45, .18);
     transform: translateX(3px);
+}
+
+/* ---- about drop — a list rail, not the department card grid ----
+   Three destinations, so density is not the problem the mega menu had. Rows
+   on hairlines instead of tiles on a grid, an icon chip carrying the colour,
+   and an arrow that only arrives on hover. Shares the panel chrome above so
+   the two belong to the same nav; shares nothing else, so they never read as
+   the same menu. Anchored left — it is narrow enough to open rightward from
+   the trigger without leaving the viewport. */
+.nav-sub {
+    position: absolute;
+    top: calc(100% + 18px);
+    left: -8px;
+    width: 316px;
+    padding: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    box-shadow: var(--sh-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease), visibility .3s;
+}
+
+.nav-drop:hover .nav-sub,
+.nav-drop:focus-within .nav-sub {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-sub-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 13px;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: var(--r-sm);
+    color: var(--navy);
+    transition: background .25s var(--ease);
+}
+
+/* Divider drawn by the row below, inset past the icon chip. Both neighbours
+   drop it on hover so the tinted row keeps a clean edge. */
+.nav-sub-item+.nav-sub-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 62px;
+    right: 12px;
+    height: 1px;
+    background: var(--line-soft);
+    transition: opacity .25s var(--ease);
+}
+
+.nav-sub-item:hover::before,
+.nav-sub-item:hover+.nav-sub-item::before,
+.nav-sub-item.is-current::before,
+.nav-sub-item.is-current+.nav-sub-item::before {
+    opacity: 0;
+}
+
+.nav-sub-item__ico {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--surface-alt);
+    color: var(--action);
+    font-size: 15px;
+    transition: background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+}
+
+.nav-sub-item__txt {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.nav-sub-item__txt strong {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+}
+
+.nav-sub-item__txt span {
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    color: var(--ink-mute);
+}
+
+.nav-sub-item__go {
+    font-size: 11px;
+    color: var(--action);
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+
+.nav-sub-item:hover,
+.nav-sub-item.is-current {
+    background: var(--crimson-50);
+}
+
+.nav-sub-item:hover .nav-sub-item__ico,
+.nav-sub-item.is-current .nav-sub-item__ico {
+    background: var(--grad-cta);
+    color: #fff;
+}
+
+.nav-sub-item:hover .nav-sub-item__ico {
+    transform: translateY(-1px);
+}
+
+.nav-sub-item:hover .nav-sub-item__go,
+.nav-sub-item.is-current .nav-sub-item__go {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* ---- hamburger + mobile overlay (was `display:none`, nav simply vanished) ---- */
@@ -881,6 +1018,23 @@ body.menu-open .nav-shell {
     color: var(--navy);
     padding: 10px 0;
     border-bottom: 1px solid var(--line-soft);
+}
+
+/* The children of About Us and of Facilities. Smaller, muted, and hung off a
+   rail rather than sat on the full-width hairlines the top level uses. */
+.mobile-menu a.is-sub {
+    font-family: var(--font-body);
+    font-size: clamp(.95rem, 4vw, 1.25rem);
+    font-weight: 600;
+    color: var(--ink-mute);
+    padding: 7px 0 7px 18px;
+    margin-left: 4px;
+    border-bottom: 0;
+    border-left: 2px solid var(--line-soft);
+}
+
+.mobile-menu a.is-sub-end {
+    margin-bottom: 8px;
 }
 
 .mobile-menu a:last-child {
@@ -2034,14 +2188,28 @@ body.menu-open .nav-shell {
     color: #fff;
 }
 
-.track__rating-label {
+/* --- Google rating tile — widget/google-rating, on the track band here and
+       in the About mosaic (pages.css restyles it for that lighter tile) --- */
+.grating {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    /* Two hooks — the filled colour and the empty one behind it — so a variant
+       recolours the whole tile by setting them. */
+    --grating-star: #FFC24A;
+    --grating-empty: rgb(255 255 255 / .3);
+}
+
+.grating__label {
     font-size: var(--fs-xs);
     font-weight: 700;
     letter-spacing: .12em;
+    text-transform: uppercase;
     opacity: .8;
 }
 
-.track__rating-score {
+.grating__score {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -2051,9 +2219,90 @@ body.menu-open .nav-shell {
     line-height: 1;
 }
 
-.track__rating-score i {
-    color: #FFC24A;
+.grating__score i {
+    color: var(--grating-star);
     font-size: .7em;
+}
+
+.grating__of {
+    font-size: .34em;
+    font-weight: 700;
+    letter-spacing: .04em;
+    opacity: .6;
+}
+
+/* Two identical star rows stacked, the gold one clipped to the score's share
+   of five. Rounding to whole stars would print 4.4 as four or as five, and the
+   half-star glyph cannot show 4.4 either. */
+.grating__stars {
+    position: relative;
+    display: inline-flex;
+    gap: 3px;
+    width: max-content;
+    font-size: .9rem;
+
+    /* A dimmed colour rather than opacity: opacity on the row would cap the
+       gold overlay inside it, and the fill has to stay at full strength. */
+    color: var(--grating-empty);
+}
+
+.grating__stars-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    display: inline-flex;
+    gap: inherit;
+    overflow: hidden;
+    color: var(--grating-star);
+
+    /* The clipped row must keep its full width inside the overflow box or the
+       stars would squeeze instead of being cut off. */
+    white-space: nowrap;
+}
+
+.grating__stars-fill i {
+    flex: none;
+}
+
+.grating__bar {
+    height: 6px;
+    width: min(100%, 210px);
+    border-radius: 999px;
+    background: rgb(255 255 255 / .25);
+    overflow: hidden;
+}
+
+.grating__bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--grating-star);
+}
+
+.grating__count {
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+    opacity: .85;
+}
+
+.grating__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: .85;
+    transition: opacity .25s var(--ease);
+}
+
+.grating__link:hover {
+    opacity: 1;
+}
+
+.grating__link i {
+    font-size: .8em;
 }
 
 .track__award {
@@ -2445,6 +2694,48 @@ body.menu-open .nav-shell {
     transform: scale(1.06);
 }
 
+/* --- Consultant monogram. There are no doctor photographs yet, and an empty
+       frame reads as a broken image rather than as a card still being filled
+       in; the frame carries the first letter of the name over the title
+       instead. card/doctor.php builds the letter and swaps the <img> for it
+       when the row's photo is empty, so this styles both the home carousel
+       (.doc__card-img, which sets its own aspect ratio) and the .pg-doc strip
+       on the department, doctors and about pages, which does not — hence the
+       --tall modifier. --- */
+.doc-mono {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 20px 16px;
+    text-align: center;
+    background: var(--grad-cool);
+}
+
+.doc-mono--tall {
+    aspect-ratio: 4 / 4.4;
+    height: auto;
+}
+
+.doc-mono__letter {
+    font-family: var(--font-head);
+    font-size: clamp(3rem, 5vw, 4.25rem);
+    font-weight: 700;
+    line-height: 1;
+    color: #FFFFFF;
+}
+
+.doc-mono__title {
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .78);
+}
+
 .doc__book {
     position: absolute;
     left: 12px;
@@ -2742,7 +3033,9 @@ body.menu-open .nav-shell {
 
 .site-footer {
     position: relative;
-    padding: calc(var(--sp-section) * 1.1) var(--sp-gutter) var(--sp-section);
+    /* Shallower than a full --sp-section band: the reference footer runs 88px
+       of air above the grid and ~92px below it, not the 120px a section gets. */
+    padding: clamp(56px, 6vw, 88px) var(--sp-gutter) clamp(56px, 6.4vw, 92px);
     margin: 0 var(--ft-inset);
     background: var(--surface-navy);
     color: rgba(255, 255, 255, .72);
@@ -2767,15 +3060,26 @@ body.menu-open .nav-shell {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1.6fr repeat(4, 1fr);
-    gap: clamp(24px, 3vw, 48px);
+    /* The dark block is near full-bleed but the columns are not: they sit in a
+       1170px measure centred in it, which is what keeps the five columns from
+       drifting apart on a wide screen. Ratio is the brand column against four
+       equal link columns — 275 : 157 at a 66px gutter. */
+    max-width: 1170px;
+    margin-inline: auto;
+    /* Only the brand column is declared. The link columns are implicit, so the
+       track count follows however many the nav settings emit — a fixed
+       `repeat(4, 1fr)` left a phantom empty track when the panel had fewer. */
+    grid-template-columns: 1.75fr;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: clamp(28px, 3.5vw, 66px);
 }
 
 .ft__logo {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 22px;
+    margin-bottom: 30px;
 }
 
 .ft__logo img {
@@ -2810,33 +3114,53 @@ body.menu-open .nav-shell {
 
 .ft__contact p {
     font-size: var(--fs-sm);
-    line-height: 1.7;
+    line-height: 1.8;
 }
 
 .ft__contact strong {
     color: #fff;
 }
 
+/* one clear line of air between the address and the visiting-hours block */
 .ft__contact p+p {
-    margin-top: 18px;
+    margin-top: 26px;
 }
 
 .ft__col h4 {
     color: #fff;
     font-size: var(--fs-h4);
-    margin-bottom: 18px;
+    margin-bottom: 22px;
 }
 
+/* Columns are flex so the social block can be pushed to the foot of the row */
+.ft__col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* "Social Media" under a finished list needs twice the gap the list items get,
+   or it reads as one more link rather than a new heading */
 .ft__col h4+h4 {
-    margin-top: 28px;
+    margin-top: 44px;
+}
+
+/* The social block sits on the same bottom line as the brand column instead of
+   floating halfway up its own: `auto` eats the slack between the last legal
+   link and the deepest column, and the padding keeps the 44px minimum gap for
+   the case where this column is itself the tallest and there is no slack. */
+.ft__col h4:has(+ .ft__social) {
+    margin-top: auto;
+    padding-top: 44px;
 }
 
 .ft__col li+li {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .ft__col a {
     font-size: var(--fs-sm);
+    /* 22px box + 15px margin = the 38px baseline pitch of the reference */
+    line-height: 1.6;
     transition: color .25s var(--ease), padding-left .25s var(--ease);
 }
 
@@ -2874,7 +3198,9 @@ body.menu-open .nav-shell {
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    padding: 22px var(--sp-gutter);
+    /* tracks the 1170px measure of .ft__grid so the strip's ends line up with
+       the logo and the last column, and falls back to the gutter below that */
+    padding: 22px max(var(--sp-gutter), calc((100% - 1170px) / 2));
     /* matches .site-footer's inset; rounded only at the foot of the block */
     margin: 0 var(--ft-inset) var(--ft-inset);
     background: var(--surface-deep);
@@ -3005,6 +3331,8 @@ body.menu-open .nav-shell {
     }
 
     .ft__grid {
+        /* back to explicit tracks — the desktop rule flows columns */
+        grid-auto-flow: row;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -3085,16 +3413,9 @@ body.menu-open .nav-shell {
         display: none;
     }
 
-    .about__stat--tr,
-    .about__stat--bl {
-        position: static;
-        margin-top: 14px;
-    }
-
-    .about__visuals {
-        display: grid;
-        gap: 10px;
-    }
+    /* Phone chip placement lives in the second 640px block, below section 25 —
+       these selectors are the same weight as the ones there, so only the last
+       occurrence in the file wins. */
 
     .prefooter__card,
     .prefooter__card:first-child,
@@ -3107,6 +3428,7 @@ body.menu-open .nav-shell {
     }
 
     .ft__grid {
+        grid-auto-flow: row;
         grid-template-columns: minmax(0, 1fr);
     }
 
@@ -3519,7 +3841,7 @@ body.menu-open .nav-shell {
     padding: clamp(15px, 1.7vw, 21px) clamp(19px, 2.1vw, 26px);
 }
 
-.track__rating-score {
+.track__rating .grating__score {
     font-size: clamp(1.8rem, 2.6vw, 2.4rem);
 }
 
@@ -3777,20 +4099,36 @@ body.menu-open .nav-shell {
         max-width: none;
     }
 
-    .about__frame {
-        display: grid;
-        gap: 12px;
-    }
-
+    /* The arc hangs 10% past the frame; at phone widths that is outside the
+       gutter and would open a horizontal scroll. */
     .about__frame::before {
         display: none;
     }
 
-    .about__stat--tr,
+    /* Chips stay punched onto the image at phone widths — stacked below they
+       read as three unrelated cards instead of one visual. Offsets pull into
+       the 20px section gutter only, so nothing crosses the viewport edge. */
+    .about__stat {
+        padding: 10px 15px;
+        box-shadow: 0 0 0 6px var(--surface-alt), var(--sh-lg);
+    }
+
+    .about__stat--tr {
+        top: 20px;
+        right: -10px;
+        bottom: auto;
+        left: auto;
+    }
+
     .about__stat--bl {
-        position: static;
-        border-radius: var(--r-card);
-        box-shadow: var(--sh-lg);
+        bottom: 20px;
+        left: -10px;
+        top: auto;
+        right: auto;
+    }
+
+    .about__img {
+        aspect-ratio: 4/4.2;
     }
 
     /* the sheet is already gutter-to-gutter here — only the inner rhythm

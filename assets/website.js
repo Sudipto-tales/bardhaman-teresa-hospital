@@ -166,6 +166,36 @@
         if (lenis) lenis.on('scroll', ({ scroll }) => onScroll(scroll));
         else window.addEventListener('scroll', () => onScroll(window.scrollY), { passive: true });
 
+        /* The department mega panel is anchored to its own trigger, which sits
+           at the left end of a nav pill pinned to the right gutter — so 880px
+           of panel hung off to the left and looked lopsided. Re-anchor it on
+           the viewport's centre instead. `right` is measured from the trigger,
+           so the offset is the trigger's right edge minus where the panel's
+           right edge wants to be. CSS keeps the vertical anchor, which is the
+           part that has to track the pill. */
+        const megaDrop = $('.nav-drop--mega', navShell);
+        const mega = megaDrop && $('.nav-mega', megaDrop);
+
+        const centreMega = () => {
+            if (!mega) return;
+
+            /* Below this the drop is display:none and the burger takes over. */
+            if (window.innerWidth <= 1024) {
+                megaDrop.style.removeProperty('--mega-right');
+                return;
+            }
+
+            const shift = megaDrop.getBoundingClientRect().right -
+                (window.innerWidth + mega.getBoundingClientRect().width) / 2;
+            megaDrop.style.setProperty('--mega-right', `${Math.round(shift)}px`);
+        };
+
+        centreMega();
+        /* The pill's width moves with the nav font, so measure again once it
+           has actually loaded. */
+        window.addEventListener('load', centreMega);
+        window.addEventListener('resize', centreMega, { passive: true });
+
         /* mobile menu */
         const closeMenu = () => {
             document.body.classList.remove('menu-open');

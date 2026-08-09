@@ -419,10 +419,11 @@ $callLabel = trim((string) ($hero['ghostLabel'] ?? ''));
 
             <div class="track__col">
                 <div class="track__item track__rating">
-                    <span class="track__rating-label">AVERAGE GOOGLE RATING</span>
-                    <div class="track__rating-score">
-                        <i class="fa-solid fa-star"></i> 4.9
-                    </div>
+<?= App::component('site/widget/google-rating', [
+    'label' => 'AVERAGE GOOGLE RATING',
+    'variant' => 'track',
+    'fallback' => '4.9',
+]) ?>
                 </div>
 
                 <div class="track__item track__img track__img--mid img-stretch">
@@ -457,7 +458,7 @@ $callLabel = trim((string) ($hero['ghostLabel'] ?? ''));
         </div>
 
 <?php if ($counters): ?>
-        <?php App::render('site/block/stats', ['counters' => $counters, 'label' => 'The hospital in numbers']); ?>
+        <?php App::render('site/block/stats', ['counters' => $counters, 'label' => 'The hospital in numbers', 'flow' => true]); ?>
 <?php endif; ?>
 
         <div class="why__grid">
@@ -539,6 +540,8 @@ $accents = ['crimson', 'magenta', 'blue', 'navy'];
                         <?php App::render('site/card/lab-test', [
                             'test' => $test,
                             'colour' => $accents[$i % count($accents)],
+                            /* No figures on the home page — see card/lab-test */
+                            'showPrice' => false,
                         ]); ?>
 <?php endforeach; ?>
                     </div>

@@ -31,6 +31,7 @@ class SitemapController extends SiteController
         'departments' => ['weekly', '0.9'],
         'doctors' => ['weekly', '0.9'],
         'facilities' => ['monthly', '0.7'],
+        'gallery' => ['monthly', '0.6'],
         'blog' => ['daily', '0.8'],
         'careers' => ['daily', '0.7'],
         'contact' => ['monthly', '0.8'],

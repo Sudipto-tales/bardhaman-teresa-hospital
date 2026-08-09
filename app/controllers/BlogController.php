@@ -14,9 +14,10 @@
  */
 class BlogController extends SiteController
 {
-    /* No Blog link in the primary nav — the design reaches the library from
-       the home page and the footer, so no header item lights up here. */
-    protected string $active = '';
+    /* "About Us" — its drop carries Our Blog, so the header has a link to this
+       page for the first time and the pill above it should stay lit. The home
+       page and the footer still reach the library too. */
+    protected string $active = 'about';
 
     public function index(): void
     {

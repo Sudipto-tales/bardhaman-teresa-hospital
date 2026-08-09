@@ -18,7 +18,7 @@
     'chips' => ['24/7 Emergency', 'Intensive care', 'Modular theatres'],
     'primary' => ['href' => base_url('contact'), 'label' => 'Plan Your Visit'],
     'ghost' => !empty($labDiagnostics)
-        ? ['href' => base_url('lab-diagnostics'), 'icon' => 'fa-flask-vial', 'label' => 'Book a Test']
+        ? ['href' => base_url('pathology'), 'icon' => 'fa-flask-vial', 'label' => 'Book a Test']
         : [],
     'stats' => !empty($counters),
 ]); ?>

@@ -129,8 +129,7 @@
                         <ul class="ct-hours">
                             <li><span>Emergency</span> <strong>24 hours</strong></li>
 <?php foreach ($hours as $row): ?>
-                            <!-- raw: openingHours() joins a range with &ndash; -->
-                            <li><span>OPD &mdash; <?= $row['label'] ?? '' ?></span> <strong><?= $row['value'] ?? '' ?></strong></li>
+                            <li><span>OPD &mdash; <?= e($row['label'] ?? '') ?></span> <strong><?= e($row['value'] ?? '') ?></strong></li>
 <?php endforeach; ?>
                         </ul>
                     </div>

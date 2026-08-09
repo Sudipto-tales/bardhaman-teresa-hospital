@@ -9,7 +9,9 @@
  *   section  string
  *   photoA   array of {src, alt}
  *   photoB   array of {src, alt}
- *   rating   array of {label, score}
+ *   rating   array of {label, score} — the tile itself is widget/google-rating,
+ *            and `score` is only the fallback it prints when neither the Places
+ *            API nor the panel's own numbers are configured
  *   quotes   array   Rows for card/testimonial
  *   cred     array of {icon, label, title, href, link}
  *   alt      bool
@@ -33,9 +35,12 @@ $first = $quotes[0] ?? [];
                     </figure>
 
                     <div class="ab-rating">
-                        <span class="eyebrow"><?= e($rating['label'] ?? '') ?></span>
-                        <p class="ab-rating__score"><i class="fa-solid fa-star"></i><span class="pg-stat__value"
-                                data-count="<?= e($rating['score'] ?? '') ?>"><?= e($rating['score'] ?? '') ?></span></p>
+<?= App::component('site/widget/google-rating', [
+    'label' => $rating['label'] ?? '',
+    'variant' => 'mosaic',
+    /* The section's stored score, from before the tile read Google itself. */
+    'fallback' => $rating['score'] ?? '',
+]) ?>
                     </div>
 
                     <figure class="ab-tile ab-tile--b">

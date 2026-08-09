@@ -16,7 +16,9 @@ $active = $active ?? '';
 $searchPlaceholder = $searchPlaceholder ?? 'Search this page — sections, doctors, tests…';
 
 /* Rendered rather than concatenated so the active class cannot drift between
-   the six links. */
+   the plain links. The two that carry a drop-down — About Us and Facilities —
+   are written out below instead: their <a> lives inside a .nav-drop and
+   carries the chevron. */
 $link = static function (string $key, string $path, string $label) use ($active): string {
     $class = 'nav-link' . ($active === $key ? ' is-active' : '');
 
@@ -26,15 +28,21 @@ $link = static function (string $key, string $path, string $label) use ($active)
         <nav class="nav-bar" aria-label="Primary">
             <?= $link('home', '/', 'Home') ?>
 
-            <?= $link('about', 'about', 'About Us') ?>
+            <div class="nav-drop nav-drop--sub">
+                <a href="<?= e(base_url('about')) ?>" class="nav-link<?= $active === 'about' ? ' is-active' : '' ?>">About Us <i class="fa-solid fa-chevron-down"></i></a>
+<?= App::component('site/layout/about-menu') ?>
+            </div>
 
 
-            <div class="nav-drop">
+            <div class="nav-drop nav-drop--mega">
                 <a href="<?= e(base_url('departments')) ?>" class="nav-link<?= $active === 'departments' ? ' is-active' : '' ?>">Our Department <i class="fa-solid fa-chevron-down"></i></a>
 <?= App::component('site/layout/mega-menu', ['departments' => $departments ?? []]) ?>
             </div>
 
-            <?= $link('facilities', 'facilities', 'Facilities') ?>
+            <div class="nav-drop nav-drop--sub">
+                <a href="<?= e(base_url('facilities')) ?>" class="nav-link<?= $active === 'facilities' ? ' is-active' : '' ?>">Facilities <i class="fa-solid fa-chevron-down"></i></a>
+<?= App::component('site/layout/facilities-menu') ?>
+            </div>
 
             <?= $link('careers', 'careers', 'Careers') ?>
 

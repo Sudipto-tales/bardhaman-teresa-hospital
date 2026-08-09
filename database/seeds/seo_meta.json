@@ -27,20 +27,20 @@
   "json": [],
   "rows": [
     {
-      "entity_type": "doctor",
-      "entity_id": "dr-jonathon-ronan",
-      "meta_title": "Dr. Jonathon Ronan — Head of Cardiology",
-      "meta_description": "Interventional cardiologist with 22 years of experience, leading the cath lab and heart-failure clinic at Teresa Memorial Hospital.",
+      "entity_type": "department",
+      "entity_id": "cardio-thoracic-vascular-surgery",
+      "meta_title": "Cardio Thoracic & Vascular Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Bypass, valve and vascular surgery with a dedicated cardiac theatre and post-operative ICU, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
       "og_image": null,
       "canonical": null,
       "noindex": 0,
-      "keywords": null
+      "keywords": "cardiac surgeon in Bardhaman, bypass surgery Bardhaman, CTVS Burdwan, vascular surgeon Bardhaman, heart surgery hospital Burdwan"
     },
     {
       "entity_type": "department",
       "entity_id": "cardiology",
-      "meta_title": "Cardiology & Heart Care in Bardhaman | Teresa Memorial",
-      "meta_description": "24/7 cath lab, cardiac ICU and a heart-failure clinic in Bardhaman (Burdwan). Six consultant cardiologists at Teresa Memorial Hospital.",
+      "meta_title": "Cardiology in Bardhaman | Teresa Memorial",
+      "meta_description": "A 24/7 cath lab, cardiac ICU and heart-failure clinic in Bardhaman (Burdwan). Three consultant cardiologists at Teresa Memorial Hospital.",
       "og_image": null,
       "canonical": null,
       "noindex": 0,
@@ -48,13 +48,163 @@
     },
     {
       "entity_type": "department",
-      "entity_id": "neuro-surgery",
-      "meta_title": "Neuro Surgery & Spine Care in Bardhaman | Teresa Memorial",
-      "meta_description": "Microsurgery, neuro-navigation and an eight-bed neuro ICU with a 24/7 stroke pathway, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "entity_id": "medicine",
+      "meta_title": "Medicine in Bardhaman | Teresa Memorial",
+      "meta_description": "Consultant-led internal medicine, with diabetes, hypertension and asthma clinics, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
       "og_image": null,
       "canonical": null,
       "noindex": 0,
-      "keywords": "neurosurgeon in Bardhaman, spine surgery Bardhaman, stroke treatment Burdwan, neuro ICU Bardhaman, brain surgery West Bengal"
+      "keywords": "physician in Bardhaman, general medicine doctor Burdwan, diabetes doctor Bardhaman, MD medicine Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "orthopedics",
+      "meta_title": "Orthopedics & Spine Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Joint replacement, spine surgery and 24/7 trauma cover, with day-one physiotherapy, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "orthopedic doctor in Bardhaman, knee replacement Bardhaman, spine surgeon Burdwan, fracture treatment Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "general-surgery",
+      "meta_title": "General & Laparoscopic Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Laparoscopic gallbladder, hernia and appendix surgery with a 48-hour average stay, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "laparoscopic surgeon in Bardhaman, hernia surgery Burdwan, gallbladder operation Bardhaman, general surgeon Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "gynecology",
+      "meta_title": "Gynecology & Obstetrics in Bardhaman | Teresa Memorial",
+      "meta_description": "Antenatal care, 24/7 labour rooms, a Level II nursery and laparoscopic gynae surgery at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "gynecologist in Bardhaman, delivery hospital Burdwan, maternity hospital Bardhaman, best gynae doctor Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "urology",
+      "meta_title": "Urology in Bardhaman | Teresa Memorial",
+      "meta_description": "Laser stone surgery, PCNL, TURP and reconstructive urology — most cases endoscopic — at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "urologist in Bardhaman, kidney stone treatment Burdwan, laser stone surgery Bardhaman, prostate surgery Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "nephrology",
+      "meta_title": "Nephrology in Bardhaman | Teresa Memorial",
+      "meta_description": "A 16-station dialysis unit running three shifts a day with consultant nephrology cover, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "nephrologist in Bardhaman, dialysis centre Burdwan, kidney doctor Bardhaman, dialysis Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "ent",
+      "meta_title": "E.N.T in Bardhaman | Teresa Memorial",
+      "meta_description": "Endoscopic sinus and microscopic ear surgery, audiometry and a voice clinic at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "ENT doctor in Bardhaman, sinus surgery Burdwan, hearing test Bardhaman, tonsil operation Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "neurology",
+      "meta_title": "Neurology & Neuro Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Neurologists and neurosurgeons on one floor — a 24/7 stroke pathway, neuro ICU and microsurgery at Teresa Memorial Hospital, Bardhaman.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "neurologist in Bardhaman, neurosurgeon Burdwan, stroke treatment Bardhaman, brain surgery hospital Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "gastroenterology",
+      "meta_title": "Gastroenterology in Bardhaman | Teresa Memorial",
+      "meta_description": "Endoscopy, colonoscopy, ERCP and GI surgery in one department, with emergency bleed cover, at Teresa Memorial Hospital, Bardhaman.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "gastroenterologist in Bardhaman, endoscopy Burdwan, colonoscopy Bardhaman, liver doctor Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "plastic-surgery",
+      "meta_title": "Plastic Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Burns care, hand surgery, microvascular flaps and reconstruction after trauma or cancer, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "plastic surgeon in Bardhaman, burns treatment Burdwan, reconstructive surgery Bardhaman, hand surgery Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "maxillofacial-surgery",
+      "meta_title": "Maxillofacial Surgery in Bardhaman | Teresa Memorial",
+      "meta_description": "Facial fracture fixation, impacted tooth surgery, jaw cysts and dental implants at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "maxillofacial surgeon in Bardhaman, wisdom tooth removal Burdwan, dental implants Bardhaman, jaw fracture treatment Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "radiology",
+      "meta_title": "Radiology & Imaging in Bardhaman | Teresa Memorial",
+      "meta_description": "Digital X-ray, ultrasound, colour Doppler and CT, reported by a consultant radiologist, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "CT scan in Bardhaman, ultrasound centre Burdwan, digital X-ray Bardhaman, doppler test Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "pathology",
+      "meta_title": "Pathology & Laboratory in Bardhaman | Teresa Memorial",
+      "meta_description": "Biochemistry, haematology, microbiology and histopathology with same-day reports and home collection, in Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "pathology lab in Bardhaman, blood test Burdwan, home sample collection Bardhaman, biopsy report Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "general-physician",
+      "meta_title": "General Physician in Bardhaman | Teresa Memorial",
+      "meta_description": "Walk-in general OPD six days a week, 9 AM to 8 PM, with no appointment needed, at Teresa Memorial Hospital, Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "general physician in Bardhaman, doctor near me Burdwan, fever treatment Bardhaman, walk-in OPD Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "physiotherapy",
+      "meta_title": "Physiotherapy in Bardhaman | Teresa Memorial",
+      "meta_description": "Daily inpatient rounds and an outpatient rehabilitation gym — day-one mobilisation after surgery — in Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "physiotherapy in Bardhaman, physiotherapist Burdwan, back pain treatment Bardhaman, stroke rehabilitation Bardhaman"
+    },
+    {
+      "entity_type": "department",
+      "entity_id": "dietetics",
+      "meta_title": "Dietetics & Nutrition in Bardhaman | Teresa Memorial",
+      "meta_description": "Clinical dietetics, plus weight, diabetes and child-growth clinics, with plans in Bengali and English, in Bardhaman (Burdwan).",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "dietitian in Bardhaman, nutritionist Burdwan, diet chart Bardhaman, weight loss clinic Bardhaman"
     },
     {
       "entity_type": "post",
@@ -135,6 +285,16 @@
       "canonical": null,
       "noindex": 0,
       "keywords": "ICU hospital Bardhaman, operation theatre Burdwan, pathology lab Bardhaman, digital x-ray and imaging Bardhaman, ambulance service Bardhaman"
+    },
+    {
+      "entity_type": "page",
+      "entity_id": "gallery",
+      "meta_title": "Gallery — Photos & Video from Teresa Memorial Hospital",
+      "meta_description": "Inside the wards, theatres and laboratory at Teresa Memorial Hospital, Bardhaman (Burdwan) — photographs, video and talks from our consultants.",
+      "og_image": null,
+      "canonical": null,
+      "noindex": 0,
+      "keywords": "Teresa Memorial Hospital photos, hospital gallery Bardhaman, hospital video Burdwan, ICU photos Bardhaman"
     },
     {
       "entity_type": "page",

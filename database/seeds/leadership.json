@@ -16,7 +16,7 @@
       "photo": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=500&auto=format&fit=crop",
       "category": "management",
       "message": "<p>We measure ourselves on the things families actually notice — how long you wait, whether anyone explained the plan, and whether the bill matched what you were told.</p>",
-      "linked_doctor_id": "dr-jonathon-ronan",
+      "linked_doctor_id": null,
       "sort_order": 1,
       "status": "published",
       "updated_at": "2026-07-14 10:00:00"
@@ -64,7 +64,7 @@
       "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500&auto=format&fit=crop",
       "category": "clinical-leadership",
       "message": null,
-      "linked_doctor_id": "dr-victor-james",
+      "linked_doctor_id": null,
       "sort_order": 5,
       "status": "draft",
       "updated_at": "2026-08-01 10:00:00"

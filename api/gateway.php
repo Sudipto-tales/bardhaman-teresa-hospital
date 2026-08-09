@@ -83,6 +83,12 @@ class ApiGatewayProvider extends RouteProvider
             'GET:api/applications/{id}' => ['ApplicationController', 'show', 'session'],
             'PATCH:api/applications/{id}' => ['ApplicationController', 'update', 'session'],
 
+            /* The gallery's video upload: multipart, and it runs ffmpeg before
+               it answers. Every other verb on api/gallery is the generic
+               controller's. Above the generic block so `video` is never read
+               as the id of a gallery record. */
+            'POST:api/gallery/video' => ['GalleryController', 'video', 'session'],
+
             'POST:api/enquiries/{id}/reply' => ['EnquiryController', 'reply', 'session'],
             'POST:api/enquiries/{id}/note' => ['EnquiryController', 'note', 'session'],
 
