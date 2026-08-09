@@ -20,16 +20,72 @@ $pdoOptions = [
 switch ($db_type) {
     case 'sqlite':
         $sqliteFile = env('DB_DATABASE', '');
-        if ($sqliteFile === '' || $sqliteFile === null) {
+        $usingDefault = ($sqliteFile === '' || $sqliteFile === null);
+
+        if ($usingDefault) {
             $sqliteFile = dirname(__DIR__) . '/database/database.sqlite';
         }
 
         $directory = dirname($sqliteFile);
+
+        /**
+         * PDO does not refuse a SQLite path that is not there — it creates the
+         * file, connects to it, and reports success. Every query after that
+         * fails with "no such table", which reads like a broken migration and
+         * is really a wrong DB_DATABASE two layers up.
+         *
+         * So on the web, a missing file is an error. The CLI is exempt because
+         * creating the file is exactly what `php vayu migrate` is for on a
+         * fresh install, and it is run by someone who can read what it says.
+         */
+        $creatingIsAllowed = PHP_SAPI === 'cli';
+
+        if (!$creatingIsAllowed && !is_file($sqliteFile)) {
+            $detail = $usingDefault
+                ? 'DB_DATABASE is empty, so this is the default path. In production it '
+                    . 'should be an absolute path outside the document root — the host '
+                    . 'may put the site under domains/<site>/public_html rather than at '
+                    . '~/public_html, so check the real one with pwd.'
+                : 'That is the DB_DATABASE value from .env. Check it against pwd on the '
+                    . 'server — a path that does not exist reads as an empty database, '
+                    . 'not as a bad path.';
+
+            $message = "SQLite database not found: {$sqliteFile}. {$detail}";
+
+            /* Logged as well as thrown: APP_DEBUG=false turns display_errors
+               off, which is right for production and would otherwise leave
+               this diagnosis nowhere to be read. */
+            error_log('[Vayu] ' . $message);
+
+            throw new RuntimeException($message);
+        }
+
         if (!is_dir($directory)) {
+            if (!$creatingIsAllowed) {
+                $message = "SQLite directory not found: {$directory}. "
+                    . 'Create it and make it writable by PHP before deploying.';
+
+                error_log('[Vayu] ' . $message);
+
+                throw new RuntimeException($message);
+            }
+
             mkdir($directory, 0755, true);
         }
 
         $pdo = new PDO('sqlite:' . $sqliteFile, null, null, $pdoOptions);
+
+        /**
+         * SQLite needs to write beside the database, not only to it: the -wal
+         * and -shm files live in the same directory. A directory that is
+         * readable but not writable therefore fails on the first save in the
+         * panel rather than here, with "attempt to write a readonly database"
+         * against a file that is plainly writable.
+         */
+        if (!$creatingIsAllowed && !is_writable($directory)) {
+            error_log("[Vayu] SQLite directory is not writable: {$directory}. "
+                . 'Reads will work and every write will fail.');
+        }
 
         /* Off by default in SQLite, which means a stale doctor_id in
            department_doctors would sit there unnoticed until a page rendered

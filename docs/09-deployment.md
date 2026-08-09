@@ -12,7 +12,7 @@ git push origin main
     ↓
 hPanel → site Dashboard → Advanced → Git → Deploy
     ↓
-files in ~/public_html are now what main says
+files in the site's public_html are now what main says
 ```
 
 That is all it does. hPanel's Deploy button is `git fetch` followed by a reset
@@ -50,23 +50,44 @@ same commit.
 Leave Auto Deployment alone. The repository row's **Deploy** button is the
 whole mechanism.
 
-**3. Make a home for the database, outside the document root.** Over SSH or the
-File Manager, beside `public_html` rather than inside it:
+**3. Find out where the site actually is.** Hostinger does not put every
+account's site in the same place. It may be at `~/public_html`, or nested per
+domain:
 
 ```
-mkdir -p ~/data
-chmod 750 ~/data
+/home/uNNNNNNNNN/domains/example.hostingersite.com/public_html
 ```
 
-`public_html` is served; `~/data` is not, and no amount of `.htaccess` going
-missing changes that. The **directory** has to be writable by PHP, not just the
-file — SQLite writes `-wal` and `-shm` files alongside the database, and a
-read-only directory fails every write with "attempt to write a readonly
-database" even when the database file itself is writable.
+Do not guess, and do not copy the path out of this document. Over SSH:
 
-**4. Paste `.env` into `~/public_html/`.** File Manager, or scp. It is not in
-git and never will be, so no deploy can overwrite it — paste it once and it
-stays put.
+```bash
+pwd                     # from the home directory: /home/uNNNNNNNNN
+ls ~/domains            # empty on a flat account, a directory per site otherwise
+```
+
+Every absolute path below is written against `/home/uNNNNNNNNN` — substitute
+the real one. A path that is merely *plausible* is the failure this whole
+section exists to prevent; see step 5.
+
+**4. Make a home for the database, outside the document root.**
+
+```bash
+mkdir -p /home/uNNNNNNNNN/data
+chmod 750 /home/uNNNNNNNNN/data
+```
+
+Beside `public_html` rather than inside it, and at the account root rather than
+inside `domains/`, so it stays put if the domain is renamed. `public_html` is
+served; this is not, and no amount of `.htaccess` going missing changes that.
+
+The **directory** has to be writable by PHP, not just the file — SQLite writes
+`-wal` and `-shm` files alongside the database, and a read-only directory fails
+every write with "attempt to write a readonly database" even when the database
+file itself is plainly writable.
+
+**5. Paste `.env` into the `public_html` you found in step 3.** File Manager,
+or scp. It is not in git and never will be, so no deploy can overwrite it —
+paste it once and it stays put.
 
 Copy `.env.example` and change the keys that differ in production:
 
@@ -76,37 +97,52 @@ APP_DEBUG=false
 APP_URL=https://teresamemorial.org
 
 DB_TYPE=sqlite
-DB_DATABASE=/home/uXXXXXXXX/data/database.sqlite
+DB_DATABASE=/home/uNNNNNNNNN/data/database.sqlite
 
 APP_KEY=<php -r "echo bin2hex(random_bytes(32));">
 JWT_SECRET=<a different one>
 ```
 
-Substitute the real home directory for `/home/uXXXXXXXX` — `pwd` over SSH, or
-read it off the File Manager.
-
 Two of those are worth saying plainly:
 
-- `APP_DEBUG=false`, or a fatal prints the file path and the failing query to
-  whoever triggered it.
-- `DB_DATABASE` set. Left empty, `config/db.php` falls back to
-  `database/database.sqlite`, which after a deploy means inside `public_html`.
+- `APP_DEBUG=false`. With it on, a fatal prints the absolute server paths and
+  the failing query to whoever loaded the page.
+- `DB_DATABASE` set, and set to a path that exists. Left empty, `config/db.php`
+  falls back to `database/database.sqlite`, which after a deploy means inside
+  `public_html`.
 
-**5. Put the database in place.** The simplest route, and the one that matches
-the rest of this: upload your local `database/database.sqlite` into `~/data/`
-through the File Manager. It already has the schema and the seeded content, so
-there is nothing to migrate and nothing to seed.
+**6. Put the database in place.** The simplest route, and the one that matches
+the rest of this: upload your local `database/database.sqlite` into
+`/home/uNNNNNNNNN/data/` through the File Manager. It already has the schema
+and the seeded content, so there is nothing to migrate and nothing to seed.
 
 With SSH available, the equivalent from scratch is:
 
 ```bash
-cd ~/public_html && php vayu migrate && php vayu seed
+cd <the public_html from step 3> && php vayu migrate && php vayu seed
 ```
 
 **Run `seed` exactly once, on an empty database.** It empties every seeded
 table before it loads `database/seeds/*.json`. Against a database with real
 content in it, it deletes that content, and the `redirects.hits` counters with
 it.
+
+### When the path is wrong
+
+Worth knowing what this looks like, because SQLite hides it. `new PDO('sqlite:'
+. $path)` on a path that does not exist **creates** the file and connects to
+it. No error, no warning — an empty database that answers every query with "no
+such table: pages", which reads like a broken migration and is really a typo in
+`DB_DATABASE`.
+
+`config/db.php` refuses that now: over HTTP a missing file is a hard error
+naming the path it looked for. The CLI is exempt, because creating the file is
+what `php vayu migrate` is *for*.
+
+If you hit it before the guard existed, look for a 0-byte `database.sqlite` —
+at the `DB_DATABASE` path, or in `public_html/database/` when `DB_DATABASE` was
+empty. That is the file being read. Delete it and put the real one where `.env`
+says.
 
 ## Every deploy after that
 
@@ -117,7 +153,7 @@ server performs.** New code will query a table that does not exist yet, and the
 page fatals. There is no automatic path for this: run
 
 ```bash
-cd ~/public_html && php vayu migrate
+cd <the public_html from step 3> && php vayu migrate
 ```
 
 over SSH after pressing Deploy. Without SSH, there is currently no way to apply
@@ -149,7 +185,7 @@ content backup.
 
 ```bash
 # crontab -e, daily
-0 3 * * * sqlite3 /home/uXXXXXXXX/data/database.sqlite ".backup '/home/uXXXXXXXX/backups/db-$(date +\%F).sqlite'"
+0 3 * * * sqlite3 /home/uNNNNNNNNN/data/database.sqlite ".backup '/home/uNNNNNNNNN/backups/db-$(date +\%F).sqlite'"
 ```
 
 `.backup` rather than `cp`: copying a live SQLite file mid-write gives a
