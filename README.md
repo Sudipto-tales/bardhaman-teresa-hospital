@@ -23,7 +23,7 @@ vayu             the CLI
 
 | Branch | What is on it |
 |---|---|
-| `main` | the state before the PHP conversion started |
+| `main` | production — a push here deploys to the live site |
 | `design/html` | the frozen, signed-off design set — the HTML/CSS/JS prototype and its generators |
 | `development` | the PHP application |
 
@@ -44,6 +44,18 @@ php vayu run        # dev server
 first**, so it is for a fresh install only — running it against real content
 destroys that content, and the `redirects.hits` counters with it. A deploy is
 `php vayu migrate` and nothing else.
+
+## Deploying
+
+Push to `main`, then press Deploy in hPanel → Advanced → Git. That is the whole
+deploy: it copies the branch into `public_html` and runs nothing afterwards,
+which is why `vendor/` is committed and why a push that adds a migration still
+needs `php vayu migrate` run over SSH. The database is SQLite and lives outside
+the document root; `.env` is pasted onto the server once and no deploy touches
+it.
+
+[`docs/09-deployment.md`](docs/09-deployment.md) is the procedure — the server
+`.env`, where the database goes, and the backup cron that is not optional.
 
 ## URLs
 

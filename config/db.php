@@ -35,6 +35,25 @@ switch ($db_type) {
            department_doctors would sit there unnoticed until a page rendered
            a blank card. */
         $pdo->exec('PRAGMA foreign_keys = ON');
+
+        /* SQLite takes a lock over the whole database to write, not over the
+           row. In the default rollback-journal mode that lock also shuts out
+           readers, so one admin saving a post is enough to stall a visitor
+           loading the home page. WAL lets readers carry on against the last
+           committed state while the write lands. */
+        $pdo->exec('PRAGMA journal_mode = WAL');
+
+        /* And when two writes really do collide, wait rather than fail.
+           Without this the second one returns SQLITE_BUSY immediately —
+           "database is locked" on an otherwise ordinary save. */
+        $pdo->exec('PRAGMA busy_timeout = 5000');
+
+        /* fsync on every commit is the default and is what makes SQLite
+           survive a power cut; NORMAL under WAL survives a process crash but
+           not the machine losing power, and is roughly an order of magnitude
+           faster on the shared hosting this runs on. The content here is
+           recoverable from a backup, so that is the trade taken. */
+        $pdo->exec('PRAGMA synchronous = NORMAL');
         break;
 
     case 'mysql':

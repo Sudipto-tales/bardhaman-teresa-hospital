@@ -17,13 +17,40 @@ RewriteRule ^composer\.(json|lock)$ - [F,L]
 RewriteRule ^\.env - [F,L]
 RewriteRule ^(storage|database|config|core|app|api|vendor|tools|docs)/ - [F,L]
 
+# The deploy is a git checkout into the document root, so .git/ is really
+# there. /.git/config names the remote and /.git/ORIG_HEAD plus the pack
+# files reconstruct the whole source tree, .env history included.
+RewriteRule ^\.git - [F,L]
+RewriteRule ^\.github/ - [F,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
 
 # Belt and braces: if mod_rewrite is off, the rules above do nothing at all,
 # and these directives still refuse the same files.
-<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|vayu|server\.php)$">
+<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|vayu|server\.php|README\.md)$">
+    Require all denied
+</FilesMatch>
+
+# Apache's own stock config denies .ht* already. That is the stock config, not
+# a guarantee about this host — and assets/uploads/ ships its own .htaccess,
+# whose contents describe exactly what it is defending against.
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+
+# Same reasoning as the rewrite above, for the case where mod_rewrite is off.
+# RedirectMatch rather than a <DirectoryMatch> block: .git is a directory and
+# FilesMatch does not match directories, and DirectoryMatch is not one of the
+# directives Apache permits in an .htaccess file at all — it belongs to the
+# server config, and putting it here is a 500 on every request.
+RedirectMatch 404 (?i)/\.git(/|$)
+
+# SQLite keeps -wal, -shm and -journal beside the database. If DB_DATABASE
+# was left at the default the rewrite above covers them; if someone points it
+# somewhere else inside the tree, this still does.
+<FilesMatch "\.(sqlite|sqlite3|db)(-wal|-shm|-journal)?$">
     Require all denied
 </FilesMatch>
 

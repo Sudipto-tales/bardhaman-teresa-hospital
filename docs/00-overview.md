@@ -83,3 +83,4 @@ that the rendered site is unchanged, then switch.
 | `06-design-tokens.md` | Colour, type, spacing, elevation, dark mode |
 | `07-api-contract.md` | Endpoints Phase 2 must implement |
 | `08-roadmap.md` | Build order and review gates |
+| `09-deployment.md` | Pushing to `main`, the server `.env`, SQLite in production, backups |

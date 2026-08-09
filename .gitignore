@@ -10,8 +10,12 @@ website.original.html
 # Secrets and machine-specific config. .env.example is the template.
 .env
 
-# Composer installs these; composer.json and composer.lock are committed.
-/vendor/
+# vendor/ IS committed, which is not the usual answer. Hostinger deploys by
+# copying the branch into public_html and running nothing afterwards — no
+# composer, no CLI. An ignored vendor/ means the deployed tree has no
+# PhpMailer, no Dotenv and no JWT, and every page fatals. Three small
+# libraries, 1.4 MB, pinned by composer.lock. Update them with
+# `composer update` locally and commit the result like any other change.
 composer.phar
 
 # The development database. Rebuild it with:
