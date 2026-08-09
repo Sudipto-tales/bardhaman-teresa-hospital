@@ -50,43 +50,8 @@ same commit.
 Leave Auto Deployment alone. The repository row's **Deploy** button is the
 whole mechanism.
 
-**3. Find out where the site actually is.** Hostinger does not put every
-account's site in the same place. It may be at `~/public_html`, or nested per
-domain:
-
-```
-/home/uNNNNNNNNN/domains/example.hostingersite.com/public_html
-```
-
-Do not guess, and do not copy the path out of this document. Over SSH:
-
-```bash
-pwd                     # from the home directory: /home/uNNNNNNNNN
-ls ~/domains            # empty on a flat account, a directory per site otherwise
-```
-
-Every absolute path below is written against `/home/uNNNNNNNNN` — substitute
-the real one. A path that is merely *plausible* is the failure this whole
-section exists to prevent; see step 5.
-
-**4. Make a home for the database, outside the document root.**
-
-```bash
-mkdir -p /home/uNNNNNNNNN/data
-chmod 750 /home/uNNNNNNNNN/data
-```
-
-Beside `public_html` rather than inside it, and at the account root rather than
-inside `domains/`, so it stays put if the domain is renamed. `public_html` is
-served; this is not, and no amount of `.htaccess` going missing changes that.
-
-The **directory** has to be writable by PHP, not just the file — SQLite writes
-`-wal` and `-shm` files alongside the database, and a read-only directory fails
-every write with "attempt to write a readonly database" even when the database
-file itself is plainly writable.
-
-**5. Paste `.env` into the `public_html` you found in step 3.** File Manager,
-or scp. It is not in git and never will be, so no deploy can overwrite it —
+**3. Paste `.env` into `public_html`** — through the File Manager, next to
+`index.php`. It is not in git and never will be, so no deploy can overwrite it:
 paste it once and it stays put.
 
 Copy `.env.example` and change the keys that differ in production:
@@ -97,35 +62,61 @@ APP_DEBUG=false
 APP_URL=https://teresamemorial.org
 
 DB_TYPE=sqlite
-DB_DATABASE=/home/uNNNNNNNNN/data/database.sqlite
+DB_DATABASE=
 
 APP_KEY=<php -r "echo bin2hex(random_bytes(32));">
 JWT_SECRET=<a different one>
 ```
 
-Two of those are worth saying plainly:
+Generate the two secrets on your own machine and paste the results in.
 
-- `APP_DEBUG=false`. With it on, a fatal prints the absolute server paths and
-  the failing query to whoever loaded the page.
-- `DB_DATABASE` set, and set to a path that exists. Left empty, `config/db.php`
-  falls back to `database/database.sqlite`, which after a deploy means inside
-  `public_html`.
+`APP_DEBUG=false` matters: with it on, a fatal prints the absolute server paths
+and the failing query to whoever loaded the page.
 
-**6. Put the database in place.** The simplest route, and the one that matches
-the rest of this: upload your local `database/database.sqlite` into
-`/home/uNNNNNNNNN/data/` through the File Manager. It already has the schema
-and the seeded content, so there is nothing to migrate and nothing to seed.
+`DB_DATABASE` empty is deliberate here — see the next step.
 
-With SSH available, the equivalent from scratch is:
+**4. Upload the database.** Leaving `DB_DATABASE` empty puts it at the default
+path, inside the project:
+
+```
+<public_html>/database/database.sqlite
+```
+
+Upload your local `database/database.sqlite` there with the File Manager. It
+already holds the schema and the seeded content, so there is nothing to migrate
+and nothing to seed.
+
+Inside the document root is not where a database would ideally live, and it is
+the right answer on a plan with no shell — the alternatives all need one. Three
+things make it safe enough:
+
+- `.htaccess` refuses it twice over, by the `database/` rule and by the
+  `*.sqlite` rule that also covers the `-wal`, `-shm` and `-journal` siblings.
+  Both were checked under Apache with `AllowOverride All`: the path answers 403.
+- It is gitignored, so no deploy can overwrite it. That is also why the
+  database is **not** committed — a tracked database would be reset to the
+  repository's copy on every Deploy, discarding every enquiry and every panel
+  edit made since the last one.
+- `database/` is writable by PHP, being a deployed directory owned by the
+  account.
+
+If your plan does have SSH, put it outside the document root instead — set
+`DB_DATABASE=/home/uNNNNNNNNN/data/database.sqlite` against a directory you
+made with `mkdir -p ~/data && chmod 750 ~/data`, and build it in place with:
 
 ```bash
-cd <the public_html from step 3> && php vayu migrate && php vayu seed
+cd <public_html> && php vayu migrate && php vayu seed
 ```
 
 **Run `seed` exactly once, on an empty database.** It empties every seeded
 table before it loads `database/seeds/*.json`. Against a database with real
 content in it, it deletes that content, and the `redirects.hits` counters with
 it.
+
+Whichever path you choose, the **directory** has to be writable by PHP, not
+just the file — SQLite writes `-wal` and `-shm` files alongside the database,
+and a read-only directory fails every write with "attempt to write a readonly
+database" even when the database file itself is plainly writable.
 
 ### When the path is wrong
 
@@ -150,15 +141,17 @@ Push to `main`, press Deploy. Done — as long as the push added no migration.
 
 **A push that adds a file to `database/migrations/` needs a step nothing on the
 server performs.** New code will query a table that does not exist yet, and the
-page fatals. There is no automatic path for this: run
+page fatals.
 
-```bash
-cd <the public_html from step 3> && php vayu migrate
-```
+With SSH, that step is `cd <public_html> && php vayu migrate` after pressing
+Deploy.
 
-over SSH after pressing Deploy. Without SSH, there is currently no way to apply
-a migration to the live database — do not push schema changes to `main` until
-there is one.
+**Without SSH there is no way to apply a migration to the live database.** This
+is the standing limitation of the no-shell setup, not an oversight: do not push
+a schema change to `main` until there is a way to run it. Something has to fill
+that gap before the next one — a token-guarded migrate route is the usual
+answer, and the alternative is exporting the content, rebuilding the database
+locally and uploading it, which loses everything written in between.
 
 Re-uploading `database.sqlite` from your machine is **not** a substitute once
 the site is live. It replaces real content — enquiries, appointments, anything
@@ -170,7 +163,7 @@ the first deploy only.
 The reset is a git operation, so anything untracked or ignored survives it:
 
 - `.env` — ignored, never committed, pasted onto the server once
-- the SQLite database — outside `public_html` entirely
+- `database/database.sqlite` — ignored, uploaded once
 - `storage/uploads/`, `storage/cv/`, `assets/uploads/` — ignored
 - `storage/cache/` — ignored, rebuilt on demand
 
@@ -180,17 +173,29 @@ deploy. That is why those paths are ignored, not a side effect of it.
 ## Backups
 
 Nothing above backs anything up. A deploy cannot destroy the database, but a
-bad `seed` or a bad migration can, and the host's own snapshots are not a
-content backup.
+bad `seed`, a bad migration or a mistaken overwrite can, and the host's own
+snapshots are not a content backup.
+
+**Without a shell**, this is a recurring manual job: download
+`<public_html>/database/database.sqlite` and the contents of `storage/cv/`
+through the File Manager, on a schedule you actually keep. Put a reminder
+somewhere. It is the weakest part of this setup and the one most likely to
+matter.
+
+Download the `-wal` file alongside the database if one is present, or the copy
+may be missing the most recent writes — WAL keeps committed data in that file
+until a checkpoint folds it back in.
+
+**With a shell**, a cron does it properly:
 
 ```bash
 # crontab -e, daily
-0 3 * * * sqlite3 /home/uNNNNNNNNN/data/database.sqlite ".backup '/home/uNNNNNNNNN/backups/db-$(date +\%F).sqlite'"
+0 3 * * * sqlite3 <db path> ".backup '/home/uNNNNNNNNN/backups/db-$(date +\%F).sqlite'"
 ```
 
 `.backup` rather than `cp`: copying a live SQLite file mid-write gives a
-corrupt one, and under WAL it silently omits everything still sitting in the
-log. `storage/cv/` needs the same treatment — a CV is not in git either, and it
+corrupt one, and it reads a consistent snapshot without the WAL caveat above.
+`storage/cv/` needs the same treatment either way — a CV is not in git, and it
 is not regenerable.
 
 ## Why SQLite here, and where it stops

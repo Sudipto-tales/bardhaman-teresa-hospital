@@ -42,13 +42,14 @@ switch ($db_type) {
 
         if (!$creatingIsAllowed && !is_file($sqliteFile)) {
             $detail = $usingDefault
-                ? 'DB_DATABASE is empty, so this is the default path. In production it '
-                    . 'should be an absolute path outside the document root — the host '
-                    . 'may put the site under domains/<site>/public_html rather than at '
-                    . '~/public_html, so check the real one with pwd.'
-                : 'That is the DB_DATABASE value from .env. Check it against pwd on the '
-                    . 'server — a path that does not exist reads as an empty database, '
-                    . 'not as a bad path.';
+                ? 'DB_DATABASE is empty, so this is the default path — the one to '
+                    . 'upload the database to if the host gives no shell. Upload it to '
+                    . 'exactly this path; it is gitignored, so no deploy will overwrite '
+                    . 'it, and .htaccess already refuses it over HTTP.'
+                : 'That is the DB_DATABASE value from .env, and nothing is there. Note '
+                    . 'that a path which does not exist reads as an empty database '
+                    . 'rather than as a bad path, so check this one character by '
+                    . 'character against where the file actually is.';
 
             $message = "SQLite database not found: {$sqliteFile}. {$detail}";
 
@@ -112,7 +113,9 @@ switch ($db_type) {
                     . 'The file exists but no migration has ever run against it, which means '
                     . 'it is the empty one PDO created rather than the database you meant. '
                     . 'Either the upload has not happened, or it landed somewhere other than '
-                    . 'this path. Replace it, or run `php vayu migrate` over SSH.';
+                    . 'this path — an upload two directories away leaves exactly this. '
+                    . 'Overwrite this file with the real one, or run `php vayu migrate` if '
+                    . 'the host gives you a shell.';
 
                 error_log('[Vayu] ' . $message);
 
