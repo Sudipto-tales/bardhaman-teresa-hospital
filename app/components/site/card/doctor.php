@@ -48,6 +48,41 @@ $initial = mb_strtoupper(mb_substr($bare !== '' ? $bare : $name, 0, 1));
 $enabled = $doctor['appointmentEnabled'] ?? $doctor['appointment_enabled'] ?? $doctor['appt'] ?? true;
 $canBook = $slug !== '' && !in_array($enabled, [false, 0, '0', '', null], true);
 $appointment = $href ?? (base_url('contact') . '?doctor=' . rawurlencode($slug) . '#book');
+
+/* Filter hooks for the doctors page. Every card carries them — they are inert
+   markup anywhere else — so the listing filters what is already on the page
+   rather than asking the server for a narrower set. See assets/pages.js
+   §initDoctorFilter. */
+/* `departments` is an array of slugs, not of rows — see doctors_hydrate() —
+   and the names for them come from the one label map the request already
+   built. A row from a static source may still arrive as an array. */
+$departmentSlugs = array_values(array_filter(array_map(
+    static fn ($row) => is_array($row) ? (string) ($row['slug'] ?? $row['id'] ?? '') : (string) $row,
+    $doctor['departments'] ?? []
+)));
+$departmentLabels = function_exists('model_label_map') ? model_label_map('departments') : [];
+$departmentNames = implode(', ', array_map(
+    static fn ($slug) => $departmentLabels[$slug] ?? $slug, $departmentSlugs
+));
+$degrees = function_exists('doctor_degrees')
+    ? doctor_degrees($doctor['qualification'] ?? $doctor['qual'] ?? '')
+    : [];
+
+/* One lowercased haystack rather than four attributes the script would have to
+   join on every keystroke. Name, role, speciality, qualification, departments —
+   "cardio" finds the department, the surgeon and the cardiologist alike. */
+$haystack = mb_strtolower(trim(implode(' ', array_filter([
+    $name,
+    $role,
+    (string) ($doctor['speciality'] ?? $doctor['specialty'] ?? ''),
+    (string) ($doctor['qualification'] ?? $doctor['qual'] ?? ''),
+    $departmentNames,
+]))));
+
+$hooks = ' data-doc data-search="' . e($haystack) . '"'
+    . ' data-dept="' . e(implode(' ', $departmentSlugs)) . '"'
+    . ' data-degree="' . e(implode(' ', $degrees)) . '"'
+    . ' data-book="' . ($canBook ? '1' : '0') . '"';
 ?>
 <?php if ($variant === 'carousel'): ?>
                     <div class="doc__card" data-specialty="<?= e($doctor['specialty'] ?? $doctor['speciality'] ?? '') ?>">
@@ -75,7 +110,7 @@ $appointment = $href ?? (base_url('contact') . '?doctor=' . rawurlencode($slug) 
                         </div>
                     </div>
 <?php else: ?>
-                    <article class="pg-doc">
+                    <article class="pg-doc"<?= $hooks ?>>
                         <div class="pg-doc__img img-stretch">
 <?php if ($photo !== ''): ?>
                             <img src="<?= e($photo) ?>" alt="<?= e($name) ?>" loading="lazy">

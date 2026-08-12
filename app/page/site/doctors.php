@@ -38,6 +38,7 @@
     'eyebrow' => 'Our Doctors',
     'title' => 'Consultants Across <strong>Every Department</strong>',
     'doctors' => $doctors,
+    'filter' => true,
 ]); ?>
 
 <?php App::render('site/block/conditions', [

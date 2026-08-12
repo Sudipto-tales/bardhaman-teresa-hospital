@@ -683,6 +683,303 @@
     text-decoration: underline;
 }
 
+/* On a phone the 260px track ceiling left a card narrower than the column it
+   sat in, with dead gutters either side of it. One full-width card per row
+   instead — same card, the size the screen actually has. The photo loses a
+   little height so the whole card still fits a fold. */
+@media (max-width: 560px) {
+    .pg-team {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .pg-doc__img img,
+    .doc-mono--tall {
+        aspect-ratio: 4 / 3.6;
+    }
+
+    .pg-doc__body {
+        padding: 16px 18px 20px;
+    }
+}
+
+/* --- 7b. DOCTOR FINDER (doctors index only) ---------------
+   Search field over a row of filter pills, each pill a menu whose options and
+   counts are built from the rows on the page. The grid below is filtered in
+   place — nothing here reloads the page — so a card that leaves the results is
+   display:none rather than removed, and comes back the moment the query
+   loosens. */
+.dfind {
+    display: grid;
+    gap: 14px;
+    width: min(100%, 980px);
+    margin: clamp(22px, 3vw, 34px) auto 0;
+}
+
+.dfind__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    box-shadow: var(--sh-sm);
+    transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.dfind__search:focus-within {
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 4px rgba(193, 39, 45, .1);
+}
+
+.dfind__icon {
+    color: var(--ink-mute);
+}
+
+.dfind__input {
+    flex: 1;
+    min-width: 0;
+    height: 56px;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+}
+
+.dfind__input:focus {
+    outline: none;
+}
+
+/* Safari draws its own × inside type=search, on top of ours. */
+.dfind__input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.dfind__clear {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--line);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background .25s var(--ease), color .25s var(--ease);
+}
+
+.dfind__clear:hover {
+    background: var(--crimson);
+    color: #fff;
+}
+
+.dfind__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.dfind__sel {
+    position: relative;
+}
+
+.dfind__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.dfind__pill > i {
+    color: var(--crimson);
+    font-size: .9rem;
+}
+
+.dfind__pill-txt {
+    display: grid;
+    text-align: left;
+}
+
+.dfind__pill-key {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.dfind__pill-val {
+    font-size: .9rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.dfind__chev {
+    font-size: .7rem;
+    color: var(--ink-mute);
+    transition: transform .3s var(--ease);
+}
+
+.dfind__sel.is-open .dfind__pill,
+.dfind__sel.is-set .dfind__pill {
+    border-color: var(--crimson);
+}
+
+.dfind__sel.is-set .dfind__pill-val {
+    color: var(--crimson);
+}
+
+.dfind__sel.is-open .dfind__chev {
+    transform: rotate(180deg);
+}
+
+.dfind__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 40;
+    display: none;
+    width: max-content;
+    min-width: 240px;
+    max-width: min(320px, 86vw);
+    max-height: 320px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--sh-lg);
+}
+
+.dfind__sel.is-open .dfind__menu {
+    display: block;
+}
+
+.dfind__menu button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: .9rem;
+    text-align: left;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .2s var(--ease), color .2s var(--ease);
+}
+
+.dfind__menu button:hover {
+    background: var(--line);
+}
+
+.dfind__menu button.is-on {
+    color: var(--crimson);
+    font-weight: 700;
+}
+
+.dfind__menu button span {
+    flex: 0 0 auto;
+    font-size: .72rem;
+    color: var(--ink-mute);
+}
+
+.dfind__reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 9px 14px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: color .25s var(--ease);
+}
+
+.dfind__reset:hover {
+    color: var(--crimson);
+}
+
+.dfind__count {
+    font-size: var(--fs-sm);
+    color: var(--ink-mute);
+}
+
+.dfind__count strong {
+    color: var(--ink);
+}
+
+.dfind__empty {
+    margin-top: 28px;
+    text-align: center;
+    color: var(--ink-soft);
+}
+
+.dfind__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(24px, 3vw, 36px);
+}
+
+/* Filtered out, not removed — the card is still in the grid and comes back
+   without a re-render when the query loosens. */
+.pg-doc.is-out {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    /* Full-width pills, so a menu anchored to one can never open off the right
+       edge of the screen. */
+    .dfind__sel {
+        flex: 1 1 100%;
+    }
+
+    .dfind__pill {
+        width: 100%;
+    }
+
+    .dfind__pill-txt {
+        flex: 1;
+    }
+
+    .dfind__menu {
+        left: 0;
+        right: 0;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .dfind__reset {
+        margin: 0 auto;
+    }
+
+    .dfind__count {
+        text-align: center;
+    }
+}
+
 /* ---------------------------------------------------------
    8. CTA STRIP
    --------------------------------------------------------- */
@@ -2447,43 +2744,78 @@ a.pg-tag:hover {
    than restyled, because a second chip shape on the same site
    would only be the first one drifting.
    --------------------------------------------------------- */
-.gal-tags {
-    justify-content: center;
+.gal-filter {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
     margin-top: clamp(20px, 2.4vw, 32px);
 }
 
+.gal-tags {
+    justify-content: center;
+    margin-top: 0;
+}
+
+/* The count beside a media-type chip. Small and quiet: it tells you how much
+   is behind the chip, it is not part of its name. */
+.gal-tags .pg-tag span {
+    margin-left: 6px;
+    opacity: .6;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+}
+
+.gal-tags--album .pg-tag {
+    font-size: var(--fs-sm);
+}
+
+/* --- the mosaic ---
+   Four columns of equal width and rows of one fixed height, so a tile is
+   whole cells and never a fraction of one. initGallery() gives each visible
+   tile its --w / --h out of a repeating six-tile pattern whose spans add up
+   to a full band, which is what leaves no hole to fill. The 2px is a seam,
+   not a gap: it keeps two photographs from bleeding into each other while
+   the block still reads as one surface. */
 .gal-grid {
+    --gal-cols: 4;
+    --gal-row: clamp(112px, 12.6vw, 186px);
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
-    gap: var(--sp-gap);
+    grid-template-columns: repeat(var(--gal-cols), minmax(0, 1fr));
+    grid-auto-rows: var(--gal-row);
+    grid-auto-flow: dense;
+    gap: 2px;
     margin-top: clamp(24px, 3vw, 40px);
+    padding: 2px;
+    border-radius: var(--r-lg);
+    background: var(--line-soft);
+    overflow: hidden;
 }
 
 /* A <button>, so every one of these is a reset */
 .gal-tile {
-    display: grid;
-    gap: 0;
+    position: relative;
+    grid-column: span var(--w, 1);
+    grid-row: span var(--h, 1);
+    display: block;
     padding: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--r-card);
-    background: var(--surface);
+    border: 0;
+    background: var(--surface-alt);
     overflow: hidden;
     text-align: left;
     font: inherit;
     color: inherit;
     cursor: pointer;
-    transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
 }
 
-.gal-tile:hover,
 .gal-tile:focus-visible {
-    transform: translateY(-6px);
-    border-color: transparent;
-    box-shadow: var(--sh-lg);
+    outline: 3px solid var(--crimson);
+    outline-offset: -3px;
+    z-index: 2;
 }
 
 .gal-tile__frame {
-    position: relative;
+    position: absolute;
+    inset: 0;
     display: block;
     overflow: hidden;
     background: var(--surface-alt);
@@ -2492,13 +2824,73 @@ a.pg-tag:hover {
 .gal-tile__frame img {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: 100%;
     object-fit: cover;
-    transition: transform .6s var(--ease);
+    transition: transform .7s var(--ease);
 }
 
-.gal-tile:hover .gal-tile__frame img {
-    transform: scale(1.06);
+.gal-tile:hover .gal-tile__frame img,
+.gal-tile:focus-visible .gal-tile__frame img {
+    transform: scale(1.07);
+}
+
+/* The title, over the picture and only while it is wanted. */
+.gal-tile__cap {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: grid;
+    gap: 3px;
+    padding: 40px 16px 14px;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(12, 31, 62, 0), rgba(12, 31, 62, .88));
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+
+.gal-tile:hover .gal-tile__cap,
+.gal-tile:focus-visible .gal-tile__cap {
+    opacity: 1;
+    transform: none;
+}
+
+.gal-tile__cap strong {
+    font-family: var(--font-head);
+    font-size: .98rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.gal-tile__cap span {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: var(--fs-xs);
+    line-height: 1.45;
+    color: rgba(255, 255, 255, .82);
+}
+
+/* A tile a finger cannot hover is a tile with no title at all, so on touch
+   the caption is simply there. */
+@media (hover: none) {
+    .gal-tile__cap {
+        opacity: 1;
+        transform: none;
+        padding-top: 30px;
+    }
+
+    .gal-tile__cap span {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .gal-grid {
+        --gal-cols: 2;
+        --gal-row: clamp(104px, 29vw, 156px);
+        border-radius: var(--r-card);
+    }
 }
 
 /* Sits over the poster on video and YouTube rows — the one thing that says
@@ -2545,23 +2937,200 @@ a.pg-tag:hover {
     backdrop-filter: blur(6px);
 }
 
-.gal-tile__txt {
+/* --- the channel rail ---
+   Two identical runs of the same cards inside a track twice their width; the
+   animation carries it exactly one run and starts again, so the loop has no
+   seam and nothing is measured in JavaScript. The cards carry their gap as a
+   right margin rather than the track carrying it as `gap`, because a gap is
+   one short on the last card and that missing 18px is exactly the jump you
+   would see once a minute. */
+.gal-yt {
+    padding-top: 0;
+}
+
+.gal-yt__head {
     display: grid;
-    gap: 4px;
-    padding: 16px 18px 18px;
+    justify-items: center;
+    gap: 8px;
+    text-align: center;
 }
 
-.gal-tile__txt strong {
+.gal-yt__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
     font-family: var(--font-head);
-    font-size: 1.02rem;
-    font-weight: 700;
-    color: var(--ink);
+    font-size: var(--fs-h2);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--navy);
 }
 
-.gal-tile__txt span {
-    font-size: var(--fs-sm);
-    line-height: 1.5;
+.gal-yt__title .fa-youtube {
+    color: #ff0033;
+}
+
+.gal-yt__arrow {
+    font-size: .7em;
+    color: var(--crimson);
+    transition: transform .3s var(--ease);
+}
+
+a.gal-yt__title:hover .gal-yt__arrow {
+    transform: translateX(7px);
+}
+
+.gal-yt__sub {
+    max-width: 58ch;
     color: var(--ink-soft);
+}
+
+.gal-yt__rail {
+    margin-top: clamp(16px, 2.2vw, 28px);
+    /* room for the card's lift and its shadow, which `overflow: hidden`
+       would otherwise shave off */
+    padding: 12px 0 20px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.gal-yt__track {
+    display: flex;
+    width: max-content;
+    animation: yt-drift var(--yt-time, 60s) linear infinite;
+}
+
+/* Left to right: the run starts one width back and arrives at nought. */
+@keyframes yt-drift {
+    from {
+        transform: translate3d(-50%, 0, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.gal-yt__rail:hover .gal-yt__track,
+.gal-yt__rail:focus-within .gal-yt__track {
+    animation-play-state: paused;
+}
+
+.yt-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(228px, 23vw, 316px);
+    aspect-ratio: 16 / 9;
+    margin-right: 18px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-card);
+    background: var(--navy);
+    overflow: hidden;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    box-shadow: var(--sh-sm);
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+
+.yt-card:hover,
+.yt-card:focus-visible {
+    transform: translateY(-5px);
+    box-shadow: var(--sh-lg);
+}
+
+.yt-card:focus-visible {
+    outline: 3px solid var(--crimson);
+    outline-offset: 2px;
+}
+
+.yt-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s var(--ease);
+}
+
+.yt-card:hover img {
+    transform: scale(1.06);
+}
+
+.yt-card__play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(12, 31, 62, .05), rgba(12, 31, 62, .34));
+}
+
+.yt-card__play i {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    padding-left: 4px;
+    border-radius: 50%;
+    background: var(--crimson);
+    box-shadow: 0 10px 26px rgba(18, 41, 79, .4);
+    font-size: 1rem;
+    transition: transform .4s var(--ease);
+}
+
+.yt-card:hover .yt-card__play i {
+    transform: scale(1.1);
+}
+
+/* Nothing is written on a card until it is hovered or focused. */
+.yt-card__title {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding: 34px 14px 13px;
+    background: linear-gradient(180deg, rgba(12, 31, 62, 0), rgba(12, 31, 62, .9));
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: .93rem;
+    font-weight: 700;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+
+.yt-card:hover .yt-card__title,
+.yt-card:focus-visible .yt-card__title {
+    opacity: 1;
+    transform: none;
+}
+
+@media (hover: none) {
+    .yt-card__title {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Motion off: the rail stops where it is and becomes a thing you push. */
+@media (prefers-reduced-motion: reduce) {
+    .gal-yt__track {
+        animation: none;
+    }
+
+    .gal-yt__rail {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+    }
+
+    .yt-card {
+        scroll-snap-align: start;
+    }
 }
 
 .gal-empty,
@@ -2917,19 +3486,320 @@ body.lb-open {
    target: drop the chrome and everything that is navigation
    rather than content.
    --------------------------------------------------------- */
+/* ---------------------------------------------------------
+   SHARE SHEET
+   Built by initPostHero() on first use and appended to <body>,
+   so it sits above the dock and the popups. Centred dialog on
+   a desktop, bottom sheet on a phone — the same markup.
+   --------------------------------------------------------- */
+.share-sheet {
+    position: fixed;
+    inset: 0;
+    /* over the cookie bar (1300) and the brand rail (1200); the ads
+       popup at 1400 stays on top, since it is modal on arrival */
+    z-index: 1350;
+    display: grid;
+    place-items: center;
+    padding: clamp(12px, 3vw, 40px);
+}
+
+.share-sheet[hidden] {
+    display: none;
+}
+
+.share-sheet__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 18, 36, .55);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity .22s var(--ease);
+}
+
+.share-sheet.is-open .share-sheet__scrim {
+    opacity: 1;
+}
+
+.share-sheet__panel {
+    position: relative;
+    width: min(460px, 100%);
+    display: grid;
+    gap: 16px;
+    padding: clamp(18px, 2.4vw, 26px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    box-shadow: var(--sh-lg);
+    opacity: 0;
+    transform: translateY(14px) scale(.98);
+    transition: opacity .22s var(--ease), transform .28s var(--ease);
+}
+
+.share-sheet.is-open .share-sheet__panel {
+    opacity: 1;
+    transform: none;
+}
+
+.share-sheet__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.share-sheet__head h3 {
+    font-family: var(--font-head);
+    font-size: var(--fs-h4);
+    color: var(--ink);
+}
+
+.share-sheet__x {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background .25s var(--ease), color .25s var(--ease);
+}
+
+.share-sheet__x:hover {
+    background: var(--ink);
+    color: #fff;
+}
+
+.share-sheet__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.share-sheet__net {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 14px 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-align: center;
+    transition: transform .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.share-sheet__net:hover {
+    transform: translateY(-3px);
+    border-color: transparent;
+    box-shadow: var(--sh-md);
+}
+
+.share-sheet__ic {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-pill);
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--ink);
+}
+
+/* each network keeps its own colour: the icon is the only thing
+   people actually scan for in a sheet this size */
+.share-sheet__net--whatsapp .share-sheet__ic {
+    background: #25D366;
+}
+
+.share-sheet__net--facebook .share-sheet__ic {
+    background: #1877F2;
+}
+
+.share-sheet__net--x .share-sheet__ic {
+    background: #14171A;
+}
+
+.share-sheet__net--linkedin .share-sheet__ic {
+    background: #0A66C2;
+}
+
+.share-sheet__net--telegram .share-sheet__ic {
+    background: #229ED9;
+}
+
+.share-sheet__net--email .share-sheet__ic {
+    background: var(--grad-cta);
+}
+
+.share-sheet__copy {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.share-sheet__copy input {
+    flex: 1;
+    min-width: 0;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+}
+
+.share-sheet__copy button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: var(--grad-cta);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--sh-action);
+}
+
+.share-sheet__more {
+    padding: 11px;
+    border: 1px dashed var(--line);
+    border-radius: var(--r-sm);
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+
+body.is-share-open {
+    overflow: hidden;
+}
+
+@media (max-width: 560px) {
+
+    /* a phone gets the platform idiom: the panel rises from the
+       bottom edge and spans the full width */
+    .share-sheet {
+        align-items: end;
+        padding: 0;
+    }
+
+    .share-sheet__panel {
+        width: 100%;
+        border-radius: var(--r-lg) var(--r-lg) 0 0;
+        transform: translateY(100%);
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+
+    .share-sheet__copy {
+        flex-direction: column;
+    }
+
+    .share-sheet__copy input {
+        padding: 12px;
+    }
+
+    .share-sheet__copy button {
+        justify-content: center;
+    }
+}
+
+/* the print stamp is markup on every article page and has to stay
+   off the screen until paper asks for it */
+.post-print-mark {
+    display: none;
+}
+
 @media print {
 
     .topbar,
     .brand-rail,
     .nav-shell,
+    .mobile-menu,
     .pg-spy,
-    .pg-dock,
+    .dock,
+    .to-top,
+    .prefooter,
+    .ft__bottom,
     .site-footer,
     .post-hero__side,
+    .post-hero__card .pg-crumb,
+    .pg-post__byline img,
     .post-related,
     .pg-cta,
-    .pg-post__aside {
+    .pg-post__aside,
+    .pop-ad,
+    .pop-cookie,
+    .share-sheet,
+    .share-sheet__scrim {
         display: none !important;
+    }
+
+    /* the sheet is the article and its photo; the shell around them
+       carried colour and shadow that only cost ink */
+    .pg-post,
+    .pg-section > .pg-wrap {
+        display: block !important;
+        max-width: none;
+    }
+
+    .post-print-mark {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 26px;
+        padding-top: 12px;
+        border-top: 1px solid #d8d8d8;
+        break-inside: avoid;
+        text-align: right;
+    }
+
+    .post-print-mark img {
+        width: 46px;
+        height: auto;
+    }
+
+    .post-print-mark__txt {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+    }
+
+    .post-print-mark__txt strong {
+        font-size: 12pt;
+    }
+
+    .post-print-mark__txt span {
+        font-size: 9pt;
+        color: #666;
+    }
+
+    /* the same mark, ghosted behind the body copy: browsers repeat a
+       fixed box on every sheet, which is what a watermark wants */
+    .pg-post__body {
+        position: relative;
+    }
+
+    .pg-post__body::before {
+        content: '';
+        position: fixed;
+        inset: 38% 0 auto 0;
+        height: 260px;
+        background: url('logo-teresa.png') center / contain no-repeat;
+        opacity: .06;
+        z-index: -1;
+        pointer-events: none;
     }
 
     .post-hero__media {

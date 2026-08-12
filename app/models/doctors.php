@@ -84,6 +84,34 @@ function doctors_leadership(int $limit = 0): array
 }
 
 /**
+ * The degree tokens inside a qualification line, for the doctors page filter.
+ *
+ * A whitelist rather than a split on the commas: the column also carries
+ * fellowships and teaching posts — "Fellowship in Spine Surgery", "Asst
+ * Professor in Medinipore Medical College" — which are not degrees and would
+ * each become a filter option matching exactly one doctor.
+ *
+ * Matching is word-bounded, so MS does not fire on MSc and MD does not fire on
+ * MDS.
+ */
+function doctor_degrees(?string $qualification): array
+{
+    $qualification = (string) $qualification;
+    if ($qualification === '') {
+        return [];
+    }
+
+    $found = [];
+    foreach (['MBBS', 'MD', 'MS', 'MCh', 'DM', 'DNB', 'MDS', 'MPT', 'MSc', 'PhD', 'DGO', 'DCH', 'FRCP'] as $degree) {
+        if (preg_match('/\b' . preg_quote($degree, '/') . '\b/i', $qualification)) {
+            $found[] = $degree;
+        }
+    }
+
+    return $found;
+}
+
+/**
  * Attach each doctor's departments in one query for the whole set.
  *
  * A draft or deleted department is left out: it has no page for the chip to

@@ -199,7 +199,7 @@ abstract class SiteController extends BaseController
 
         foreach ([
             'footer-1' => 'Community',
-            'footer-2' => 'Departments',
+            'footer-2' => 'About',
             'footer-3' => 'Support',
         ] as $location => $title) {
             $items = nav_for_location($location);

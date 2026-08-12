@@ -27,32 +27,31 @@ $columns = $columns ?? [
     ['title' => 'Community', 'links' => [
         ['label' => 'Doctors', 'href' => base_url('doctors')],
         ['label' => 'Testimonials', 'href' => base_url('/') . '#testimonials'],
-        ['label' => 'FAQs', 'href' => base_url('/') . '#faq'],
-        ['label' => 'Blog', 'href' => base_url('blog')],
-        ['label' => 'Site Map', 'href' => base_url('departments')],
+        ['label' => 'Blogs', 'href' => base_url('blog')],
+        ['label' => 'FAQ', 'href' => base_url('/') . '#faq'],
     ]],
     ['title' => 'About', 'links' => [
-        ['label' => 'Careers', 'href' => base_url('careers')],
-        ['label' => 'Education', 'href' => base_url('blog')],
         ['label' => 'About Us', 'href' => base_url('about')],
-        ['label' => 'Areas of Care', 'href' => base_url('departments')],
-        ['label' => 'Volunteers', 'href' => base_url('careers') . '#openings'],
+        ['label' => 'Career', 'href' => base_url('careers')],
+        ['label' => 'Facilities', 'href' => base_url('facilities')],
+        ['label' => 'Departments', 'href' => base_url('departments')],
     ]],
     ['title' => 'Support', 'links' => [
-        ['label' => 'Visitor Information', 'href' => base_url('facilities') . '#visiting'],
-        ['label' => 'Emergency Care', 'href' => base_url('contact') . '#emergency'],
-        ['label' => 'Donate', 'href' => base_url('contact')],
-        /* Department pages sit at the root, not under /departments/ — the
-           design names them that way and the redirects follow it. */
-        ['label' => 'Online Services', 'href' => base_url('pathology')],
-        ['label' => 'Pay Your Bills', 'href' => base_url('contact')],
+        ['label' => 'Terms & Conditions', 'href' => base_url('contact')],
+        /* The contact page's emergency panel, by id — the same target the
+           dock's ambulance button uses. */
+        ['label' => 'Emergency', 'href' => base_url('contact') . '#emergency'],
+        ['label' => 'Contact Us', 'href' => base_url('contact')],
     ]],
 ];
 
 /* The fifth column carries the social row as well as its links, so it is
-   rendered below rather than folded into $columns. */
+   rendered below rather than folded into $columns.
+
+   Terms & Conditions is not repeated here: it is the first row of Support,
+   the column beside this one, and the same label twice across adjacent
+   columns reads as two different documents. */
 $legal = $legal ?? [
-    ['label' => 'Terms & Conditions', 'href' => base_url('contact')],
     ['label' => 'Privacy Policy', 'href' => base_url('contact')],
     ['label' => 'Hospital Stay', 'href' => base_url('facilities') . '#visiting'],
 ];
