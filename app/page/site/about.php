@@ -122,17 +122,31 @@ $heading = static function (array $section, string $fallback): string {
 <?php break; ?>
 
 <?php /* ============ LEADERSHIP ============ */
-    case 'leadership': ?>
-<?php if (!empty($leadership)): ?>
-<?php App::render('site/block/team', [
-    'section' => 'Leadership',
-    'eyebrow' => 'Leadership',
-    'title' => $heading($section, 'The People <strong>Accountable For It</strong>'),
-    'doctors' => $leadership,
-    'alt' => true,
-]); ?>
-<?php endif; ?>
-<?php break; ?>
+    case 'leadership':
+        /* Switched off at the client's request: the About page shows no
+           leadership strip. The `case` stays so the section is matched and
+           produces nothing — deleting it would drop the row through to no
+           branch at all, which is the same output by accident rather than
+           on purpose.
+
+           Nothing behind it was touched. AboutController still queries
+           `leadership`, the rows are still published, and the panel still
+           edits them, so this is one comment away from coming back:
+
+               if (!empty($leadership)) {
+                   App::render('site/block/team', [
+                       'section' => 'Leadership',
+                       'eyebrow' => 'Leadership',
+                       'title' => $heading($section, 'The People <strong>Accountable For It</strong>'),
+                       'doctors' => $leadership,
+                       'alt' => true,
+                   ]);
+               }
+
+           Hiding the section in the panel (Pages → About → Leadership) does
+           the same thing without a deploy, and is the better switch if this
+           is ever meant to be temporary. */
+        break; ?>
 
 <?php /* ============ IN PRACTICE ============ */
     case 'in-practice': ?>
