@@ -231,7 +231,7 @@ class Seeder
 
         ($this->out)('');
         ($this->out)("  \033[32mSign in with any seeded address and this password:\033[0m");
-        ($this->out)("      admin@teresamemorial.org");
+        ($this->out)("      admin@teresamemorialhospital.com");
         ($this->out)("      {$this->password}");
         ($this->out)('');
         ($this->out)('  It is generated per run and stored nowhere else. Change it after');

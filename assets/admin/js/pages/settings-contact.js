@@ -2,7 +2,7 @@
    Contact details.
 
    This is the screen the whole panel exists for. Today
-   +91 342 325 4567 and contact@teresamemorial.org are typed
+   +91 342 325 4567 and contact@teresamemorialhospital.com are typed
    into all 20 public pages — roughly four times each,
    in the header bar, the mobile dock, the CTA band and the
    footer. Changing a number means a repo-wide find-and-replace
@@ -71,7 +71,7 @@
                                 name: 'emails', cols: 3, min: 1, addLabel: 'Add an address',
                                 fields: [
                                     { key: 'label', label: 'Label', placeholder: 'General' },
-                                    { key: 'address', label: 'Address', placeholder: 'contact@teresamemorial.org' },
+                                    { key: 'address', label: 'Address', placeholder: 'contact@teresamemorialhospital.com' },
                                     { key: 'showInHeader', type: 'checkbox', label: 'Show in header' },
                                 ],
                             }),

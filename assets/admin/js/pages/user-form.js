@@ -78,7 +78,7 @@
                             F.text({ name: 'name', label: 'Full name', required: true, placeholder: 'Riya Sarkar' }),
                             F.email({
                                 name: 'email', label: 'Email', required: true,
-                                placeholder: 'name@teresamemorial.org',
+                                placeholder: 'name@teresamemorialhospital.com',
                                 hint: 'This is the sign-in address. The invite goes here.',
                             }),
                             F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 342 325 4567' }),

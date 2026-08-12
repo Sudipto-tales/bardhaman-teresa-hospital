@@ -915,8 +915,8 @@
                 <p>It may have been filled or the link may be out of date. The current openings are always on the
                     careers page — or send a CV and HR will match it against what is coming up.</p>
                 <a href="${url('careers')}" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> All open roles</a>
-                <a href="mailto:careers@teresamemorial.org" class="arrow-link"><i
-                        class="fa-solid fa-envelope"></i> Email careers@teresamemorial.org</a>
+                <a href="mailto:careers@teresamemorialhospital.com" class="arrow-link"><i
+                        class="fa-solid fa-envelope"></i> Email careers@teresamemorialhospital.com</a>
             </div>`;
             /* the whole #apply section goes, mailto panel included — the
                link above is the replacement route */
@@ -962,7 +962,7 @@
 
         const mailto = $('#applyMailto');
         if (mailto) {
-            mailto.href = `mailto:careers@teresamemorial.org?subject=${encodeURIComponent(`Application — ${job.title}`)}`;
+            mailto.href = `mailto:careers@teresamemorialhospital.com?subject=${encodeURIComponent(`Application — ${job.title}`)}`;
         }
 
         const crumb = $('.pg-crumb [aria-current]');

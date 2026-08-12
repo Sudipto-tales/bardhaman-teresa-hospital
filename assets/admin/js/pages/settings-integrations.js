@@ -50,7 +50,7 @@
                         F.repeater({
                             name: 'notifyEnquiryTo', label: 'Notify these addresses of a new enquiry',
                             cols: 1, addLabel: 'Add an address',
-                            fields: [{ key: 'email', placeholder: 'frontdesk@teresamemorial.org' }],
+                            fields: [{ key: 'email', placeholder: 'frontdesk@teresamemorialhospital.com' }],
                         }),
                     ],
                 })}

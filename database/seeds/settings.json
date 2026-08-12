@@ -77,7 +77,7 @@
     {
       "group_name": "contact",
       "setting_key": "emails",
-      "value": "[{\"label\":\"General\",\"address\":\"contact@teresamemorial.org\",\"showInHeader\":true},{\"label\":\"Careers\",\"address\":\"careers@teresamemorial.org\",\"showInHeader\":false},{\"label\":\"Billing\",\"address\":\"billing@teresamemorial.org\",\"showInHeader\":false}]"
+      "value": "[{\"label\":\"General\",\"address\":\"contact@teresamemorialhospital.com\",\"showInHeader\":true},{\"label\":\"Careers\",\"address\":\"careers@teresamemorialhospital.com\",\"showInHeader\":false},{\"label\":\"Billing\",\"address\":\"billing@teresamemorialhospital.com\",\"showInHeader\":false}]"
     },
     {
       "group_name": "contact",
@@ -177,7 +177,7 @@
     {
       "group_name": "integrations",
       "setting_key": "smtpHost",
-      "value": "\"smtp.teresamemorial.org\""
+      "value": "\"smtp.teresamemorialhospital.com\""
     },
     {
       "group_name": "integrations",
@@ -187,7 +187,7 @@
     {
       "group_name": "integrations",
       "setting_key": "smtpUser",
-      "value": "\"noreply@teresamemorial.org\""
+      "value": "\"noreply@teresamemorialhospital.com\""
     },
     {
       "group_name": "integrations",
@@ -202,7 +202,7 @@
     {
       "group_name": "integrations",
       "setting_key": "smtpFromEmail",
-      "value": "\"noreply@teresamemorial.org\""
+      "value": "\"noreply@teresamemorialhospital.com\""
     },
     {
       "group_name": "integrations",
@@ -212,7 +212,7 @@
     {
       "group_name": "integrations",
       "setting_key": "notifyEnquiryTo",
-      "value": "[{\"email\":\"contact@teresamemorial.org\"},{\"email\":\"frontdesk@teresamemorial.org\"}]"
+      "value": "[{\"email\":\"contact@teresamemorialhospital.com\"},{\"email\":\"frontdesk@teresamemorialhospital.com\"}]"
     },
     {
       "group_name": "integrations",
@@ -417,7 +417,7 @@
     {
       "group_name": "seo",
       "setting_key": "canonicalDomain",
-      "value": "\"https://teresamemorial.org\""
+      "value": "\"https://teresamemorialhospital.com\""
     },
     {
       "group_name": "seo",
