@@ -87,7 +87,7 @@ export const DEPARTMENTS = [
         ],
         checks: ['24/7 interventional cover', 'On-site cardiac ICU', 'Bedside echo and Doppler', 'Structured cardiac rehab', 'Pacemaker & device clinic', 'Insurance desk on the floor'],
         introImg: IMG.ward(1000),
-        badge: { icon: 'fa-truck-medical', title: 'Chest pain?', text: 'Call +91 342 325 4567 — do not drive yourself.' },
+        badge: { icon: 'fa-truck-medical', title: 'Chest pain?', text: 'Call +91 90460 05557 — do not drive yourself.' },
         procedures: [
             { icon: 'fa-heart-circle-bolt', title: 'Primary Angioplasty', text: 'Emergency stenting for a heart attack in progress, available every hour of the year.' },
             { icon: 'fa-diagram-project', title: 'Coronary Angiography', text: 'Radial-access diagnostic imaging with same-day discharge for most patients.' },

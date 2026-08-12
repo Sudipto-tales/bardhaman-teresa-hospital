@@ -7,8 +7,8 @@ realistically want to change is compiled into source files:
 
 | What | Where it lives today |
 |---|---|
-| Phone `+91 342 325 4567` | Hardcoded in all 20 `.html` files, ~4 occurrences each |
-| Email `contact@teresamemorialhospital.com` | Same |
+| Phone `+91 90460 05557` | Hardcoded in all 20 `.html` files, ~4 occurrences each |
+| Email `tmh.bdn@gmail.com` | Same |
 | Doctor roster | `tools/site-data.mjs` → `DOCS`, `ROSTER` |
 | Departments (12 pages worth) | `tools/site-data.mjs` → `DEPARTMENTS` |
 | Blog posts | `tools/site-data.mjs` → `POSTS` |

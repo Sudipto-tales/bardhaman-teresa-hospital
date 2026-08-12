@@ -70,7 +70,7 @@
                                             name: 'email', label: 'Email', required: true,
                                             hint: 'Also your sign-in address.',
                                         }),
-                                        F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 342 325 4567' }),
+                                        F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 90460 05557' }),
                                         F.media({ name: 'avatar', label: 'Photo', hint: 'Optional. Your initials are used when there is none.' }),
                                     ],
                                 })}

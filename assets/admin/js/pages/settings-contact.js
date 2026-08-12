@@ -2,7 +2,7 @@
    Contact details.
 
    This is the screen the whole panel exists for. Today
-   +91 342 325 4567 and contact@teresamemorialhospital.com are typed
+   +91 90460 05557 and tmh.bdn@gmail.com are typed
    into all 20 public pages — roughly four times each,
    in the header bar, the mobile dock, the CTA band and the
    footer. Changing a number means a repo-wide find-and-replace
@@ -49,7 +49,7 @@
                                 name: 'phones', cols: 5, min: 1, addLabel: 'Add a number',
                                 fields: [
                                     { key: 'label', label: 'Label', placeholder: 'Reception' },
-                                    { key: 'number', label: 'Number', placeholder: '+91 342 325 4567' },
+                                    { key: 'number', label: 'Number', placeholder: '+91 90460 05557' },
                                     { key: 'isPrimary', type: 'checkbox', label: 'Primary' },
                                     { key: 'showInHeader', type: 'checkbox', label: 'Header' },
                                     { key: 'showInDock', type: 'checkbox', label: 'Mobile dock' },
@@ -71,7 +71,7 @@
                                 name: 'emails', cols: 3, min: 1, addLabel: 'Add an address',
                                 fields: [
                                     { key: 'label', label: 'Label', placeholder: 'General' },
-                                    { key: 'address', label: 'Address', placeholder: 'contact@teresamemorialhospital.com' },
+                                    { key: 'address', label: 'Address', placeholder: 'tmh.bdn@gmail.com' },
                                     { key: 'showInHeader', type: 'checkbox', label: 'Show in header' },
                                 ],
                             }),
@@ -118,7 +118,7 @@
                                 fields: [
                                     { key: 'department', type: 'select', label: 'Department',
                                         options: ['Emergency', ...departments.map((d) => d.name)] },
-                                    { key: 'number', label: 'Number', placeholder: '+91 342 325 4571' },
+                                    { key: 'number', label: 'Number', placeholder: '+91 90460 05557' },
                                 ],
                             }),
                         ],

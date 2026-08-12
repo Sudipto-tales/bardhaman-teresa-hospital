@@ -197,7 +197,7 @@
                             fields: [
                                 F.icon({ name: 'badgeIcon', label: 'Badge icon' }),
                                 F.text({ name: 'badgeTitle', label: 'Badge title', placeholder: 'Chest pain?' }),
-                                F.textarea({ name: 'badgeText', label: 'Badge text', rows: 2, placeholder: 'Call +91 342 325 4567 — do not drive yourself.' }),
+                                F.textarea({ name: 'badgeText', label: 'Badge text', rows: 2, placeholder: 'Call +91 90460 05557 — do not drive yourself.' }),
                             ],
                         })}
                     </div>

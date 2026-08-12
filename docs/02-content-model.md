@@ -60,9 +60,9 @@ This is the screen that removes the repo-wide find-and-replace.
 | `directions` | textarea | "Landmark: opposite …" |
 | `departmentLines` | repeater `{department, number}` | Direct lines on the contact page |
 
-**Replaces:** `+91 342 325 4567` and `contact@teresamemorialhospital.com` hardcoded in all
+**Replaces:** `+91 90460 05557` and `tmh.bdn@gmail.com` hardcoded in all
 20 `.html` files (header bar line 71–72, mobile dock line 157, CTA line ~399),
-`careers@teresamemorialhospital.com` in `job.html:372`, and the contact blocks in
+`headhrtmh@gmail.com` in `job.html:372`, and the contact blocks in
 `contact.html`.
 
 ### 1c. Social — `settings-social.html`
