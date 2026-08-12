@@ -1,0 +1,375 @@
+{
+    "pack": "gallery-2026-08",
+    "description": "Cath lab photograph and eight theatre clips, July 2025 shoot.",
+    "files": [
+        {
+            "source": "media/cb7cfee70f062e370d0826f63ae1d576.jpg",
+            "target": "assets/uploads/2026/08/cb7cfee70f062e370d0826f63ae1d576.jpg",
+            "bytes": 1987085,
+            "sha256": "9021abb74888bebe2c88cd7f4b3a221d7ec9f9ab753de4bbe51c3a93f7a73fa9"
+        },
+        {
+            "source": "media/2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+            "target": "assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+            "bytes": 102591,
+            "sha256": "d5f4634f18de7363592b2f0688787937b03860d2139d5ed975044783e7140e9e"
+        },
+        {
+            "source": "media/2941c4f20b314fc811b8f5bdb9016979.mp4",
+            "target": "assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979.mp4",
+            "bytes": 907994,
+            "sha256": "c1373e9b3ba2420ebdc4a4a9011527197fae4992d874accc5547833f5b73243d"
+        },
+        {
+            "source": "media/cf0d567a2099228789c6606c0945bca5-poster.jpg",
+            "target": "assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5-poster.jpg",
+            "bytes": 112536,
+            "sha256": "3bde4005193a4a272e92f237f20c7c4750c4f30f8480e636563a19ddad0e86d7"
+        },
+        {
+            "source": "media/cf0d567a2099228789c6606c0945bca5.mp4",
+            "target": "assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5.mp4",
+            "bytes": 800977,
+            "sha256": "ce23081cd7e48c560b4dff47709ee537056bcfbc46d576ca58944d9c90eb0f6a"
+        },
+        {
+            "source": "media/b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+            "target": "assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+            "bytes": 93741,
+            "sha256": "ca16eae2e6db0326700600df90c3b286ab09e96b527287e27b939416b97db4e4"
+        },
+        {
+            "source": "media/b2f1ead7718d87c5efc15f2dbe284fb4.mp4",
+            "target": "assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4.mp4",
+            "bytes": 774108,
+            "sha256": "50cc70b29631cd3c2689486dc9277ae5fce4474f719d322585e043e2a68e1193"
+        },
+        {
+            "source": "media/e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+            "target": "assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+            "bytes": 94014,
+            "sha256": "0f18c005325bd4455454c7b54f1674dc765f164b430e2033ff120f47a0fea553"
+        },
+        {
+            "source": "media/e5b70c9800296069ad17866f0f7f6c7e.mp4",
+            "target": "assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e.mp4",
+            "bytes": 993791,
+            "sha256": "08ec2d25f1038ac2d6ad9ca7c34ccbf072ed66e86e58b91492e69f7955223de9"
+        },
+        {
+            "source": "media/2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+            "target": "assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+            "bytes": 92344,
+            "sha256": "472272786596486fe7525f14068e0551d3c90343b0d20cb4b7d02898b5f1d0f2"
+        },
+        {
+            "source": "media/2d695c09f8c518e390f98dac847a0f5f.mp4",
+            "target": "assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f.mp4",
+            "bytes": 744883,
+            "sha256": "5eeb06b94da368affea13c175deea49eab451d68602574c49876f3165b74ff16"
+        },
+        {
+            "source": "media/a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+            "target": "assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+            "bytes": 112240,
+            "sha256": "5eb7fe687bf88872879da72a4af288d7ccb18e5bef1538821e4d42b829fd162b"
+        },
+        {
+            "source": "media/a2df87e17e6d73f8a3e768b76cf81be3.mp4",
+            "target": "assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3.mp4",
+            "bytes": 1093154,
+            "sha256": "947821b78ff50a5da0090c0a5a3fd9a26dca22a1590693f53b45e6465ebf6097"
+        },
+        {
+            "source": "media/6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+            "target": "assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+            "bytes": 166523,
+            "sha256": "0df217a1951b6be610629a11c80e81c57416698341b8b0b94ea50ad0076eccfd"
+        },
+        {
+            "source": "media/6619aed51efd639d7a01f9d9ec617c63.mp4",
+            "target": "assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63.mp4",
+            "bytes": 1465285,
+            "sha256": "3ddf2fa7c6da58b3d7471a023f427c742478cb14c456f3bbbe519ca539d13c0a"
+        },
+        {
+            "source": "media/a26141827c622351c17a8dea9019779c-poster.jpg",
+            "target": "assets/uploads/2026/08/a26141827c622351c17a8dea9019779c-poster.jpg",
+            "bytes": 252469,
+            "sha256": "e9b2ac3c0e456b9bcfab0b12e2bbabf533400f3aba3a75ddc85ddd4524f19905"
+        },
+        {
+            "source": "media/a26141827c622351c17a8dea9019779c.mp4",
+            "target": "assets/uploads/2026/08/a26141827c622351c17a8dea9019779c.mp4",
+            "bytes": 1431823,
+            "sha256": "a905913fff089f7566044c4976badeec8a5b41fce313c5e93b00c0231d2c7553"
+        }
+    ],
+    "sets": [
+        {
+            "table": "media",
+            "key": "url",
+            "idPrefix": "med",
+            "rows": [
+                {
+                    "url": "/assets/uploads/2026/08/cb7cfee70f062e370d0826f63ae1d576.jpg",
+                    "path": "assets/uploads/2026/08/cb7cfee70f062e370d0826f63ae1d576.jpg",
+                    "filename": "cb7cfee70f062e370d0826f63ae1d576.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "The cath lab",
+                    "caption": "The C-arm, the table and the monitors, between cases.",
+                    "folder": "Gallery",
+                    "width": 2400,
+                    "height": 3200,
+                    "size_bytes": 1987085,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+                    "path": "assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+                    "filename": "2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Overhead light and C-arm",
+                    "caption": "The lamp head and the arch, parked clear of the table.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 102591,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5-poster.jpg",
+                    "path": "assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5-poster.jpg",
+                    "filename": "cf0d567a2099228789c6606c0945bca5-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "The arch over the table",
+                    "caption": "The C-arm swung into position across a draped table.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 112536,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+                    "path": "assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+                    "filename": "b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Image intensifier, draped",
+                    "caption": "The C-arm head under its sterile cover, above the drapes.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 93741,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+                    "path": "assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+                    "filename": "e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Table and control rail",
+                    "caption": "The cath lab table, with its controls along the side.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 94014,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+                    "path": "assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+                    "filename": "2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Table controls",
+                    "caption": "The rail of controls that moves the table under the arch.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 92344,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+                    "path": "assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+                    "filename": "a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "The console",
+                    "caption": "Where the images come up while a case is running.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 112240,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+                    "path": "assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+                    "filename": "6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Ready for the list",
+                    "caption": "Syringes, fluids and consumables laid out before the first case.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 166523,
+                    "deleted_at": null
+                },
+                {
+                    "url": "/assets/uploads/2026/08/a26141827c622351c17a8dea9019779c-poster.jpg",
+                    "path": "assets/uploads/2026/08/a26141827c622351c17a8dea9019779c-poster.jpg",
+                    "filename": "a26141827c622351c17a8dea9019779c-poster.jpg",
+                    "mime": "image/jpeg",
+                    "alt": "Sterile stock",
+                    "caption": "Drapes, gowns and gloves on the theatre shelves.",
+                    "folder": "Gallery",
+                    "width": 1080,
+                    "height": 1920,
+                    "size_bytes": 252469,
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "table": "gallery",
+            "key": "slug",
+            "rows": [
+                {
+                    "slug": "cathlab-01",
+                    "type": "image",
+                    "album": "Cath Lab",
+                    "title": "The cath lab",
+                    "caption": "The C-arm, the table and the monitors, between cases.",
+                    "image": "/assets/uploads/2026/08/cb7cfee70f062e370d0826f63ae1d576.jpg",
+                    "video_path": null,
+                    "youtube_id": null,
+                    "duration": null,
+                    "size_bytes": 1987085,
+                    "sort_order": 1,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-02",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "Overhead light and C-arm",
+                    "caption": "The lamp head and the arch, parked clear of the table.",
+                    "image": "/assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/2941c4f20b314fc811b8f5bdb9016979.mp4",
+                    "youtube_id": null,
+                    "duration": 6,
+                    "size_bytes": 907994,
+                    "sort_order": 2,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-03",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "The arch over the table",
+                    "caption": "The C-arm swung into position across a draped table.",
+                    "image": "/assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/cf0d567a2099228789c6606c0945bca5.mp4",
+                    "youtube_id": null,
+                    "duration": 3,
+                    "size_bytes": 800977,
+                    "sort_order": 3,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-04",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "Image intensifier, draped",
+                    "caption": "The C-arm head under its sterile cover, above the drapes.",
+                    "image": "/assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/b2f1ead7718d87c5efc15f2dbe284fb4.mp4",
+                    "youtube_id": null,
+                    "duration": 5,
+                    "size_bytes": 774108,
+                    "sort_order": 4,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-05",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "Table and control rail",
+                    "caption": "The cath lab table, with its controls along the side.",
+                    "image": "/assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/e5b70c9800296069ad17866f0f7f6c7e.mp4",
+                    "youtube_id": null,
+                    "duration": 5,
+                    "size_bytes": 993791,
+                    "sort_order": 5,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-06",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "Table controls",
+                    "caption": "The rail of controls that moves the table under the arch.",
+                    "image": "/assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/2d695c09f8c518e390f98dac847a0f5f.mp4",
+                    "youtube_id": null,
+                    "duration": 3,
+                    "size_bytes": 744883,
+                    "sort_order": 6,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-07",
+                    "type": "video",
+                    "album": "Cath Lab",
+                    "title": "The console",
+                    "caption": "Where the images come up while a case is running.",
+                    "image": "/assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/a2df87e17e6d73f8a3e768b76cf81be3.mp4",
+                    "youtube_id": null,
+                    "duration": 5,
+                    "size_bytes": 1093154,
+                    "sort_order": 7,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-08",
+                    "type": "video",
+                    "album": "Theatre Stores",
+                    "title": "Ready for the list",
+                    "caption": "Syringes, fluids and consumables laid out before the first case.",
+                    "image": "/assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/6619aed51efd639d7a01f9d9ec617c63.mp4",
+                    "youtube_id": null,
+                    "duration": 6,
+                    "size_bytes": 1465285,
+                    "sort_order": 8,
+                    "status": "published",
+                    "deleted_at": null
+                },
+                {
+                    "slug": "cathlab-09",
+                    "type": "video",
+                    "album": "Theatre Stores",
+                    "title": "Sterile stock",
+                    "caption": "Drapes, gowns and gloves on the theatre shelves.",
+                    "image": "/assets/uploads/2026/08/a26141827c622351c17a8dea9019779c-poster.jpg",
+                    "video_path": "/assets/uploads/2026/08/a26141827c622351c17a8dea9019779c.mp4",
+                    "youtube_id": null,
+                    "duration": 5,
+                    "size_bytes": 1431823,
+                    "sort_order": 9,
+                    "status": "published",
+                    "deleted_at": null
+                }
+            ]
+        }
+    ]
+}
