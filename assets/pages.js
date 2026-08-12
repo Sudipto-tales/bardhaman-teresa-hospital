@@ -146,6 +146,120 @@
 
         const title = $('.post-hero__title');
         const url = location.href;
+        const shareTitle = title ? title.textContent.trim() : document.title;
+
+        /* ---- share sheet -------------------------------------
+           navigator.share is https + mobile only and gives back
+           nothing when it is missing, so the networks are drawn
+           here instead: one row of intents plus copy-link, which
+           is the option people actually reach for on a desktop.
+           Built once, on first open. */
+        const enc = encodeURIComponent;
+        const NETWORKS = [
+            { id: 'whatsapp', label: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: (u, t) => `https://api.whatsapp.com/send?text=${enc(t + ' ' + u)}` },
+            { id: 'facebook', label: 'Facebook', icon: 'fa-brands fa-facebook-f', href: (u) => `https://www.facebook.com/sharer/sharer.php?u=${enc(u)}` },
+            { id: 'x', label: 'X', icon: 'fa-brands fa-x-twitter', href: (u, t) => `https://twitter.com/intent/tweet?url=${enc(u)}&text=${enc(t)}` },
+            { id: 'linkedin', label: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: (u) => `https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}` },
+            { id: 'telegram', label: 'Telegram', icon: 'fa-brands fa-telegram', href: (u, t) => `https://t.me/share/url?url=${enc(u)}&text=${enc(t)}` },
+            { id: 'email', label: 'Email', icon: 'fa-solid fa-envelope', href: (u, t) => `mailto:?subject=${enc(t)}&body=${enc(u)}` },
+        ];
+
+        let sheet;
+        let opener;
+
+        const buildSheet = () => {
+            const el = document.createElement('div');
+            el.className = 'share-sheet';
+            el.hidden = true;
+            el.innerHTML = `
+                <div class="share-sheet__scrim" data-share-close></div>
+                <div class="share-sheet__panel" role="dialog" aria-modal="true" aria-label="Share this article">
+                    <div class="share-sheet__head">
+                        <h3>Share this article</h3>
+                        <button type="button" class="share-sheet__x" data-share-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="share-sheet__grid">
+                        ${NETWORKS.map((n) => `
+                        <a class="share-sheet__net share-sheet__net--${n.id}" href="${n.href(url, shareTitle)}" target="_blank" rel="noopener noreferrer">
+                            <span class="share-sheet__ic"><i class="${n.icon}"></i></span>
+                            <span>${n.label}</span>
+                        </a>`).join('')}
+                    </div>
+                    <div class="share-sheet__copy">
+                        <input type="text" readonly value="${url.replace(/"/g, '&quot;')}" aria-label="Article link">
+                        <button type="button" data-share-copy><i class="fa-solid fa-link"></i> Copy link</button>
+                    </div>
+                    ${navigator.share ? '<button type="button" class="share-sheet__more" data-share-native><i class="fa-solid fa-ellipsis"></i> More apps</button>' : ''}
+                </div>`;
+            document.body.appendChild(el);
+
+            el.addEventListener('click', async (ev) => {
+                if (ev.target.closest('[data-share-close]')) { closeSheet(); return; }
+
+                if (ev.target.closest('[data-share-copy]')) {
+                    await copyLink();
+                    closeSheet();
+                    return;
+                }
+
+                if (ev.target.closest('[data-share-native]')) {
+                    closeSheet();
+                    try { await navigator.share({ title: shareTitle, url }); } catch (err) { /* cancelled */ }
+                    return;
+                }
+
+                /* a network opened in its own tab; this one is done with */
+                if (ev.target.closest('.share-sheet__net')) closeSheet();
+            });
+
+            return el;
+        };
+
+        const openSheet = () => {
+            sheet = sheet || buildSheet();
+            opener = document.activeElement;
+            sheet.hidden = false;
+            document.body.classList.add('is-share-open');
+            requestAnimationFrame(() => sheet.classList.add('is-open'));
+            const first = $('.share-sheet__net', sheet);
+            if (first) first.focus();
+            document.addEventListener('keydown', onKey);
+        };
+
+        const closeSheet = () => {
+            if (!sheet || sheet.hidden) return;
+            sheet.classList.remove('is-open');
+            document.body.classList.remove('is-share-open');
+            document.removeEventListener('keydown', onKey);
+            setTimeout(() => { sheet.hidden = true; }, 220);
+            if (opener && opener.focus) opener.focus();
+        };
+
+        const onKey = (ev) => {
+            if (ev.key === 'Escape') { closeSheet(); return; }
+            if (ev.key !== 'Tab' || !sheet) return;
+
+            /* the sheet is modal, so Tab has to come back round rather
+               than walking the page behind the scrim */
+            const stops = $$('a[href], button, input', sheet).filter((n) => n.offsetParent !== null);
+            if (!stops.length) return;
+            const edge = ev.shiftKey ? stops[0] : stops[stops.length - 1];
+            if (document.activeElement === edge) {
+                ev.preventDefault();
+                (ev.shiftKey ? stops[stops.length - 1] : stops[0]).focus();
+            }
+        };
+
+        const copyLink = async () => {
+            if (navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    say('Link copied');
+                    return;
+                } catch (err) { /* falls through to the prompt */ }
+            }
+            window.prompt('Copy this link', url);
+        };
 
         $$('[data-post-tool]', hero).forEach((el) => {
             const kind = el.dataset.postTool;
@@ -157,35 +271,13 @@
                 return;
             }
 
-            el.addEventListener('click', async () => {
+            el.addEventListener('click', () => {
                 if (kind === 'print') {
                     window.print();
                     return;
                 }
 
-                const data = { title: title ? title.textContent.trim() : document.title, url };
-
-                /* navigator.share is mobile and https only; the desktop
-                   path is the clipboard, and a cancelled share sheet
-                   throws AbortError, which is not a failure */
-                if (navigator.share) {
-                    try {
-                        await navigator.share(data);
-                        return;
-                    } catch (err) {
-                        if (err && err.name === 'AbortError') return;
-                    }
-                }
-
-                if (navigator.clipboard) {
-                    try {
-                        await navigator.clipboard.writeText(url);
-                        say('Link copied');
-                        return;
-                    } catch (err) { /* falls through to the prompt */ }
-                }
-
-                window.prompt('Copy this link', url);
+                openSheet();
             });
         });
 
@@ -200,7 +292,7 @@
             });
         }
 
-        gsap.from($$('.post-hero__flags, .post-hero__title, .post-hero__lead, .post-hero__card .pg-crumb, .post-hero__side > *', hero), {
+        gsap.from($$('.post-hero__flags, .post-hero__title, .post-hero__lead, .post-hero__card .pg-crumb', hero), {
             y: 24,
             opacity: 0,
             duration: .7,
@@ -208,6 +300,22 @@
             stagger: .07,
             delay: .15,
         });
+
+        /* the side stack is revealed as one box, never child by child:
+           a per-child y would sit in the flow's own gap, so a tween
+           interrupted mid-flight leaves the call pill overlapping the
+           tool row. clearProps drops the inline transform either way */
+        const side = $('.post-hero__side', hero);
+        if (side) {
+            gsap.from(side, {
+                y: 24,
+                opacity: 0,
+                duration: .7,
+                ease: 'power3.out',
+                delay: .4,
+                clearProps: 'transform',
+            });
+        }
     };
 
     /* ---------------------------------------------------------
@@ -386,6 +494,168 @@
        Bengali. The chips match on data-cat, which the widget
        leaves alone — attributes are never translated.
        --------------------------------------------------------- */
+    /* ---------------------------------------------------------
+       Doctor finder — the doctors index only.
+
+       Free-text search over one prebuilt haystack per card (name, role,
+       speciality, qualification, departments), plus three single-choice
+       menus. Everything is client side: the whole roster is already in the
+       page, so filtering is a class toggle rather than a request, and Load
+       More reveals the rest of the matches without touching the server.
+       --------------------------------------------------------- */
+    const initDoctorFilter = () => {
+        const find = $('[data-doc-find]');
+        const grid = $('[data-doc-grid]');
+        if (!find || !grid) return;
+
+        const cards = $$('[data-doc]', grid);
+        const input = $('[data-find-q]', find);
+        const clear = $('[data-find-clear]', find);
+        const reset = $('[data-find-reset]', find);
+        const count = $('[data-find-count]', find);
+        const empty = $('[data-find-empty]', grid.parentElement);
+        const more = $('[data-find-more]', grid.parentElement);
+
+        /* Two rows of the desktop grid. Load More lifts it for good — the ask
+           was the whole roster on one click, not a page at a time. */
+        const step = Number(grid.dataset.initial) || 8;
+        let limit = step;
+        let q = '';
+        const picks = { dept: '', degree: '', book: '' };
+
+        const matches = (card) => {
+            const d = card.dataset;
+            return (!q || (d.search || '').includes(q))
+                && (!picks.dept || (d.dept || '').split(' ').includes(picks.dept))
+                && (!picks.degree || (d.degree || '').split(' ').includes(picks.degree))
+                && (!picks.book || d.book === '1');
+        };
+
+        const apply = () => {
+            let hits = 0;
+
+            cards.forEach((card) => {
+                const hit = matches(card);
+                if (hit) hits += 1;
+                /* Past the limit it is a match that is not shown yet, which is
+                   what Load More is counting. */
+                card.classList.toggle('is-out', !hit || hits > limit);
+            });
+
+            const filtered = q !== '' || picks.dept || picks.degree || picks.book;
+
+            if (empty) empty.hidden = hits > 0;
+            if (clear) clear.hidden = q === '';
+            if (more) {
+                more.hidden = hits <= limit;
+                more.lastChild.textContent = ` Load more doctors (${hits - limit})`;
+            }
+            if (count) {
+                count.innerHTML = hits === 0
+                    ? 'No consultants match'
+                    : `<strong>${Math.min(hits, limit)}</strong> of ${hits} consultant${hits === 1 ? '' : 's'}${filtered ? ' matching' : ''}`;
+            }
+        };
+
+        const setPick = (key, value, label, sel) => {
+            picks[key] = value;
+            sel.classList.toggle('is-set', value !== '');
+            $('[data-find-val]', sel).textContent = label;
+            $$('button[data-value]', sel).forEach((b) => {
+                const on = b.dataset.value === value;
+                b.classList.toggle('is-on', on);
+                b.setAttribute('aria-checked', on ? 'true' : 'false');
+            });
+            /* A new filter is a new result set, so the cap starts over rather
+               than leaving a shorter list already fully expanded. */
+            limit = step;
+            apply();
+        };
+
+        const closeMenus = (except) => {
+            $$('.dfind__sel', find).forEach((sel) => {
+                if (sel === except) return;
+                sel.classList.remove('is-open');
+                $('.dfind__pill', sel).setAttribute('aria-expanded', 'false');
+            });
+        };
+
+        $$('.dfind__sel', find).forEach((sel) => {
+            const key = sel.dataset.findSel;
+            const pill = $('.dfind__pill', sel);
+
+            pill.addEventListener('click', () => {
+                const open = !sel.classList.contains('is-open');
+                closeMenus(sel);
+                sel.classList.toggle('is-open', open);
+                pill.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            $$('button[data-value]', sel).forEach((option) => {
+                option.addEventListener('click', () => {
+                    /* The option's own count is markup, not part of its label. */
+                    const label = option.firstChild.textContent.trim();
+                    setPick(key, option.dataset.value, label, sel);
+                    closeMenus();
+                });
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dfind__sel')) closeMenus();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenus();
+        });
+
+        let timer;
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                q = input.value.trim().toLowerCase();
+                limit = step;
+                apply();
+            }, 120);
+        });
+
+        if (clear) {
+            clear.addEventListener('click', () => {
+                input.value = '';
+                q = '';
+                limit = step;
+                apply();
+                input.focus();
+            });
+        }
+
+        if (reset) {
+            reset.addEventListener('click', () => {
+                input.value = '';
+                q = '';
+                $$('.dfind__sel', find).forEach((sel) => {
+                    const all = $('button[data-value=""]', sel);
+                    setPick(sel.dataset.findSel, '', all.textContent.trim(), sel);
+                });
+                limit = step;
+                apply();
+            });
+        }
+
+        if (more) {
+            more.addEventListener('click', () => {
+                limit = cards.length;
+                apply();
+                /* The first card that was not there a moment ago, so the eye
+                   lands on new rows rather than staying at the button. */
+                const first = cards.filter((c) => !c.classList.contains('is-out'))[step];
+                if (first) first.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
+            });
+        }
+
+        apply();
+    };
+
     const initBlogFilter = () => {
         const search = $('#blogSearch');
         if (!search) return;
@@ -787,7 +1057,14 @@
     /* ---------------------------------------------------------
        Gallery — /gallery.
 
-       Two jobs: the album chips, and the viewer.
+       Three jobs: the chips, the mosaic, and the viewer.
+
+       The mosaic's spans are set here rather than in the
+       stylesheet because :nth-child counts hidden tiles too — an
+       album with four photographs in it would inherit whatever
+       pattern position its rows happened to hold in the full set,
+       and the block would come out with holes in it. The pattern
+       is laid over the visible run, every time the run changes.
 
        The viewer is built on open and torn down on close, every
        time. That is not tidiness — a YouTube iframe left in the
@@ -802,7 +1079,8 @@
         if (!grid) return;
 
         const tiles = $$('.gal-tile', grid);
-        const chips = $$('#galTags .pg-tag');
+        const typeChips = $$('#galTags [data-type]');
+        const albumChips = $$('#galTags [data-album]');
         const none = $('#galNone');
 
         const box = $('#galLightbox');
@@ -814,30 +1092,96 @@
         const prevBtn = $('#lbPrev');
         const nextBtn = $('#lbNext');
 
-        /* The arrows walk the filtered set, not the whole grid: pressing
-           `next` inside an album should not wander out of it. */
+        /* `shown` is what the grid is showing; `list` is what the arrows walk.
+           They are the same thing when a tile was clicked — pressing `next`
+           inside an album should not wander out of it — and the rail's own
+           cards when one of those was, so the viewer opened from the channel
+           steps through the channel. */
         let shown = tiles.slice();
+        let list = shown;
         let at = -1;
         let opener = null;
 
-        /* --- chips --- */
+        /* --- the mosaic ---
 
-        const filter = (album) => {
+           Each plan is one band: a run of tiles whose cells add up to whole
+           rows of the four-column module, so a band never ends halfway across
+           and the next one never starts in a hole. Widths are clamped to the
+           column count, which is how the same plans tile the two-column phone
+           grid — every plan's row is either one wide tile or two narrow ones.
+
+           [width, height] in cells. */
+        const PLANS = {
+            1: [[4, 1]],
+            2: [[2, 1], [2, 1]],
+            3: [[2, 1], [1, 1], [1, 1]],
+            4: [[1, 1], [1, 1], [1, 1], [1, 1]],
+            5: [[2, 2], [1, 1], [1, 1], [1, 1], [1, 1]],
+            6: [[2, 2], [1, 1], [1, 1], [2, 1], [2, 1], [2, 1]],
+        };
+
+        const mosaic = () => {
+            const cols = Number(getComputedStyle(grid).getPropertyValue('--gal-cols')) || 4;
+            let i = 0;
+
+            while (i < shown.length) {
+                const rest = shown.length - i;
+                /* Seven left would be a band of six and then a lone tile
+                   stretched across the whole width. Three and four is the
+                   better pair of bands. */
+                const take = rest > 6 ? (rest === 7 ? 3 : 6) : rest;
+
+                PLANS[take].forEach(([w, h], k) => {
+                    const tile = shown[i + k];
+                    tile.style.setProperty('--w', Math.min(w, cols));
+                    tile.style.setProperty('--h', h);
+                });
+
+                i += take;
+            }
+        };
+
+        /* --- chips ---
+           Type and album are two questions, not one row of chips: "video" and
+           "Talks & Camps" are both true of the same row and picking one should
+           not clear the other. */
+        let album = '';
+        let kind = '';
+
+        const filter = () => {
             shown = tiles.filter((tile) => {
-                const hit = !album || tile.dataset.album === album;
+                const type = tile.dataset.type === 'image' ? 'image' : 'video';
+                const hit = (!album || tile.dataset.album === album) && (!kind || type === kind);
                 tile.hidden = !hit;
                 return hit;
             });
 
             if (none) none.hidden = shown.length > 0;
+            mosaic();
         };
 
-        chips.forEach((chip) => {
-            chip.addEventListener('click', () => {
-                chips.forEach((c) => c.classList.toggle('is-active', c === chip));
-                filter(chip.dataset.album || '');
+        const wire = (chips, key, set) => {
+            chips.forEach((chip) => {
+                chip.addEventListener('click', () => {
+                    chips.forEach((c) => c.classList.toggle('is-active', c === chip));
+                    set(chip.dataset[key] || '');
+                    filter();
+                });
             });
-        });
+        };
+
+        wire(albumChips, 'album', (v) => { album = v; });
+        wire(typeChips, 'type', (v) => { kind = v; });
+
+        mosaic();
+
+        /* The plans are the same at either column count but the clamp is not,
+           so a rotated phone re-lays the block. */
+        let redraw;
+        window.addEventListener('resize', () => {
+            clearTimeout(redraw);
+            redraw = setTimeout(mosaic, 150);
+        }, { passive: true });
 
         /* --- the viewer --- */
 
@@ -864,17 +1208,17 @@
         };
 
         const show = (i) => {
-            at = (i + shown.length) % shown.length;
+            at = (i + list.length) % list.length;
 
-            const tile = shown[at];
+            const tile = list[at];
             const d = tile.dataset;
 
             stage.innerHTML = player(tile);
             if (titleEl) titleEl.textContent = d.title || '';
             if (capEl) capEl.textContent = d.caption || '';
-            if (countEl) countEl.textContent = `${at + 1} of ${shown.length}`;
+            if (countEl) countEl.textContent = `${at + 1} of ${list.length}`;
 
-            const many = shown.length > 1;
+            const many = list.length > 1;
             if (prevBtn) prevBtn.hidden = !many;
             if (nextBtn) nextBtn.hidden = !many;
         };
@@ -892,8 +1236,10 @@
             }
         };
 
-        const open = (tile) => {
-            const i = shown.indexOf(tile);
+        const open = (tile, from) => {
+            list = from;
+
+            const i = list.indexOf(tile);
             if (i < 0) return;
 
             opener = tile;
@@ -903,7 +1249,30 @@
             if (closeBtn) closeBtn.focus();
         };
 
-        tiles.forEach((tile) => tile.addEventListener('click', () => open(tile)));
+        tiles.forEach((tile) => tile.addEventListener('click', () => open(tile, shown)));
+
+        /* --- the channel rail ---
+           Half the cards in the track are the copy that makes the loop
+           seamless. A click on one of those opens the card it was copied from,
+           so the viewer never counts the same video twice. */
+        const railCards = $$('[data-yt-card]');
+
+        /* One entry per video. A short channel is repeated inside the run as
+           well as copied for the loop, so the cards are not one video each. */
+        const keys = new Set();
+        const railList = railCards.filter((card) => {
+            if (card.dataset.clone || keys.has(card.dataset.key)) return false;
+            keys.add(card.dataset.key);
+
+            return true;
+        });
+
+        railCards.forEach((card) => {
+            card.addEventListener('click', () => {
+                const first = railList.find((c) => c.dataset.key === card.dataset.key);
+                open(first || card, first ? railList : [card]);
+            });
+        });
 
         if (closeBtn) closeBtn.addEventListener('click', close);
         if (prevBtn) prevBtn.addEventListener('click', () => show(at - 1));
@@ -922,7 +1291,7 @@
                 return;
             }
 
-            if (shown.length < 2) return;
+            if (list.length < 2) return;
 
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
@@ -957,6 +1326,7 @@
         initBanner();
         initPostHero();
         initStats();
+        initDoctorFilter();
         initBlogFilter();
         initQuotes();
         initGallery();

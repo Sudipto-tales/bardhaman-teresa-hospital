@@ -166,10 +166,138 @@ that gap before the next one — a token-guarded migrate route is the usual
 answer, and the alternative is exporting the content, rebuilding the database
 locally and uploading it, which loses everything written in between.
 
+*Content* is no longer part of that gap — see Content packs below, which is the
+token-guarded route built for rows and files. Schema still is. The two are
+deliberately separate: a pack writes rows to tables that already exist and can
+be replayed, and a migration rewrites the shape of a live database and cannot.
+
 Re-uploading `database.sqlite` from your machine is **not** a substitute once
 the site is live. It replaces real content — enquiries, appointments, anything
 edited in the panel — with whatever your local copy holds. That trick is for
 the first deploy only.
+
+## Content packs
+
+The gap above has a floor under it now, for content if not for schema.
+
+A **content pack** is a tracked bundle — binaries plus rows — applied to a live
+database without emptying anything. It exists because the two halves of a
+content drop are exactly the two things a deploy cannot carry:
+
+| | Why a deploy misses it |
+|---|---|
+| Photos and clips | `assets/uploads/` is gitignored, so a checkout cannot put a file there |
+| The rows describing them | `database.sqlite` is gitignored, and `seed` empties tables |
+
+A pack lives in `database/content/`, which `.htaccess` refuses to serve. It
+holds its own copy of every file, checksummed, and one or more sets of rows
+keyed by a column. Applying it copies any file not already in place and
+upserts each row by its key.
+
+**It is additive.** Nothing in `core/ContentPack.php` issues a DELETE. A row
+whose key is already present is updated; a file already at the target path is
+left alone and reported. Applying the same pack twice changes nothing the
+second time, which is what makes it safe to retry when a response hangs.
+
+### Applying one — no shell
+
+**1. Put a token in `public_html/.env`** through the File Manager:
+
+```ini
+CONTENT_IMPORT_TOKEN=<php -r "echo bin2hex(random_bytes(32));">
+```
+
+Until that line exists the route answers 404, and so does a wrong token — the
+endpoint is invisible rather than merely closed. Under 32 characters is refused
+and logged.
+
+**2. Ask what it would do.** Nothing is written by a GET:
+
+```bash
+curl -H "X-Content-Token: $TOKEN" \
+  "https://<site>/api/content/packs?pack=gallery-2026-08"
+```
+
+Read the counts back before continuing. `inserted` is new rows, `updated` is
+rows whose key is already on the live site — an `updated` you did not expect
+means the pack is about to overwrite something an editor owns.
+
+**3. Apply it:**
+
+```bash
+curl -X POST -H "X-Content-Token: $TOKEN" -H "Content-Type: application/json" \
+  -d '{"pack":"gallery-2026-08"}' https://<site>/api/content/import
+```
+
+**4. Empty `CONTENT_IMPORT_TOKEN` again.** The route closes with it. A token
+that stays in `.env` after the import is a write endpoint left open for the
+convenience of never having to paste it twice.
+
+The header, not a query string: shared hosting writes URLs to access logs that
+support staff can read.
+
+### Applying one — with a shell
+
+```bash
+php tools/import-content.php                    # what packs exist
+php tools/import-content.php <pack> --dry-run   # what it would change
+php tools/import-content.php <pack>             # do it
+```
+
+Same class, no token — a shell on the server is already the credential.
+
+### What a pack may not do
+
+The repository is the trusted part and the request is not: a caller picks a
+pack by name from a directory listing, and cannot supply one. The constraints
+are enforced anyway, because a generator bug should not be able to do these
+things either:
+
+- Writes only under `assets/uploads/`, and only `.jpg .jpeg .png .gif .webp
+  .avif .mp4 .webm`. No SVG — it is a document that can carry script — and
+  nothing that the server would execute.
+- Writes only to the tables in `ContentPack::TABLES`, currently `gallery` and
+  `media`. Extend that list only for tables holding authored content: an upsert
+  into `enquiries` would be editing a message somebody sent.
+- Every column named in a row must exist on the table, and every file must
+  match the SHA-256 in its manifest, or the whole pack is refused before the
+  first write.
+- 20 requests per hour per IP, and every rejection is logged.
+
+### Building one
+
+`database/content/<name>.json` — files with checksums, then sets of rows:
+
+```json
+{
+  "pack": "gallery-2026-08",
+  "files": [
+    {"source": "media/ab12.mp4", "target": "assets/uploads/2026/08/ab12.mp4",
+     "bytes": 907994, "sha256": "..."}
+  ],
+  "sets": [
+    {"table": "media", "key": "url", "idPrefix": "med", "rows": [...]},
+    {"table": "gallery", "key": "slug", "rows": [...]}
+  ]
+}
+```
+
+`idPrefix` fills a `public_id` at import time from the numbers the *destination*
+is using. A pack cannot carry those: it was built against one database and
+`med-004` is taken on the live site by whatever was uploaded last Tuesday.
+
+Two things worth getting right when generating the rows:
+
+- **Pick keys that cannot collide.** The gallery pack uses `cathlab-01`, not
+  `gal-001`, precisely so it cannot overwrite the seeded placeholders or an
+  editor's row. A key you invent is an insert; a key that already exists is a
+  silent edit to somebody else's record.
+- **Strip anything local to your database** — `id`, `created_at`,
+  `updated_by`, `public_id`. Those describe the row where it was built, not
+  where it is going.
+
+Packs are cheap to keep and worth keeping: the pack is the record of what was
+imported and when, and re-running it repairs a file somebody deleted.
 
 ## What a deploy does not touch
 

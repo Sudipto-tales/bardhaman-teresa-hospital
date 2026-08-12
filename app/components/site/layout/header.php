@@ -45,22 +45,78 @@ $phone = trim((string) ($phone ?? ''));
     </div>
 
     <!-- mobile overlay menu -->
+<?php
+/* The three desktop drops, flattened into one data shape. Departments used to
+   be the odd one out — the only nav item whose children never reached the
+   overlay — so it is built from the same rows the mega menu is handed rather
+   than from a second hardcoded list that would drift away from it.
+
+   Collapsible rather than always-open: eleven departments plus six other
+   children is more than fits a phone, and a menu that scrolls past its own
+   last item reads as broken. */
+$mobileGroups = [
+    [
+        'id' => 'mmAbout',
+        'label' => 'About Us',
+        'href' => base_url('about'),
+        'items' => [
+            ['label' => 'Our Story', 'href' => base_url('about')],
+            ['label' => 'Our Doctors', 'href' => base_url('doctors')],
+            ['label' => 'Our Blog', 'href' => base_url('blog')],
+        ],
+    ],
+    [
+        'id' => 'mmDepartments',
+        'label' => 'Our Department',
+        'href' => base_url('departments'),
+        'items' => array_merge(
+            [['label' => 'All Departments', 'href' => base_url('departments')]],
+            array_map(static fn ($row) => [
+                'label' => (string) ($row['name'] ?? ''),
+                /* A department's page is at the root — /cardiology, not
+                   /departments/cardiology — same as mega-menu.php. */
+                'href' => base_url((string) ($row['slug'] ?? $row['id'] ?? '')),
+            ], $departments ?? [])
+        ),
+    ],
+    [
+        'id' => 'mmFacilities',
+        'label' => 'Facilities',
+        'href' => base_url('facilities'),
+        'items' => [
+            ['label' => 'Our Facilities', 'href' => base_url('facilities')],
+            ['label' => 'Lab Test', 'href' => base_url('/') . '#lab'],
+            ['label' => 'Our Gallery', 'href' => base_url('gallery')],
+        ],
+    ],
+];
+?>
     <div class="mobile-menu" id="mobileMenu">
-        <a href="<?= e(base_url('/')) ?>">Home</a>
-        <a href="<?= e(base_url('about')) ?>">About Us</a>
-        <!-- the same three the desktop About drop carries; flat and indented
-             rather than collapsible, because the overlay has the room -->
-        <a href="<?= e(base_url('about')) ?>" class="is-sub">Our Story</a>
-        <a href="<?= e(base_url('doctors')) ?>" class="is-sub">Our Doctors</a>
-        <a href="<?= e(base_url('blog')) ?>" class="is-sub is-sub-end">Our Blog</a>
-        <a href="<?= e(base_url('departments')) ?>">Our Department</a>
-        <a href="<?= e(base_url('facilities')) ?>">Facilities</a>
-        <!-- the Facilities drop, flattened the same way -->
-        <a href="<?= e(base_url('facilities')) ?>" class="is-sub">Our Facilities</a>
-        <a href="<?= e(base_url('/')) ?>#lab" class="is-sub">Lab Test</a>
-        <a href="<?= e(base_url('gallery')) ?>" class="is-sub is-sub-end">Our Gallery</a>
-        <a href="<?= e(base_url('careers')) ?>">Careers</a>
-        <a href="<?= e(base_url('contact')) ?>">Contact</a>
+        <nav class="mm__list" aria-label="Mobile menu">
+            <a class="mm__link" href="<?= e(base_url('/')) ?>">Home</a>
+
+<?php foreach ($mobileGroups as $group): ?>
+            <div class="mm__group">
+                <div class="mm__row">
+                    <a class="mm__link" href="<?= e($group['href']) ?>"><?= e($group['label']) ?></a>
+                    <button class="mm__plus" type="button" aria-expanded="false"
+                        aria-controls="<?= e($group['id']) ?>" aria-label="Show <?= e($group['label']) ?> pages">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="mm__panel" id="<?= e($group['id']) ?>">
+                    <div class="mm__panel-in">
+<?php foreach ($group['items'] as $item): ?>
+                        <a href="<?= e($item['href']) ?>"><?= e($item['label']) ?></a>
+<?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+<?php endforeach; ?>
+
+            <a class="mm__link" href="<?= e(base_url('careers')) ?>">Careers</a>
+            <a class="mm__cta" href="<?= e(base_url('contact')) ?>">Contact</a>
+        </nav>
     </div>
 
 <?= App::component('site/layout/mobile-dock', [

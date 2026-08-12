@@ -45,6 +45,11 @@ class ViewRouteProvider extends RouteProvider
             'careers' => ['CareersController', 'index'],
             'careers/{slug}' => ['CareersController', 'show'],
 
+            /* Before `{slug}`, or a department could be named `terms` and take
+               the footer's link with it. */
+            'terms' => ['LegalController', 'terms'],
+            'privacy' => ['LegalController', 'privacy'],
+
             /* Neither exists on disk, so the rewrite hands both here. Both are
                generated per request: a sitemap rebuilt nightly is a sitemap
                that is wrong for the rest of the day. */

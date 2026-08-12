@@ -24,6 +24,17 @@ class GalleryPageController extends SiteController
     {
         $items = gallery_published();
 
+        /* The channel rail's heading is a link, and the URL is already kept
+           once — the social repeater the footer reads. Absent from settings,
+           the heading is plain text rather than a link to nowhere. */
+        $channel = '';
+        foreach ($this->social() as $row) {
+            if (strcasecmp((string) $row['label'], 'youtube') === 0) {
+                $channel = (string) $row['url'];
+                break;
+            }
+        }
+
         $this->page('gallery', [
             'head' => $this->seoHead('page', 'gallery', [
                 'title' => 'Gallery — Photos & Video from Teresa Memorial Hospital',
@@ -33,6 +44,7 @@ class GalleryPageController extends SiteController
             ]),
             'items' => $items,
             'albums' => gallery_albums($items),
+            'channel' => $channel,
             'bannerImage' => media_url('corridor.jpg', $this->defaultImage()),
         ]);
     }

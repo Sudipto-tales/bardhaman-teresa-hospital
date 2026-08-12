@@ -217,12 +217,44 @@
                     clipPath: 'circle(150% at calc(100% - 46px) 46px)',
                     duration: 0.6, ease: 'power3.out'
                 })
-                .fromTo($$('a', mobileMenu),
+                /* Top-level rows only. Staggering every anchor would count the
+                   twenty-odd collapsed children too, so the last visible row
+                   arrived a second after the first. */
+                .fromTo($$(':scope > .mm__link, :scope > .mm__group', mobileMenu.querySelector('.mm__list')),
                     { y: 26, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.5, ease: EASE, stagger: 0.05 }, 0.15);
         });
 
         $$('a', mobileMenu).forEach((a) => a.addEventListener('click', closeMenu));
+
+        /* Accordion. `max-height` is animated in pixels because `auto` is not a
+           transitionable value; it is cleared back to the collapsed 0 on close.
+           One group open at a time — the department list is long enough that
+           two open groups push the rest of the menu out of reach. */
+        const panels = $$('.mm__plus', mobileMenu);
+
+        const setPanel = (btn, open) => {
+            const panel = document.getElementById(btn.getAttribute('aria-controls'));
+            if (!panel) return;
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            panel.style.maxHeight = open ? `${panel.scrollHeight}px` : '';
+        };
+
+        panels.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const open = btn.getAttribute('aria-expanded') !== 'true';
+                panels.forEach((other) => setPanel(other, other === btn && open));
+            });
+        });
+
+        /* A rotated phone changes the wrap count inside an open panel, so the
+           pinned height stops matching its content. */
+        window.addEventListener('resize', () => {
+            panels.forEach((btn) => {
+                if (btn.getAttribute('aria-expanded') === 'true') setPanel(btn, true);
+            });
+        }, { passive: true });
     };
 
     /* =====================================================

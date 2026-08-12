@@ -73,6 +73,17 @@ $byline = array_filter([$author['role'] ?? '', $date ?? '', $read ?? '']);
 <?php endforeach; ?>
                     </div>
 <?php endif; ?>
+
+                    <!-- paper only. It sits at the end of the flow rather than
+                         being fixed, so it prints once, in the corner of the
+                         last sheet, instead of on top of every page -->
+                    <div class="post-print-mark" aria-hidden="true">
+                        <img src="<?= e(site_url((string) setting('general', 'logo', ''), base_url('assets/logo-teresa.png'))) ?>" alt="">
+                        <div class="post-print-mark__txt">
+                            <strong><?= e((string) setting('general', 'name', 'Teresa Memorial Hospital')) ?></strong>
+                            <span><?= e(base_url('blog/' . $slug)) ?></span>
+                        </div>
+                    </div>
                 </article>
 
                 <aside class="pg-post__aside">
