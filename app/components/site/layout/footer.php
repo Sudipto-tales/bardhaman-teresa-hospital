@@ -37,7 +37,7 @@ $columns = $columns ?? [
         ['label' => 'Departments', 'href' => base_url('departments')],
     ]],
     ['title' => 'Support', 'links' => [
-        ['label' => 'Terms & Conditions', 'href' => base_url('contact')],
+        ['label' => 'Terms & Conditions', 'href' => base_url('terms')],
         /* The contact page's emergency panel, by id — the same target the
            dock's ambulance button uses. */
         ['label' => 'Emergency', 'href' => base_url('contact') . '#emergency'],
@@ -52,7 +52,7 @@ $columns = $columns ?? [
    the column beside this one, and the same label twice across adjacent
    columns reads as two different documents. */
 $legal = $legal ?? [
-    ['label' => 'Privacy Policy', 'href' => base_url('contact')],
+    ['label' => 'Privacy Policy', 'href' => base_url('privacy')],
     ['label' => 'Hospital Stay', 'href' => base_url('facilities') . '#visiting'],
 ];
 

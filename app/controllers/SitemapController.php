@@ -35,6 +35,10 @@ class SitemapController extends SiteController
         'blog' => ['daily', '0.8'],
         'careers' => ['daily', '0.7'],
         'contact' => ['monthly', '0.8'],
+        /* Crawled rarely and ranked last on purpose — they exist so the footer
+           links somewhere real, not to be found by search. */
+        'terms' => ['yearly', '0.2'],
+        'privacy' => ['yearly', '0.2'],
     ];
 
     public function index(): void

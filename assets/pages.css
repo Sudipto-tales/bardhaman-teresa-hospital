@@ -3291,6 +3291,219 @@ body.lb-open {
 }
 
 /* ---------------------------------------------------------
+   15b. LEGAL DOCUMENT (terms, privacy)
+   A contents rail and a column of numbered prose. The rail is
+   built from the same array as the body, so it can never list
+   a section that is not there.
+
+   Its own breakpoint lives here rather than in §16: the
+   document is one block and reads better with its stacking
+   rule beside the rule it undoes.
+   --------------------------------------------------------- */
+.lgl {
+    display: grid;
+    grid-template-columns: clamp(220px, 22vw, 290px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 60px);
+    align-items: start;
+}
+
+.lgl__toc {
+    position: sticky;
+    top: calc(var(--rail-h) + 24px);
+    padding: clamp(18px, 2vw, 26px);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-card);
+    background: var(--surface-alt);
+}
+
+.lgl__toc-head {
+    margin: 0 0 12px;
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.lgl__toc ol {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lgl__toc a {
+    display: flex;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--r-sm);
+    font-size: var(--fs-sm);
+    line-height: 1.35;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: background .18s var(--ease), color .18s var(--ease);
+}
+
+.lgl__toc a span {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+}
+
+.lgl__toc a:hover,
+.lgl__toc a:focus-visible {
+    background: var(--surface);
+    color: var(--crimson);
+}
+
+.lgl__toc a:hover span,
+.lgl__toc a:focus-visible span {
+    color: var(--crimson);
+}
+
+/* --- the document --- */
+.lgl__doc>*+* {
+    margin-top: clamp(18px, 2vw, 26px);
+}
+
+.lgl__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 7px 14px;
+    border-radius: var(--r-pill);
+    background: var(--surface-alt);
+    font-size: var(--fs-xs);
+    color: var(--ink-mute);
+}
+
+.lgl__lead {
+    margin: 0;
+    font-size: clamp(1rem, .95rem + .28vw, 1.14rem);
+    line-height: 1.7;
+    color: var(--ink);
+}
+
+/* the anchor a rail link lands on sits under the fixed header
+   without this */
+.lgl__sec {
+    scroll-margin-top: calc(var(--rail-h) + 20px);
+}
+
+.lgl__sec+.lgl__sec {
+    margin-top: clamp(26px, 3vw, 40px);
+}
+
+.lgl__sec h2 {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 12px;
+    font-family: var(--font-head);
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+}
+
+.lgl__sec h2 span {
+    color: var(--crimson);
+    font-variant-numeric: tabular-nums;
+}
+
+.lgl__sec p {
+    margin: 0;
+    line-height: 1.78;
+    color: var(--ink-soft);
+}
+
+.lgl__sec p+p,
+.lgl__sec p+ul {
+    margin-top: 12px;
+}
+
+.lgl__sec ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.lgl__sec ul li {
+    position: relative;
+    padding-left: 26px;
+    line-height: 1.7;
+    font-size: var(--fs-sm);
+    color: var(--ink-soft);
+}
+
+.lgl__sec ul li::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: .62em;
+    width: 7px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--grad-cta);
+}
+
+.lgl__doc a {
+    color: var(--crimson);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* --- the closing panel --- */
+.lgl__ask {
+    margin-top: clamp(32px, 3.6vw, 48px);
+    padding: clamp(22px, 2.6vw, 34px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface-alt);
+}
+
+.lgl__ask h3 {
+    margin: 0 0 8px;
+    font-family: var(--font-head);
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.lgl__ask p {
+    margin: 0;
+    color: var(--ink-soft);
+}
+
+.lgl__ask-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+
+    .lgl {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* above the document it indexes, and no longer pinned:
+       a sticky card on a phone is a card in the way */
+    .lgl__toc {
+        position: static;
+        order: -1;
+    }
+
+    .lgl__toc ol {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+/* ---------------------------------------------------------
    16. RESPONSIVE
    --------------------------------------------------------- */
 @media (max-width: 1024px) {
@@ -3738,6 +3951,8 @@ body.is-share-open {
     .post-related,
     .pg-cta,
     .pg-post__aside,
+    .lgl__toc,
+    .lgl__ask,
     .pop-ad,
     .pop-cookie,
     .share-sheet,
@@ -3748,6 +3963,7 @@ body.is-share-open {
     /* the sheet is the article and its photo; the shell around them
        carried colour and shadow that only cost ink */
     .pg-post,
+    .lgl,
     .pg-section > .pg-wrap {
         display: block !important;
         max-width: none;
