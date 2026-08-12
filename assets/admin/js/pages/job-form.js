@@ -31,7 +31,7 @@
 
         const settings = await store.getDoc('settings');
         const careersEmail = (settings.contact.emails.find((e) => /careers/i.test(e.label || e.address)) || {}).address
-            || 'careers@teresamemorialhospital.com';
+            || 'headhrtmh@gmail.com';
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [

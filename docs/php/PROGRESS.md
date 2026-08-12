@@ -631,7 +631,7 @@ form into `details`.
 ### 6.4
 
 **The components no longer carry a fallback phone number or address.** They
-carried the design's own — `+91 342 325 4567`, four times across the header,
+carried the design's own — `+91 90460 05557`, four times across the header,
 the dock, the closing band and the article banner — which read as a safety net
 and was in fact the failure this conversion set out to remove: a number nobody
 edits in the panel and nobody finds when it changes. A missing value now prints

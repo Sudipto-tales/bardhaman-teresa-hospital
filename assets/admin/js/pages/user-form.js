@@ -81,7 +81,7 @@
                                 placeholder: 'name@teresamemorialhospital.com',
                                 hint: 'This is the sign-in address. The invite goes here.',
                             }),
-                            F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 342 325 4567' }),
+                            F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 90460 05557' }),
                             F.media({ name: 'avatar', label: 'Photo', hint: 'Optional. Initials are used when there is none.' }),
                         ],
                     })}

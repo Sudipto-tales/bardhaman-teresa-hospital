@@ -1314,7 +1314,7 @@
            unless the visitor actually asked for Bengali */
         if (lang !== 'bn') return;
 
-        /* Left alone, the widget rewrites +91 342 325 4567 into Bengali
+        /* Left alone, the widget rewrites +91 90460 05557 into Bengali
            numerals, which is a number nobody can dial. Tag the links
            themselves rather than chasing each one through the generator, and
            only where the text is actually an address or a number — a plain

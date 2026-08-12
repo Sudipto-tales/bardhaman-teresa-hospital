@@ -164,7 +164,7 @@ function site_primary_email(): string
     return '';
 }
 
-/** '+91 342 325 4567' → '+913423254567'. tel: and wa.me both want this. */
+/** '+91 90460 05557' → '+919046005557'. tel: and wa.me both want this. */
 function site_digits(?string $value): string
 {
     $digits = preg_replace('/[^\d+]/', '', (string) $value) ?? '';
