@@ -89,6 +89,14 @@ class ApiGatewayProvider extends RouteProvider
                as the id of a gallery record. */
             'POST:api/gallery/video' => ['GalleryController', 'video', 'session'],
 
+            /* Content packs — docs/09-deployment.md §Content packs. No
+               session, and not public either: the guard is a token in .env
+               that is absent on a site with nothing left to import, and the
+               route answers 404 whenever it is. This is the deploy step the
+               host cannot run, not a panel feature. */
+            'GET:api/content/packs' => ['ContentController', 'index'],
+            'POST:api/content/import' => ['ContentController', 'import'],
+
             'POST:api/enquiries/{id}/reply' => ['EnquiryController', 'reply', 'session'],
             'POST:api/enquiries/{id}/note' => ['EnquiryController', 'note', 'session'],
 
