@@ -3183,3 +3183,385 @@ body.is-file-drag .dropzone {
     font-style: italic;
     text-decoration: none;
 }
+
+/* =========================================================
+   WELCOME CARD
+
+   The dashboard's opening card, ported from the mockup. The
+   illustration is meant to break out of the card's top-right
+   corner, so this one card keeps `overflow: visible` and the
+   copy is capped at 60% width to stay clear of it.
+
+   Every colour here reads from a token rather than the
+   mockup's raw pink hexes, because the same card has to sit on
+   the dark surface without repainting.
+   ========================================================= */
+.welcome-card {
+    position: relative;
+    overflow: visible;
+    min-height: 238px;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(120% 140% at 0% 0%,
+            var(--surface) 0%,
+            var(--surface-2) 45%,
+            var(--surface-3) 100%);
+}
+
+.welcome-card__copy {
+    position: relative;
+    z-index: 3;
+    max-width: 60%;
+}
+
+.welcome-card__hii {
+    font-family: var(--font-brand);
+    font-size: 62px;
+    line-height: .95;
+    font-weight: 800;
+    color: var(--brand-red);
+    letter-spacing: -1px;
+}
+
+.welcome-card__wave {
+    display: inline-block;
+    font-size: 44px;
+    transform-origin: 70% 80%;
+    animation: handwave 2.6s ease-in-out infinite;
+}
+
+.welcome-card__sub {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-top: var(--s2);
+}
+
+.welcome-card__sub b {
+    color: var(--brand-red);
+    font-weight: 600;
+}
+
+/* The logo slogan, in the face that keeps its conjuncts — see tokens. */
+.welcome-card__slogan {
+    font-family: var(--font-bn);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--brand-magenta);
+    margin-top: var(--s1);
+}
+
+.welcome-card__note {
+    font-size: var(--fs-sm);
+    color: var(--text-mid);
+    margin-top: 6px;
+}
+
+.badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: var(--s4);
+}
+
+.gbadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: var(--radius-full);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: var(--card-shadow);
+    color: var(--text-mid);
+}
+
+.gbadge i {
+    font-size: 9px;
+}
+
+.gbadge.up { color: var(--good); }
+.gbadge.down { color: var(--bad); }
+
+/* ---- the illustration, and the shapes behind it ---- */
+.welcome-card__art {
+    position: absolute;
+    right: 14px;
+    top: -46px;
+    width: 300px;
+    height: 320px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.welcome-card__doctor {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 24px 26px rgba(112, 20, 44, .22));
+    animation: floaty 5s ease-in-out infinite;
+}
+
+.welcome-card__doctor .wave-arm {
+    transform-box: view-box;
+    transform-origin: 194px 208px;
+    animation: armwave 2.6s ease-in-out infinite;
+}
+
+.welcome-card__doctor .eye {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: blink 5s infinite;
+}
+
+.splash,
+.orbit,
+.spark {
+    position: absolute;
+    z-index: 1;
+}
+
+.splash {
+    border-radius: 46% 54% 62% 38% / 52% 40% 60% 48%;
+    filter: blur(1px);
+}
+
+.splash--a {
+    inset: 44px 24px 44px 34px;
+    background: linear-gradient(135deg,
+            color-mix(in srgb, var(--brand-magenta) 30%, transparent),
+            color-mix(in srgb, var(--brand-red) 16%, transparent));
+    animation: morph 9s ease-in-out infinite;
+}
+
+.splash--b {
+    inset: 86px 60px 88px 62px;
+    background: linear-gradient(135deg,
+            color-mix(in srgb, var(--brand-blue) 22%, transparent),
+            color-mix(in srgb, var(--brand-navy) 6%, transparent));
+    animation: morph 11s ease-in-out infinite reverse;
+}
+
+.orbit {
+    border-radius: 50%;
+    border: 2px dashed color-mix(in srgb, var(--brand-red) 22%, transparent);
+}
+
+.orbit--a {
+    inset: 34px 16px 46px 24px;
+    animation: spin 26s linear infinite;
+}
+
+.orbit--b {
+    inset: 74px 54px 86px 60px;
+    border-style: solid;
+    border-color: color-mix(in srgb, var(--brand-navy) 20%, transparent);
+    animation: spin 18s linear infinite reverse;
+}
+
+.spark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.spark--1 {
+    top: 56px;
+    left: 12px;
+    background: var(--brand-navy);
+    opacity: .55;
+    animation: bob 3.4s ease-in-out infinite;
+}
+
+.spark--2 {
+    top: 132px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background: color-mix(in srgb, var(--brand-red) 40%, transparent);
+    animation: bob 4.2s ease-in-out infinite .6s;
+}
+
+.spark--3 {
+    bottom: 42px;
+    left: 26px;
+    width: 8px;
+    height: 8px;
+    background: color-mix(in srgb, var(--brand-navy) 45%, transparent);
+    animation: bob 3.8s ease-in-out infinite 1.1s;
+}
+
+@keyframes floaty {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(-1.2deg); }
+}
+
+@keyframes armwave {
+    0%, 100% { transform: rotate(-8deg); }
+    50% { transform: rotate(16deg); }
+}
+
+@keyframes handwave {
+    0%, 100% { transform: rotate(-12deg); }
+    50% { transform: rotate(18deg); }
+}
+
+@keyframes blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(.1); }
+}
+
+@keyframes morph {
+    0%, 100% {
+        border-radius: 46% 54% 62% 38% / 52% 40% 60% 48%;
+        transform: scale(1);
+    }
+
+    50% {
+        border-radius: 62% 38% 42% 58% / 40% 58% 42% 60%;
+        transform: scale(1.06);
+    }
+}
+
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* The global reduced-motion rule only shortens durations; a loop that never
+   ends has to be stopped outright. */
+@media (prefers-reduced-motion: reduce) {
+
+    .welcome-card__doctor,
+    .welcome-card__doctor .wave-arm,
+    .welcome-card__doctor .eye,
+    .welcome-card__wave,
+    .splash,
+    .orbit,
+    .spark {
+        animation: none !important;
+    }
+}
+
+@media (max-width: 1350px) {
+    .welcome-card__art {
+        width: 250px;
+        height: 268px;
+        top: -30px;
+    }
+
+    .welcome-card__hii { font-size: 52px; }
+}
+
+@media (max-width: 1200px) {
+    .welcome-card__copy { max-width: 66%; }
+}
+
+/* Below this the card is too narrow for the copy to clear the illustration,
+   so the illustration steps back behind it instead of being dropped — the
+   card would lose its shape entirely. */
+@media (max-width: 900px) {
+    .welcome-card__art { opacity: .22; }
+
+    .welcome-card__copy { max-width: 100%; }
+}
+
+/* =========================================================
+   METER CARD — gauge plus labelled tracks
+   ========================================================= */
+.gauge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* One conic gradient, cut at --val percent. A ring drawn this way needs no
+   SVG and animates by changing a single custom property. */
+.gauge {
+    --val: 0;
+    flex: 0 0 104px;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(var(--brand-red) calc(var(--val) * 1%), var(--surface-3) 0);
+}
+
+.gauge__core {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: var(--surface);
+    display: grid;
+    place-items: center;
+    line-height: 1;
+}
+
+.gauge__core strong {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.gauge__core small {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.meter-list {
+    list-style: none;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.meter-list li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--s1) var(--s2);
+    align-items: center;
+    font-size: var(--fs-sm);
+    color: var(--text-mid);
+}
+
+.meter-list b {
+    font-size: var(--fs-sm);
+    color: var(--text-dark);
+    font-variant-numeric: tabular-nums;
+}
+
+.meter-list .track {
+    grid-column: 1 / -1;
+}
+
+.track {
+    height: 6px;
+    border-radius: 6px;
+    background: var(--surface-3);
+    overflow: hidden;
+}
+
+.track i {
+    display: block;
+    height: 100%;
+    border-radius: 6px;
+    background: var(--brand-red);
+    transition: width 1s var(--ease);
+}
+
+/* Stacked once the card is narrow enough that a 104px gauge leaves the
+   tracks too short to read. */
+@media (max-width: 640px) {
+    .gauge-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .gauge { align-self: center; }
+}

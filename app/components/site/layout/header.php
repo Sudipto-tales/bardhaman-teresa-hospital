@@ -91,7 +91,11 @@ $mobileGroups = [
     ],
 ];
 ?>
-    <div class="mobile-menu" id="mobileMenu">
+    <!-- data-lenis-prevent: Lenis is stopped while the menu is open, and a
+         stopped Lenis preventDefaults every wheel and touchmove it sees — which
+         killed scrolling inside this overlay too. The attribute hands events on
+         this subtree back to the browser, same as the home page's scrollers. -->
+    <div class="mobile-menu" id="mobileMenu" data-lenis-prevent>
         <nav class="mm__list" aria-label="Mobile menu">
             <a class="mm__link" href="<?= e(base_url('/')) ?>">Home</a>
 

@@ -177,7 +177,7 @@
         {
             "group_name": "integrations",
             "setting_key": "smtpHost",
-            "value": "\"smtp.teresamemorialhospital.com\""
+            "value": "\"smtp.gmail.com\""
         },
         {
             "group_name": "integrations",
@@ -187,12 +187,12 @@
         {
             "group_name": "integrations",
             "setting_key": "smtpUser",
-            "value": "\"noreply@teresamemorialhospital.com\""
+            "value": "\"\""
         },
         {
             "group_name": "integrations",
             "setting_key": "smtpPass",
-            "value": "\"••••••••••••\""
+            "value": "\"\""
         },
         {
             "group_name": "integrations",
@@ -202,7 +202,7 @@
         {
             "group_name": "integrations",
             "setting_key": "smtpFromEmail",
-            "value": "\"noreply@teresamemorialhospital.com\""
+            "value": "\"tmh.bdn@gmail.com\""
         },
         {
             "group_name": "integrations",

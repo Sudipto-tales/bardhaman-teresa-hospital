@@ -53,6 +53,18 @@
         document.body.style.overflow = openCount ? 'hidden' : '';
     }
 
+    /* Overlays stack in the order they were opened, rather than by which
+       class they carry. The media picker is a drawer raised from inside a
+       form modal, and the stylesheet puts .drawer-root below .modal-root:
+       the picker rendered behind the modal's scrim, which blurred it and
+       ate every click on a tile. Each overlay now sits one step above the
+       one that opened it, still under the toasts at 100. */
+    const Z_BASE = 80;
+
+    function raise(el) {
+        el.style.zIndex = String(Z_BASE + openCount);
+    }
+
     /* ---------------------------------------------------------
        confirm() — resolves true/false. Never throws.
        --------------------------------------------------------- */
@@ -104,6 +116,7 @@
 
             document.body.appendChild(rootEl);
             lockScroll(true);
+            raise(rootEl);
             const release = trap(rootEl, rootEl.querySelector('.modal'));
 
             const close = (result) => {
@@ -173,6 +186,7 @@
 
             document.body.appendChild(rootEl);
             lockScroll(true);
+            raise(rootEl);
             const panel = rootEl.querySelector('.modal');
             const release = trap(rootEl, panel);
 
@@ -222,6 +236,7 @@
 
             document.body.appendChild(rootEl);
             lockScroll(true);
+            raise(rootEl);
             const panel = rootEl.querySelector('.drawer');
             const release = trap(rootEl, panel);
 

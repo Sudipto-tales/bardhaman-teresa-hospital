@@ -996,27 +996,41 @@ body.menu-open .nav-shell {
     z-index: 1250;
 }
 
-/* The overlay is a scroller, not a centred stack. Centring only works while the
-   list is shorter than the viewport; with the department group expanded it is
-   not, and a centred column overflows off both ends with no way to reach either.
-   Top-aligned + `overflow-y: auto` keeps every item reachable at any height, and
-   `overscroll-behavior` stops a flick at the end of the list scrolling the page
-   underneath. The top pad clears the nav shell, which sits above this. */
+/* The overlay is a scroller, not a centred stack. Vertical centring — by
+   `justify-content` or by auto margins — only holds while the list is shorter
+   than the viewport; with the department group expanded it is not, and the
+   list then reads as floating in the middle of an empty screen. Top-aligned
+   from the start is both the standard shape and the one that survives an open
+   group: the list grows downward into the scroll. `overscroll-behavior` stops
+   a flick at the end of the list from scrolling the page underneath. The top
+   pad clears the nav shell, which sits above this; the bottom pad clears the
+   phone dock and the home indicator. */
 .mobile-menu {
     position: fixed;
     inset: 0;
     z-index: 1150;
     display: none;
     flex-direction: column;
-    padding: calc(96px + env(safe-area-inset-top, 0px)) var(--sp-gutter)
-        calc(40px + env(safe-area-inset-bottom, 0px));
+    justify-content: flex-start;
+    padding: calc(90px + env(safe-area-inset-top, 0px)) var(--sp-gutter)
+        calc(96px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    /* the overlay scrolls itself; without this the browser can hand a vertical
+       drag to the page behind it before this element gets it */
+    touch-action: pan-y;
     background: var(--overlay-bg);
     -webkit-backdrop-filter: blur(22px);
     backdrop-filter: blur(22px);
     clip-path: circle(0% at calc(100% - 46px) 46px);
+}
+
+/* The page behind must not scroll while the overlay is open. Lenis is stopped
+   for the same reason, but it is absent under `prefers-reduced-motion`, and
+   this also covers the moment before its script loads. */
+body.menu-open {
+    overflow: hidden;
 }
 
 .mm__list {
@@ -1024,11 +1038,12 @@ body.menu-open .nav-shell {
     flex-direction: column;
     width: 100%;
     max-width: 520px;
-    /* Auto margins, not `justify-content: center` — both centre the list while
-       it fits, but auto margins resolve to 0 once free space goes negative, so
-       an expanded group overflows downward into the scroll rather than off the
-       top where it cannot be reached. */
-    margin: auto;
+    /* Horizontal centring only — see the overlay's note. `flex: none` because a
+       column flex item is shrinkable on its main axis: without it an expanded
+       group can be squeezed to the overlay's height and spill out of its own
+       box instead of extending the scroll. */
+    flex: none;
+    margin: 0 auto;
 }
 
 /* One size for every top-level row. The old clamp topped out at 2.2rem, which
