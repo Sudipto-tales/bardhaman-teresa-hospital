@@ -197,35 +197,6 @@
         window.addEventListener('resize', centreMega, { passive: true });
 
         /* mobile menu */
-        const closeMenu = () => {
-            document.body.classList.remove('menu-open');
-            if (lenis) lenis.start();
-            gsap.to(mobileMenu, {
-                clipPath: 'circle(0% at calc(100% - 46px) 46px)',
-                duration: 0.5, ease: 'power3.in'
-            });
-        };
-
-        burger.addEventListener('click', () => {
-            const open = !document.body.classList.contains('menu-open');
-            if (!open) return closeMenu();
-
-            document.body.classList.add('menu-open');
-            if (lenis) lenis.stop();
-            gsap.timeline()
-                .to(mobileMenu, {
-                    clipPath: 'circle(150% at calc(100% - 46px) 46px)',
-                    duration: 0.6, ease: 'power3.out'
-                })
-                /* Top-level rows only. Staggering every anchor would count the
-                   twenty-odd collapsed children too, so the last visible row
-                   arrived a second after the first. */
-                .fromTo($$(':scope > .mm__link, :scope > .mm__group', mobileMenu.querySelector('.mm__list')),
-                    { y: 26, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.5, ease: EASE, stagger: 0.05 }, 0.15);
-        });
-
-        $$('a', mobileMenu).forEach((a) => a.addEventListener('click', closeMenu));
 
         /* Accordion. `max-height` is animated in pixels because `auto` is not a
            transitionable value; it is cleared back to the collapsed 0 on close.
@@ -245,6 +216,20 @@
                 e.preventDefault();
                 const open = btn.getAttribute('aria-expanded') !== 'true';
                 panels.forEach((other) => setPanel(other, other === btn && open));
+
+                /* Twelve departments do not fit under their own row, so an open
+                   group would otherwise unfold mostly below the fold with no
+                   sign that there is more. Pull the row it belongs to up to the
+                   top of the overlay once the panel has finished expanding, so
+                   the children it just revealed are the thing on screen. */
+                if (!open) return;
+                const row = btn.closest('.mm__group');
+                const settle = () => {
+                    const top = row.offsetTop - mobileMenu.clientHeight * 0.12;
+                    mobileMenu.scrollTo({ top: Math.max(0, top), behavior: REDUCED ? 'auto' : 'smooth' });
+                };
+                if (REDUCED) settle();
+                else setTimeout(settle, 360); /* matches .mm__panel's transition */
             });
         });
 
@@ -255,6 +240,41 @@
                 if (btn.getAttribute('aria-expanded') === 'true') setPanel(btn, true);
             });
         }, { passive: true });
+
+        const closeMenu = () => {
+            document.body.classList.remove('menu-open');
+            if (lenis) lenis.start();
+            gsap.to(mobileMenu, {
+                clipPath: 'circle(0% at calc(100% - 46px) 46px)',
+                duration: 0.5, ease: 'power3.in'
+            });
+        };
+
+        burger.addEventListener('click', () => {
+            const open = !document.body.classList.contains('menu-open');
+            if (!open) return closeMenu();
+
+            document.body.classList.add('menu-open');
+            if (lenis) lenis.stop();
+            /* Reopen from the top: the overlay keeps whatever scroll offset the
+               last visit left it at, and a menu that opens mid-list reads as
+               broken. Collapse the groups for the same reason. */
+            panels.forEach((btn) => setPanel(btn, false));
+            mobileMenu.scrollTop = 0;
+            gsap.timeline()
+                .to(mobileMenu, {
+                    clipPath: 'circle(150% at calc(100% - 46px) 46px)',
+                    duration: 0.6, ease: 'power3.out'
+                })
+                /* Top-level rows only. Staggering every anchor would count the
+                   twenty-odd collapsed children too, so the last visible row
+                   arrived a second after the first. */
+                .fromTo($$(':scope > .mm__link, :scope > .mm__group', mobileMenu.querySelector('.mm__list')),
+                    { y: 26, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.5, ease: EASE, stagger: 0.05 }, 0.15);
+        });
+
+        $$('a', mobileMenu).forEach((a) => a.addEventListener('click', closeMenu));
     };
 
     /* =====================================================
