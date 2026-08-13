@@ -111,7 +111,8 @@ $developer = $developer ?? ['name' => 'Promix', 'url' => 'https://promix.tech/',
                 <h4>Social Media</h4>
                 <div class="ft__social">
 <?php foreach ($social as $item): ?>
-                    <a href="<?= e($item['url'] ?? '#') ?>" aria-label="<?= e($item['label'] ?? '') ?>"><i class="<?= e($item['icon'] ?? '') ?>"></i></a>
+                    <a href="<?= e($item['url'] ?? '#') ?>" target="_blank" rel="noopener noreferrer"
+                        aria-label="<?= e($item['label'] ?? '') ?> (opens in a new tab)"><i class="<?= e($item['icon'] ?? '') ?>"></i></a>
 <?php endforeach; ?>
                 </div>
             </div>
