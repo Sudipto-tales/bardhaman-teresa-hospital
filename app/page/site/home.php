@@ -186,8 +186,8 @@ $callLabel = trim((string) ($hero['ghostLabel'] ?? ''));
         <div class="about__visuals">
             <div class="about__frame">
                 <div class="img-stretch about__media">
-                    <img src="<?= e(($section['data']['image'] ?? '') !== '' ? $section['data']['image'] : $bannerImage) ?>"
-                        alt="Inside Teresa Memorial Hospital" class="about__img" loading="lazy">
+                    <img src="<?= e(base_url('assets/image/teresa-hospital.jpg')) ?>"
+                        alt="Teresa Memorial Hospital building at night" class="about__img" loading="lazy">
                 </div>
 
                 <div class="about__stat about__stat--tr">
