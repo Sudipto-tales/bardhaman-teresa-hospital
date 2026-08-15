@@ -23,14 +23,21 @@
 
     const HOME_BLOCK = 6;
 
+    /* Values are the registry's enum (config/resources.php, `category`), never
+       the labels. They travel two ways — into `?category=` on the list, and
+       into the PATCH body on save — and a label in either place is a filter
+       that matches nothing and a save the server refuses. */
+    const TEST = 'test';
+    const PACKAGE = 'package';
+
     const CATEGORIES = [
-        { value: 'Test', label: 'Test' },
-        { value: 'Health package', label: 'Health package' },
+        { value: TEST, label: 'Test' },
+        { value: PACKAGE, label: 'Health package' },
     ];
 
     const TABS = [
-        ['tab-tests', 'Test', 'Tests', 'fa-vial'],
-        ['tab-packages', 'Health package', 'Health packages', 'fa-clipboard-check'],
+        ['tab-tests', TEST, 'Tests', 'fa-vial'],
+        ['tab-packages', PACKAGE, 'Health packages', 'fa-clipboard-check'],
     ];
 
     let list = null;
@@ -91,8 +98,8 @@
        --------------------------------------------------------- */
     async function paintSummary() {
         const rows = await store.all('lab-tests');
-        const tests = rows.filter((r) => r.category === 'Test');
-        const packages = rows.filter((r) => r.category === 'Health package');
+        const tests = rows.filter((r) => r.category === TEST);
+        const packages = rows.filter((r) => r.category === PACKAGE);
         const featured = rows.filter((r) => r.featured && r.status === 'published');
 
         document.getElementById('strip').innerHTML = U.statStrip([
@@ -174,7 +181,7 @@
                 },
                 {
                     label: 'Includes', width: '10%',
-                    render: (r) => (r.category === 'Health package'
+                    render: (r) => (r.category === PACKAGE
                         ? `<span class="pill" title="${U.esc((r.includes || []).map((i) => i.item).join(', '))}">${(r.includes || []).length} item${(r.includes || []).length === 1 ? '' : 's'}</span>`
                         : '<span class="muted">—</span>'),
                 },
@@ -291,8 +298,8 @@
        --------------------------------------------------------- */
     async function edit(record) {
         const isPackage = record
-            ? record.category === 'Health package'
-            : (list.state.filters.category === 'Health package');
+            ? record.category === PACKAGE
+            : (list.state.filters.category === PACKAGE);
 
         const data = await formLib.editModal({
             title: record ? `Edit ${record.name}` : `Add a ${isPackage ? 'health package' : 'test'}`,
@@ -300,7 +307,7 @@
             icon: isPackage ? 'fa-clipboard-check' : 'fa-vial',
             record,
             defaults: {
-                category: isPackage ? 'Health package' : 'Test',
+                category: isPackage ? PACKAGE : TEST,
                 status: 'published',
                 icon: isPackage ? 'fa-clipboard-check' : 'fa-vial',
                 homeCollection: !isPackage,
@@ -347,7 +354,7 @@
 
         /* A test with an includes list is a package somebody forgot to
            retype. Say so rather than saving a row the site cannot render. */
-        if (data.category === 'Test' && (data.includes || []).length) {
+        if (data.category === TEST && (data.includes || []).length) {
             toast.error('A test cannot include other tests', {
                 body: 'Change the kind to Health package, or clear the includes list.',
             });

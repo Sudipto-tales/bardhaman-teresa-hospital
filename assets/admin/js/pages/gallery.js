@@ -54,9 +54,10 @@
     let settings = {};
     let usage = {};   /* fileKey -> [{label, name, href}] */
 
-    /* The public site asks for a 500px rendition of the portrait the gallery
-       holds at 1600px. Same file, different query string — so two URLs are
-       the same picture when they name the same Unsplash photo. */
+    /* The library is local files now, so the path alone identifies a picture.
+       The Unsplash branch stays for URLs pasted into the panel by hand, where
+       a 500px and a 1600px rendition of one photo differ only by query
+       string and must not read as two files. */
     function fileKey(url) {
         const m = /photo-([A-Za-z0-9_-]+)/.exec(url || '');
         return m ? m[1] : String(url || '').split('?')[0];

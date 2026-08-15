@@ -21,7 +21,17 @@
     /* The public site's root, absolute — see core/layout.js. */
     const SITE = window.TMH.api.base;
 
-    const SOURCES = ['Website form', 'Google', 'Manual'];
+    /* The values are the registry's enum (config/resources.php, `source`), not
+       the labels. A select built from bare strings uses the label as the value,
+       which meant the record's own `manual` matched no option, the select bound
+       empty, and the PATCH sent `source: ""` — NULL into a NOT NULL column. */
+    const SOURCES = [
+        { value: 'website', label: 'Website form' },
+        { value: 'google', label: 'Google' },
+        { value: 'manual', label: 'Manual' },
+    ];
+
+    const sourceLabel = (value) => (SOURCES.find((s) => s.value === value) || {}).label || 'Manual';
 
     const TABS = [
         ['tab-pending', 'draft', 'Pending', 'fa-inbox'],
@@ -140,7 +150,7 @@
             </div>
 
             <div class="quote-card__meta">
-                <span class="pill pill--soft">${U.esc(row.source || 'Manual')}</span>
+                <span class="pill pill--soft">${U.esc(sourceLabel(row.source))}</span>
                 ${dept ? `<span class="pill pill--soft">${U.esc(dept.name)}</span>` : ''}
                 ${row.featured ? '<span class="tag info"><i class="fa-solid fa-star"></i> Featured</span>' : ''}
                 ${lowRating ? '<span class="tag warn">Low rating</span>' : ''}
@@ -233,7 +243,7 @@
             subtitle: 'Typed in here rather than submitted through the site.',
             icon: 'fa-quote-left',
             record,
-            defaults: { status: 'published', source: 'Manual', rating: '5' },
+            defaults: { status: 'published', source: 'manual', rating: '5' },
             html: F.section({
                 fields: [
                     F.textarea({

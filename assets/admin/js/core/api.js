@@ -78,8 +78,13 @@
         const o = options || {};
         const url = new URL(BASE + String(path).replace(/^\/+/, ''), location.origin);
 
+        /* 'all' is the panel's "no filter" sentinel, so it is dropped rather
+           than sent. It is not a sentinel in the search box: `q=all` is a
+           person looking for the word, and skipping it here silently returned
+           the unfiltered table instead. */
         Object.entries(o.query || {}).forEach(([k, v]) => {
-            if (v === undefined || v === null || v === '' || v === 'all') return;
+            if (v === undefined || v === null || v === '') return;
+            if (v === 'all' && k !== 'q') return;
             url.searchParams.set(k, v);
         });
 
