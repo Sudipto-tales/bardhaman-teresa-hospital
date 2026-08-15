@@ -19,7 +19,19 @@
         new: 'warn', replied: 'info', closed: 'ok', spam: 'off',
     };
 
-    const SOURCES = ['Contact form', 'Chat widget', 'Phone widget', 'Landing page'];
+    /* The values PublicIntakeController::SOURCES writes, not the words the
+       filter prints. Sending a label filtered on a string no row has ever
+       held, so the Source control returned an empty table whatever was picked.
+       `appointment` was missing from the list altogether. */
+    const SOURCES = [
+        { value: 'contact', label: 'Contact form' },
+        { value: 'appointment', label: 'Appointment form' },
+        { value: 'chat', label: 'Chat widget' },
+        { value: 'phone', label: 'Phone widget' },
+        { value: 'landing', label: 'Landing page' },
+    ];
+
+    const sourceLabel = (value) => (SOURCES.find((s) => s.value === value) || {}).label || value || '—';
 
     /* Date windows. The store has no field to compare against, so each carries
        its own predicate — see the filterFns note in core/store.js. */
@@ -68,7 +80,7 @@
             searchPlaceholder: 'Search name, subject or message',
             statusOptions: STATUS,
             filters: [
-                { key: 'source', label: 'Source', options: SOURCES.map((s) => ({ value: s, label: s })) },
+                { key: 'source', label: 'Source', options: SOURCES },
                 {
                     key: 'assignedTo',
                     label: 'Assigned',
@@ -117,7 +129,7 @@
                         <span class="cell-main">${r.priority === 'high' ? '<i class="fa-solid fa-circle-exclamation" style="color:var(--accent-orange)" title="High priority"></i> ' : ''}${U.mark(r.subject, s.q)}</span>
                         <span class="cell-sub clamp-2">${U.esc(r.message)}</span>`,
                 },
-                { label: 'Source', sort: 'source', width: '12%', render: (r) => `<span class="chip">${U.esc(r.source || '—')}</span>` },
+                { label: 'Source', sort: 'source', width: '12%', render: (r) => `<span class="chip">${U.esc(sourceLabel(r.source))}</span>` },
                 {
                     label: 'Department', width: '13%',
                     render: (r) => {
