@@ -19,7 +19,7 @@ class FacilityController extends SiteController
             ]),
             'facilities' => facilities_published(),
             'counters' => counters_for_scope('global', 4) ?: counters_for_scope('home', 4),
-            'bannerImage' => media_url('ward.jpg', $this->defaultImage()),
+            'bannerImage' => media_url('teresa-hospital-1.png', $this->defaultImage()),
             'introImage' => media_url('theatre.jpg', $this->defaultImage()),
             'introImageAlt' => media_alt('theatre.jpg', 'A modular operating theatre at Teresa Memorial Hospital'),
             'labDiagnostics' => department_by_slug('pathology') !== null,
