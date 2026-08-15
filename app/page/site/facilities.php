@@ -14,7 +14,7 @@
     'title' => 'Everything Needed,',
     'strong' => 'On One Campus',
     'lead' => 'Emergency, theatre, ICU, laboratory, imaging and pharmacy sit inside the same building — so a deteriorating patient never leaves the premises to get what they need.',
-    'img' => $bannerImage ?? '',
+    'img' => base_url('assets/image/teresa-hospital-1.png'),
     'chips' => ['24/7 Emergency', 'Intensive care', 'Modular theatres'],
     'primary' => ['href' => base_url('contact'), 'label' => 'Plan Your Visit'],
     'ghost' => !empty($labDiagnostics)
