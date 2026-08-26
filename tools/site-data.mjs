@@ -541,7 +541,7 @@ export const MILESTONES = [
     '2023 — Modular theatres rebuilt',
     '2024 — Digital records go live',
     '2025 — Fourth theatre added',
-    '2026 — 210 beds across 20 units',
+    '2026 — 204 beds across 20 units',
 ];
 
 /* The three pastel cards under the about-page banner strip. Order is

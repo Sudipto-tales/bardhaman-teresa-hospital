@@ -45,7 +45,7 @@ class HomeController extends SiteController
                    is the hospital. head.php takes titleFull verbatim. */
                 'titleFull' => (string) setting('general', 'name', 'Teresa Memorial Hospital')
                     . ' &mdash; ' . (string) setting('general', 'tagline', 'Bardhaman'),
-                'description' => 'A 210-bed multispeciality hospital and nursing home in Bardhaman (Burdwan) '
+                'description' => 'A 204-bed multispeciality hospital and nursing home in Bardhaman (Burdwan) '
                     . 'with a 24/7 emergency, twelve departments and a same-day laboratory.',
                 /* The home page loads no pages.css — every rule it
                    needs is in website.css, and pages.css restyles some of the

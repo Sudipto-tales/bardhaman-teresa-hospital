@@ -1,7 +1,7 @@
 <?php
 
 /**
- * counters — every animated number on the site, so "210 beds" is one row
+ * counters — every animated number on the site, so "204 beds" is one row
  * wherever it appears (docs/02-content-model.md §13).
  *
  * The table has no `status` column: a counter is either in a scope or it is
