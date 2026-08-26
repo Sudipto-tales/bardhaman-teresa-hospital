@@ -396,19 +396,20 @@
                 { scaleY: 1, scaleX: 1, opacity: 1, duration: 1, ease: 'power4.out' }, 0.55)
             .fromTo('.hero__scroll', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.9);
 
-        /* Ken Burns crossfade — replaces the old setInterval opacity flip */
+        /* Ken Burns crossfade — cycles through 3 images every 6 seconds */
         let active = 0;
         gsap.set(bgs[0], { opacity: 1, scale: 1 });
         gsap.set(bgs[1], { opacity: 0, scale: 1.08 });
+        gsap.set(bgs[2], { opacity: 0, scale: 1.08 });
 
         setInterval(() => {
             const cur = bgs[active];
-            const next = bgs[1 - active];
+            const next = bgs[(active + 1) % 3];
             gsap.timeline()
                 .fromTo(next, { opacity: 0, scale: 1.08 }, { opacity: 1, duration: 1.6, ease: 'power2.inOut' }, 0)
                 .to(next, { scale: 1, duration: 7, ease: 'none' }, 0)
                 .to(cur, { opacity: 0, duration: 1.6, ease: 'power2.inOut' }, 0);
-            active = 1 - active;
+            active = (active + 1) % 3;
         }, 6000);
 
         /* scroll parallax on the hero layers */

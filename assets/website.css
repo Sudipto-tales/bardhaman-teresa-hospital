@@ -1338,12 +1338,17 @@ body.menu-open {
 }
 
 .hero__bg--1 {
-    background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop');
+    background-image: url('/assets/image/herobg1.jpg');
     opacity: 1;
 }
 
 .hero__bg--2 {
-    background-image: url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=2000&auto=format&fit=crop');
+    background-image: url('/assets/image/herobg2.jpg');
+    opacity: 0;
+}
+
+.hero__bg--3 {
+    background-image: url('/assets/image/herobg3.jpg');
     opacity: 0;
 }
 

@@ -42,6 +42,7 @@ $heading = static function (array $section, string $fallback): string {
     <section class="hero" id="hero" data-section="Home">
         <div class="hero__bg hero__bg--1"></div>
         <div class="hero__bg hero__bg--2"></div>
+        <div class="hero__bg hero__bg--3"></div>
 
         <div class="hero__cards">
             <div class="hero-card hero-card--main">
