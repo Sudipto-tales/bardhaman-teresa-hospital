@@ -36,7 +36,7 @@
                         F.text({ name: 'shortName', label: 'Short name', hint: 'Used in the browser tab and the mobile header.' }),
                         F.text({ name: 'tagline', label: 'Tagline', wide: true, placeholder: 'Compassionate Care, Every Day' }),
                         F.number({ name: 'establishedYear', label: 'Established', min: 1800,
-                            hint: 'Drives the “since 1994” line and the milestone timeline.' }),
+                            hint: 'Drives the “since 2019” line and the milestone timeline.' }),
                         F.text({ name: 'registrationNo', label: 'Registration number', hint: 'Printed in the footer.' }),
                     ],
                 })}

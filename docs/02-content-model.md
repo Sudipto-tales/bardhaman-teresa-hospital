@@ -34,7 +34,7 @@ One record. Splitting is a UI concern only — the API returns one object.
 | `logo` | media | Header logo — currently `assets/logo-teresa.png` |
 | `logoDark` | media | Dark-theme variant |
 | `favicon` | media | |
-| `establishedYear` | number | 1994 — drives the "since" line and milestones |
+| `establishedYear` | number | 2019 — drives the "since" line and milestones |
 | `registrationNo` | text | Shown in the footer |
 | `openingHours` | repeater `{day, from, to, closed}` | 7 rows |
 | `emergencyAlwaysOpen` | bool | Renders "24/7" instead of hours for emergency |

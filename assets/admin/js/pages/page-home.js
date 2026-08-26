@@ -71,7 +71,7 @@
                 key: 'hero', label: 'Hero banner', open: true, enabled: on('hero'),
                 sub: 'The first screen. Headline splits so the second half carries the brand colour.',
                 fields: [
-                    F.text({ name: 'hero.eyebrow', label: 'Eyebrow', placeholder: 'Bardhaman · Since 1994' }),
+                    F.text({ name: 'hero.eyebrow', label: 'Eyebrow', placeholder: 'Bardhaman · Since 2019' }),
                     F.media({ name: 'hero.image', label: 'Background image', wide: false }),
                     F.text({ name: 'hero.title', label: 'Headline — first half', required: true }),
                     F.text({ name: 'hero.titleStrong', label: 'Headline — second half', required: true }),
