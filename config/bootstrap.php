@@ -60,3 +60,11 @@ function e($value): string
 {
     return htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8');
 }
+
+/** Check if current request or base URL is over HTTPS. */
+function is_https(): bool
+{
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
+        || str_starts_with($GLOBALS['base_url'] ?? '', 'https://');
+}

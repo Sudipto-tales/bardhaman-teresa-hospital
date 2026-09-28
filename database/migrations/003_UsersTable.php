@@ -40,6 +40,7 @@ class UsersTable extends Migration
             'reset_token VARCHAR(255)',
             'reset_expires_at DATETIME',
             'sort_order INT NOT NULL DEFAULT 0',
+            'updated_by INT',
             $this->timestamps(),
         ]);
 

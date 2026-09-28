@@ -129,7 +129,9 @@ class ResourceController extends ApiController
 
         $columns['created_at'] = now_iso();
         $columns['updated_at'] = now_iso();
-        $columns['updated_by'] = $this->userId();
+        if ($this->hasColumn($r['table'], 'updated_by')) {
+            $columns['updated_by'] = $this->userId();
+        }
 
         $id = $this->insert($r, $columns);
         $this->writeJoins($r, $id, $body);
@@ -199,7 +201,9 @@ class ResourceController extends ApiController
         }
 
         $columns['updated_at'] = now_iso();
-        $columns['updated_by'] = $this->userId();
+        if ($this->hasColumn($r['table'], 'updated_by')) {
+            $columns['updated_by'] = $this->userId();
+        }
 
         $this->updateRow($r, (int) $existing['id'], $columns);
         $this->writeJoins($r, (int) $existing['id'], $body);
@@ -248,10 +252,17 @@ class ResourceController extends ApiController
 
         /* Soft. The panel offers Undo on the toast, and a hard delete makes
            that a lie. The row leaves every list the moment deleted_at is set. */
-        db_execute(
-            'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ?, updated_by = ? WHERE id = ?',
-            [now_iso(), now_iso(), $this->userId(), $row['id']]
-        );
+        if ($this->hasColumn($r['table'], 'updated_by')) {
+            db_execute(
+                'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ?, updated_by = ? WHERE id = ?',
+                [now_iso(), now_iso(), $this->userId(), $row['id']]
+            );
+        } else {
+            db_execute(
+                'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ? WHERE id = ?',
+                [now_iso(), now_iso(), $row['id']]
+            );
+        }
 
         ActivityLog::record('delete', $r['name'], $id, $this->describe($r, $row));
 
@@ -273,10 +284,17 @@ class ResourceController extends ApiController
             Api::notFound();
         }
 
-        db_execute(
-            'UPDATE ' . $r['table'] . ' SET deleted_at = NULL, updated_at = ?, updated_by = ? WHERE id = ?',
-            [now_iso(), $this->userId(), $row['id']]
-        );
+        if ($this->hasColumn($r['table'], 'updated_by')) {
+            db_execute(
+                'UPDATE ' . $r['table'] . ' SET deleted_at = NULL, updated_at = ?, updated_by = ? WHERE id = ?',
+                [now_iso(), $this->userId(), $row['id']]
+            );
+        } else {
+            db_execute(
+                'UPDATE ' . $r['table'] . ' SET deleted_at = NULL, updated_at = ? WHERE id = ?',
+                [now_iso(), $row['id']]
+            );
+        }
 
         $restored = $this->find($r, $id, true);
 
@@ -358,10 +376,17 @@ class ResourceController extends ApiController
                     continue;
                 }
 
-                db_execute(
-                    'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ?, updated_by = ? WHERE id = ?',
-                    [now_iso(), now_iso(), $this->userId(), $row['id']]
-                );
+                if ($this->hasColumn($r['table'], 'updated_by')) {
+                    db_execute(
+                        'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ?, updated_by = ? WHERE id = ?',
+                        [now_iso(), now_iso(), $this->userId(), $row['id']]
+                    );
+                } else {
+                    db_execute(
+                        'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ? WHERE id = ?',
+                        [now_iso(), now_iso(), $row['id']]
+                    );
+                }
                 $succeeded[] = $id;
                 continue;
             }
@@ -384,10 +409,17 @@ class ResourceController extends ApiController
                     continue;
                 }
 
-                db_execute(
-                    'UPDATE ' . $r['table'] . ' SET status = ?, updated_at = ?, updated_by = ? WHERE id = ?',
-                    [$target, now_iso(), $this->userId(), $row['id']]
-                );
+                if ($this->hasColumn($r['table'], 'updated_by')) {
+                    db_execute(
+                        'UPDATE ' . $r['table'] . ' SET status = ?, updated_at = ?, updated_by = ? WHERE id = ?',
+                        [$target, now_iso(), $this->userId(), $row['id']]
+                    );
+                } else {
+                    db_execute(
+                        'UPDATE ' . $r['table'] . ' SET status = ?, updated_at = ? WHERE id = ?',
+                        [$target, now_iso(), $row['id']]
+                    );
+                }
                 $succeeded[] = $id;
                 continue;
             }
@@ -402,7 +434,9 @@ class ResourceController extends ApiController
 
             if ($columns) {
                 $columns['updated_at'] = now_iso();
-                $columns['updated_by'] = $this->userId();
+                if ($this->hasColumn($r['table'], 'updated_by')) {
+                    $columns['updated_by'] = $this->userId();
+                }
                 $this->updateRow($r, (int) $row['id'], $columns);
             }
 
@@ -455,6 +489,27 @@ class ResourceController extends ApiController
     {
         $user = Auth::user();
         return isset($user['id']) ? (int) $user['id'] : null;
+    }
+
+    protected function hasColumn(string $table, string $column): bool
+    {
+        static $cache = [];
+
+        if (!isset($cache[$table])) {
+            global $pdo;
+            $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+            try {
+                $rows = $driver === 'sqlite'
+                    ? $pdo->query("PRAGMA table_info({$table})")->fetchAll()
+                    : $pdo->query("SHOW COLUMNS FROM {$table}")->fetchAll();
+                $cache[$table] = array_map(static fn ($r) => $r['name'] ?? $r['Field'] ?? '', $rows);
+            } catch (Throwable $e) {
+                $cache[$table] = [];
+            }
+        }
+
+        return in_array($column, $cache[$table], true);
     }
 
     /* ---------------------------------------------------------

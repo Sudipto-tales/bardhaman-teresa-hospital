@@ -34,9 +34,7 @@ class Auth
             'path' => '/',
             'httponly' => true,
             'samesite' => 'Lax',
-            /* Only over TLS in production; forcing it in development would
-               mean the cookie is never set and nobody can log in locally. */
-            'secure' => APP_ENV === 'production',
+            'secure' => is_https(),
         ]);
 
         session_start();
@@ -176,7 +174,7 @@ class Auth
             'path' => '/',
             'httponly' => true,
             'samesite' => 'Lax',
-            'secure' => APP_ENV === 'production',
+            'secure' => is_https(),
         ]);
     }
 

@@ -55,7 +55,11 @@ foreach (array_keys(ResourceRegistry::all()) as $name) {
     }
 
     /* The public key, and the columns the controller writes on every row. */
-    foreach ([$resource['key'], 'created_at', 'updated_at'] as $column) {
+    $requiredCols = [$resource['key'], 'created_at', 'updated_at'];
+    if (empty($resource['readonly'])) {
+        $requiredCols[] = 'updated_by';
+    }
+    foreach ($requiredCols as $column) {
         if (!in_array($column, $cols, true)) {
             $fail("`{$table}` has no `{$column}`");
         }

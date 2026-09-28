@@ -19,6 +19,7 @@ class RolesTable extends Migration
             'description VARCHAR(255)',
             $this->json('permissions'),
             'sort_order INT NOT NULL DEFAULT 0',
+            'updated_by INT',
             $this->timestamps(),
         ]);
 
