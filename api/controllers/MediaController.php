@@ -286,6 +286,63 @@ class MediaController extends ApiController
         Api::ok($this->row($restored));
     }
 
+    /**
+     * Bulk actions — only delete is supported for media.
+     *
+     * Mirrors ResourceController::bulk() but uses MediaUsage for the
+     * dependency check. Returns {succeeded: [], failed: [{id, reason}]}.
+     */
+    public function bulk(): never
+    {
+        $body = $this->body();
+        $ids = $body['ids'] ?? [];
+        $action = $body['action'] ?? '';
+        $payload = $body['payload'] ?? [];
+
+        if (!is_array($ids) || !$ids) {
+            Api::validationFailed(['ids' => 'Nothing was selected']);
+        }
+
+        if ($action !== 'delete') {
+            Api::validationFailed(['action' => 'Only delete is supported in bulk for media']);
+        }
+
+        $force = filter_var($payload['force'] ?? false, FILTER_VALIDATE_BOOL);
+        $succeeded = [];
+        $failed = [];
+
+        foreach ($ids as $id) {
+            $row = $this->find((string) $id, true);
+
+            if (!$row) {
+                $failed[] = ['id' => $id, 'reason' => 'Not found'];
+                continue;
+            }
+
+            $usedBy = MediaUsage::forUrl($row['url']);
+
+            if ($usedBy && !$force) {
+                $failed[] = ['id' => $id, 'reason' => 'In use by ' . count($usedBy) . ' record(s)'];
+                continue;
+            }
+
+            db_execute(
+                'UPDATE media SET deleted_at = ?, updated_at = ? WHERE id = ?',
+                [now_iso(), now_iso(), (int) $row['id']]
+            );
+            $succeeded[] = $id;
+        }
+
+        ActivityLog::record(
+            'delete',
+            'media',
+            null,
+            'Bulk delete: ' . count($succeeded) . ' of ' . count($ids) . ' file(s)'
+        );
+
+        Api::ok(['succeeded' => $succeeded, 'failed' => $failed]);
+    }
+
     /* ---------------------------------------------------------
        Helpers
        --------------------------------------------------------- */

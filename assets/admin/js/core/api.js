@@ -299,12 +299,13 @@
          * store.js returned. The row comes from the cache because DELETE
          * answers 204 and by then it is the only copy left in the browser.
          */
-        async remove(entity, id) {
+        async remove(entity, id, options = {}) {
             const rows = cache[entity] || [];
             const index = rows.findIndex((r) => String(r.id) === String(id));
             const row = index === -1 ? await store.get(entity, id) : rows[index];
 
-            await del(`${pathFor(entity)}/${encodeURIComponent(id)}`);
+            const query = options.force ? { force: 'true' } : {};
+            await del(`${pathFor(entity)}/${encodeURIComponent(id)}`, query);
 
             if (index !== -1) rows.splice(index, 1);
 
@@ -352,8 +353,8 @@
             return true;
         },
 
-        /**
-         * bulk('doctors', ids, 'publish')
+/**
+         * bulk('doctors', ids, 'delete', { force: true })
          * → {succeeded: [], failed: [{id, reason}]}
          * Partial failure is reported honestly rather than swallowed — see the
          * bulk toast rule in docs/04-crud-flows.md.

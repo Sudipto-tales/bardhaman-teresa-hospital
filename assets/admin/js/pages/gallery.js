@@ -28,11 +28,10 @@
     const REFS = [
         { entity: 'doctors', label: 'Doctor', fields: ['photo'], name: (r) => r.name, href: (r) => `doctor-form?id=${encodeURIComponent(r.id)}` },
         { entity: 'leadership', label: 'Leadership', fields: ['photo'], name: (r) => r.name, href: (r) => `leadership-form?id=${encodeURIComponent(r.id)}` },
-        { entity: 'departments', label: 'Department', fields: ['banner', 'image'], name: (r) => r.name, href: (r) => `department-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'departments', label: 'Department', fields: ['banner', 'introImg'], name: (r) => r.name, href: (r) => `department-form?id=${encodeURIComponent(r.id)}` },
         { entity: 'posts', label: 'Blog post', fields: ['coverImage'], name: (r) => r.title, href: (r) => `blog-form?id=${encodeURIComponent(r.id)}` },
         { entity: 'testimonials', label: 'Testimonial', fields: ['photo'], name: (r) => `${r.name}’s quote`, href: () => 'testimonials' },
         { entity: 'facilities', label: 'Facility', fields: ['image'], name: (r) => r.title, href: () => 'facilities' },
-        { entity: 'jobs', label: 'Vacancy', fields: ['image'], name: (r) => r.title, href: (r) => `job-form?id=${encodeURIComponent(r.id)}` },
     ];
 
     const FILTERS = [
@@ -133,6 +132,18 @@
         [['logo', 'Header logo'], ['logoDark', 'Dark-theme logo'], ['favicon', 'Favicon']]
             .forEach(([field, label]) => add(general[field], {
                 label: 'Site setting', name: label, href: 'settings-general',
+            }));
+
+        const social = settings.social || {};
+        [['shareImage', 'Share image']]
+            .forEach(([field, label]) => add(social[field], {
+                label: 'Site setting', name: label, href: 'settings-social',
+            }));
+
+        const popups = settings.popups || {};
+        [['adsImage', 'Ads popup image']]
+            .forEach(([field, label]) => add(popups[field], {
+                label: 'Site setting', name: label, href: 'settings-popups',
             }));
 
         return map;
@@ -631,17 +642,51 @@
         });
         if (!ok) return false;
 
-        const removed = await store.remove('media', row.id);
-        state.selected.delete(row.id);
-        toast.success(`${row.filename} deleted`, {
-            undo: async () => {
-                await store.restore('media', removed.row, removed.index);
-                toast.success('Restored');
-                load();
-            },
-        });
-        await load();
-        return true;
+        try {
+            const removed = await store.remove('media', row.id);
+            state.selected.delete(row.id);
+            toast.success(`${row.filename} deleted`, {
+                undo: async () => {
+                    await store.restore('media', removed.row, removed.index);
+                    toast.success('Restored');
+                    load();
+                },
+            });
+            await load();
+            return true;
+        } catch (err) {
+            if (err.status === 409 && err.dependents && err.dependents.length) {
+                const force = await window.TMH.confirm({
+                    title: `${row.filename} is in use`,
+                    body: 'The server found references the client missed. Force delete anyway?',
+                    danger: true,
+                    icon: 'fa-link-slash',
+                    dependents: err.dependents.map((d) => `${d.entity}: ${d.label}`),
+                    confirmLabel: 'Force delete',
+                    cancelLabel: 'Cancel',
+                });
+                if (!force) return false;
+
+                try {
+                    await store.remove('media', row.id, { force: true });
+                    state.selected.delete(row.id);
+                    toast.success(`${row.filename} force-deleted`, {
+                        undo: async () => {
+                            await store.restore('media', { id: row.id }, 0);
+                            toast.success('Restored');
+                            load();
+                        },
+                    });
+                    await load();
+                    return true;
+                } catch (forceErr) {
+                    toast.error(`Force delete failed: ${forceErr.message || forceErr.code}`);
+                    return false;
+                }
+            }
+            toast.error(`Delete failed: ${err.message || err.code}`);
+            return false;
+        }
     }
 
     /* ---------------------------------------------------------
@@ -653,35 +698,89 @@
         const blocked = picked.filter((r) => usedBy(r).length);
         const free = picked.filter((r) => !usedBy(r).length);
 
-        if (!free.length) {
+        if (!free.length && !blocked.length) {
             await window.TMH.confirm({
-                title: 'All of those are in use',
-                body: 'None of the selected files can go while something on the site points at them.',
+                title: 'Nothing selected',
+                body: 'No files were selected for deletion.',
                 blocked: true,
-                danger: true,
-                icon: 'fa-link-slash',
-                dependents: blocked.map((r) => `${r.filename} — used by ${usedBy(r).length} record(s)`),
+                icon: 'fa-circle-exclamation',
             });
             return;
         }
 
-        const ok = await window.TMH.confirm({
-            title: `Delete ${free.length} file${free.length === 1 ? '' : 's'}?`,
-            body: blocked.length
-                ? `${blocked.length} of the ${picked.length} selected are in use and will be skipped.`
-                : 'Nothing on the site points at any of them.',
-            danger: true,
-            confirmLabel: `Delete ${free.length}`,
-            dependents: blocked.length ? blocked.map((r) => `Kept — in use: ${r.filename}`) : null,
-        });
-        if (!ok) return;
+        let proceedWithForce = false;
 
+        if (blocked.length) {
+            const action = await window.TMH.confirm({
+                title: blocked.length === picked.length ? 'All selected are in use' : 'Some selected are in use',
+                body: blocked.length === picked.length
+                    ? 'None of the selected files can go while something on the site points at them.'
+                    : `${blocked.length} of the ${picked.length} selected are in use and will be skipped unless you force delete.`,
+                danger: true,
+                icon: 'fa-link-slash',
+                dependents: blocked.map((r) => `${r.filename} — used by ${usedBy(r).length} record(s)`),
+                confirmLabel: 'Delete free files only',
+                cancelLabel: 'Cancel',
+                typeToConfirm: null,
+            });
+            if (!action) return;
+            // If user clicked confirm, they want to delete free files only (no force)
+        } else {
+            const ok = await window.TMH.confirm({
+                title: `Delete ${free.length} file${free.length === 1 ? '' : 's'}?`,
+                body: 'Nothing on the site points at any of them.',
+                danger: true,
+                confirmLabel: `Delete ${free.length}`,
+            });
+            if (!ok) return;
+        }
+
+        // First try without force
         const res = await store.bulk('media', free.map((r) => r.id), 'delete');
         state.selected.clear();
 
-        /* Partial failure is reported rather than rounded up to success —
-           see the bulk rule in docs/04-crud-flows.md. */
         if (res.failed.length) {
+            // Some failed - check if it's due to dependents
+            const dependentFailures = res.failed.filter((f) => f.reason && f.reason.includes('In use'));
+            if (dependentFailures.length && free.length > 0) {
+                const force = await window.TMH.confirm({
+                    title: 'Some files are in use',
+                    body: `${dependentFailures.length} file(s) could not be deleted because they are in use. Force delete them anyway?`,
+                    danger: true,
+                    icon: 'fa-link-slash',
+                    dependents: dependentFailures.map((f) => `${f.id}: ${f.reason}`),
+                    confirmLabel: 'Force delete all',
+                    cancelLabel: 'Keep failed',
+                });
+                if (force) {
+                    proceedWithForce = true;
+                }
+            }
+        }
+
+        // If force was chosen, retry with force=true
+        if (proceedWithForce) {
+            const allIds = [...free.map((r) => r.id), ...blocked.map((r) => r.id)];
+            const forceRes = await store.bulk('media', allIds, 'delete', { force: true });
+            state.selected.clear();
+
+            if (forceRes.failed.length) {
+                toast.warning(`${forceRes.succeeded.length} deleted, ${forceRes.failed.length} could not be`, {
+                    action: {
+                        label: 'Why',
+                        onClick: () => window.TMH.confirm({
+                            title: 'Files that were kept',
+                            blocked: true,
+                            danger: true,
+                            icon: 'fa-link-slash',
+                            dependents: forceRes.failed.map((f) => `${f.id}: ${f.reason}`),
+                        }),
+                    },
+                });
+            } else {
+                toast.success(`${forceRes.succeeded.length} file${forceRes.succeeded.length === 1 ? '' : 's'} deleted`);
+            }
+        } else if (res.failed.length) {
             toast.warning(`${res.succeeded.length} deleted, ${res.failed.length} could not be`, {
                 action: {
                     label: 'Why',
