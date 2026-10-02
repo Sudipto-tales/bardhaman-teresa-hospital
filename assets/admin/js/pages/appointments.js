@@ -1,20 +1,9 @@
-/* Appointment requests — read-only archive.
-
-   The hospital does not take bookings online. A visitor who clicks "Book an
-   appointment" on a doctor card lands on the contact page with that doctor
-   preselected, and the desk calls back; doctors whose "Appointments available"
-   toggle is off show no link at all. So nothing on this screen writes: there
-   is no slot to confirm and no patient to notify from here.
-
-   The screen is kept because the records that already exist — and anything a
-   future intake form collects — still have to be readable. Two views over the
-   same rows: a table for searching, and a day view for "what did Thursday
-   morning look like". The day view is not a calendar and does not pretend to
-   be one; the hospital's real slots live in the HIS. */
+/* Website appointment requests. The desk calls back and updates the status;
+   the patient's submitted details remain unchanged. */
 (function () {
     'use strict';
 
-    const { util: U, store, table, layout, modal } = window.TMH;
+    const { util: U, store, table, layout, modal, toast } = window.TMH;
 
     const STATUS = [
         { value: 'all', label: 'All' },
@@ -47,7 +36,7 @@
         document.getElementById('pageHead').innerHTML = layout.pageHead({
             crumb: [{ label: 'Growth' }, { label: 'Appointments' }],
             title: 'Appointment requests',
-            sub: 'A read-only record. The website does not take bookings — it points people at the contact page.',
+            sub: 'Requests received from the website. Open a request to update its status.',
             actions: `
                 <div class="row gap-1">
                     <button type="button" class="btn ${isDayView() ? 'btn--ghost' : 'btn--soft'}" data-view="table">
@@ -66,15 +55,13 @@
         document.getElementById('view').innerHTML = `
             <div class="banner banner--info">
                 <i class="fa-solid fa-circle-info"></i>
-                <span><b>Nothing here can be changed.</b> Appointments are not taken online. A
-                    doctor’s card links to the contact page only when
-                    <a href="doctors">Appointments available</a> is on for that doctor, and the
-                    desk calls the patient back. These rows are kept for reference.</span>
+                <span><b>New requests arrive as Pending.</b> Call the patient to agree a time,
+                    then mark the request Confirmed, Completed or Cancelled.</span>
             </div>
 
             ${U.statStrip([
                 ['fa-hourglass-half', 'red', rows.filter((r) => r.status === 'pending').length, 'Pending', 'Never confirmed'],
-                ['fa-calendar-check', 'navy', rows.filter((r) => r.status === 'confirmed').length, 'Confirmed', 'A slot was given'],
+                ['fa-calendar-check', 'navy', rows.filter((r) => r.status === 'confirmed').length, 'Confirmed', 'Confirmed by the desk'],
                 ['fa-calendar-day', 'blue', rows.filter((r) => dateOf(r) === todayIso() && r.status !== 'cancelled').length, 'Today', 'Asked or booked for today'],
                 ['fa-calendar-xmark', 'magenta', rows.filter((r) => r.status === 'cancelled').length, 'Cancelled', ''],
             ])}
@@ -160,7 +147,7 @@
                     render: (r) => statusTag(r),
                 },
             ],
-            /* Read and call. No status changes, no delete, no bulk bar. */
+            /* Status changes are available in the request drawer. */
             rowActions: (row) => [
                 { label: 'Open', icon: 'fa-eye', onClick: () => openDrawer(row) },
                 ...(row.phone ? [{ label: 'Call patient', icon: 'fa-phone', onClick: () => call(row) }] : []),
@@ -168,7 +155,7 @@
             onRowClick: openDrawer,
             empty: {
                 icon: 'fa-calendar-check', title: 'No appointment requests',
-                text: 'Nothing has been recorded. The site sends visitors to the contact page rather than booking them here.',
+                text: 'Appointment requests submitted on the website will appear here.',
             },
         });
     }
@@ -261,13 +248,12 @@
 
     /* ---------- drawer ---------- */
 
-    /* Detail only. The one action offered is the phone, because calling the
-       patient is the only thing that actually moves a request forward. */
+    /* Keep submitted details intact; only the workflow status is editable. */
     async function openDrawer(row) {
         const doc = doctors.find((d) => d.id === row.doctorId);
         const dep = departments.find((d) => d.id === row.departmentId);
 
-        await modal.drawer({
+        const saved = await modal.drawer({
             title: row.patientName,
             html: `
                 <div class="col gap-6">
@@ -304,13 +290,39 @@
                         <p class="text-sm mid">${U.esc(row.cancelReason)}</p>
                     </div>` : ''}
 
-                    <p class="text-xs muted">This record cannot be edited from the panel.</p>
+                    <div class="field">
+                        <label for="appointmentStatus">Appointment status</label>
+                        <select id="appointmentStatus">
+                            ${STATUS.filter((s) => s.value !== 'all').map((s) =>
+                                `<option value="${s.value}" ${s.value === row.status ? 'selected' : ''}>${s.label}</option>`).join('')}
+                        </select>
+                        <small>Status changes are recorded in the activity log.</small>
+                    </div>
                 </div>`,
-            footer: row.phone
-                ? `<a class="btn btn--primary grow" href="tel:${U.esc(row.phone.replace(/\s+/g, ''))}">
-                       <i class="fa-solid fa-phone"></i> Call ${U.esc(row.patientName)}</a>`
-                : null,
+            footer: `
+                ${row.phone ? `<a class="btn btn--ghost" href="tel:${U.esc(row.phone.replace(/\s+/g, ''))}">
+                    <i class="fa-solid fa-phone"></i> Call patient</a>` : ''}
+                <button type="button" class="btn btn--primary grow" data-save-status>Save status</button>`,
+            onMount: (panel, close) => {
+                const button = panel.querySelector('[data-save-status]');
+                button.addEventListener('click', async () => {
+                    button.disabled = true;
+                    try {
+                        await store.update('appointments', row.id, {
+                            status: panel.querySelector('#appointmentStatus').value,
+                            updatedAt: row.updatedAt,
+                        });
+                        close(true);
+                        toast.success('Appointment status updated');
+                    } catch (err) {
+                        toast.error(err.message || 'Could not update the appointment status');
+                    } finally {
+                        button.disabled = false;
+                    }
+                });
+            },
         });
+        if (saved) await init();
     }
 
     /* ---------- helpers ---------- */

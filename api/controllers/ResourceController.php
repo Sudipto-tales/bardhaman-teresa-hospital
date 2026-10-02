@@ -148,7 +148,7 @@ class ResourceController extends ApiController
     {
         $r = $this->resource();
 
-        if ($r['readonly']) {
+        if ($r['readonly'] && empty($r['statusUpdate'])) {
             Api::forbidden('This record is read-only');
         }
 
@@ -162,6 +162,16 @@ class ResourceController extends ApiController
         $body = $this->body();
         $fields = [];
         $before = $this->row($r, $existing);
+
+        if ($r['readonly'] && !empty($r['statusUpdate'])) {
+            foreach (array_diff(array_keys($body), ['status', 'updatedAt']) as $field) {
+                $fields[$field] = 'Only the appointment status can be changed';
+            }
+            if (!isset($body['status'])) {
+                $fields['status'] = 'Required';
+            }
+            $this->reject($fields);
+        }
 
         /* Optimistic concurrency. The contract asks for updatedAt on every
            patch; it is enforced when sent and not demanded when it is not,
@@ -194,6 +204,10 @@ class ResourceController extends ApiController
 
         if ($r['hasStatus']) {
             $columns['status'] = $status;
+        }
+
+        if (!empty($r['statusUpdate']) && $status !== $existing['status']) {
+            $columns['confirmed_at'] = $status === 'confirmed' ? now_iso() : null;
         }
 
         if (array_key_exists('order', $body)) {
@@ -470,11 +484,11 @@ class ResourceController extends ApiController
             Api::notFound('No such collection');
         }
 
-        /* Read-only means read-only. The route table sends every verb to this
-           controller, so the refusal lives here rather than in eight route
-           entries that could be added to later without noticing. */
-        if ($resource['readonly'] && ApiRequest::method() !== HttpMethod::GET) {
-            Api::forbidden('Appointment records are read-only — the site takes no bookings');
+        /* Appointment intake records permit a status-only PATCH. Other
+           writes remain blocked, including create, delete and bulk actions. */
+        $statusPatch = !empty($resource['statusUpdate']) && ApiRequest::method() === HttpMethod::PATCH;
+        if ($resource['readonly'] && ApiRequest::method() !== HttpMethod::GET && !$statusPatch) {
+            Api::forbidden('This collection only allows reading and appointment status updates');
         }
 
         return $this->resource = $resource;

@@ -548,14 +548,8 @@ return [
         'statusValues' => ['new', 'replied', 'closed', 'spam'],
     ],
 
-    /**
-     * Read-only, deliberately and completely.
-     *
-     * The hospital does not take bookings online. There is no create, no
-     * update, no delete, no reorder and no bulk — a write endpoint here would
-     * be an invitation to rebuild the workflow that was removed on purpose.
-     * See docs/02-content-model.md §20 and docs/07-api-contract.md.
-     */
+    /** Website intake creates these records. The admin may update only status;
+     * create, delete, reorder and bulk operations stay disabled. */
     'appointments' => [
         'defaultSort' => 'preferredDate',
         'defaultDir' => 'desc',
@@ -563,6 +557,7 @@ return [
         'key' => 'public_id',
         'label' => 'patientName',
         'readonly' => true,
+        'statusUpdate' => true,
         'search' => ['patient_name', 'phone', 'email', 'reason'],
         'sort' => ['patientName', 'preferredDate', 'status', 'createdAt'],
         'fields' => [

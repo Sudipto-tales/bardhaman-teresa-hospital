@@ -130,7 +130,27 @@ class PublicIntakeController extends ApiController
             'updated_at' => now_iso(),
         ];
 
-        $publicId = $this->insert('enquiries', 'enq', $columns);
+        $publicId = db_transaction(function () use ($columns, $source, $slot) {
+            $id = $this->insert('enquiries', 'enq', $columns);
+
+            if ($source === 'appointment') {
+                $this->insert('appointments', 'apt', [
+                    'patient_name' => $columns['name'],
+                    'phone' => $columns['phone'],
+                    'email' => $columns['email'],
+                    'department_id' => $columns['department_id'],
+                    'doctor_id' => $columns['doctor_id'],
+                    'preferred_date' => $columns['preferred_date'],
+                    'preferred_slot' => $slot === '' ? null : ucfirst(strtolower(substr($slot, 0, 60))),
+                    'reason' => $columns['message'],
+                    'status' => 'pending',
+                    'created_at' => $columns['created_at'],
+                    'updated_at' => $columns['updated_at'],
+                ]);
+            }
+
+            return $id;
+        });
 
         RateLimit::hit('enquiry', RateLimit::clientIp());
         ActivityLog::record('create', 'enquiries', $publicId, $name . ' — ' . $subject);

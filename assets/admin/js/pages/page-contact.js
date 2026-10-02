@@ -84,7 +84,7 @@
                     F.mirror({
                         label: 'Where submissions go', source: 'Appointments', href: 'appointments',
                         value: `${store.allSync('appointments').length} requests received`,
-                        hint: 'The live form posts nowhere today. Phase 2 wires it to /api/public/appointment.',
+                        hint: 'Website requests appear in Appointments and in the Enquiries inbox.',
                     }),
                 ],
             })}
