@@ -146,6 +146,9 @@ class RouteManager
         [$class, $action] = $handler;
 
         self::applyMiddleware($handler[2] ?? null);
+        if (($handler[2] ?? null) === 'session') {
+            Permissions::enforceApi($route, $method->value, $params, $action);
+        }
 
         if (!class_exists($class)) {
             ApiResponse::error("Controller not found: {$class}", 500);

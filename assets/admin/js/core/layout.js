@@ -78,7 +78,10 @@
 
         const user = me();
 
-        const groups = (root.TMH_NAV || []).map((group) => `
+        const visible = (root.TMH_NAV || []).map((group) => ({
+            ...group, items: group.items.filter((item) => item.key !== 'profile' && root.TMH.session.canScreen(item.key)),
+        })).filter((group) => group.items.length);
+        const groups = visible.map((group) => `
             <div class="nav-group">
                 <div class="nav-group__label">${esc(group.label)}</div>
                 ${group.items.map((item) => `
@@ -171,6 +174,7 @@
     function navHits(needle) {
         const out = [];
         (root.TMH_NAV || []).forEach((group) => group.items.forEach((item) => {
+            if (!root.TMH.session.canScreen(item.key)) return;
             const hay = `${item.label} ${group.label}`.toLowerCase();
             const at = hay.indexOf(needle);
             if (at < 0) return;
@@ -378,7 +382,7 @@
                 <div class="menu hidden" id="accountMenu" role="menu">
                     <a href="profile" role="menuitem"><i class="fa-solid fa-circle-user"></i> My profile</a>
                     <a href="profile?tab=security" role="menuitem"><i class="fa-solid fa-key"></i> Change password</a>
-                    <a href="settings-general" role="menuitem"><i class="fa-solid fa-sliders"></i> Settings</a>
+                    ${root.TMH.session.canScreen('settings-general') ? '<a href="settings-general" role="menuitem"><i class="fa-solid fa-sliders"></i> Settings</a>' : ''}
                     <a href="${SITE}" target="_blank" rel="noopener" role="menuitem"><i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>
                     <hr>
                     <!-- "Reset demo data" was here, and is gone with the mock
@@ -401,6 +405,15 @@
        --------------------------------------------------------- */
     function pageHead(opts) {
         const o = opts || {};
+        const actionHost = document.createElement('div');
+        actionHost.innerHTML = o.actions || '';
+        actionHost.querySelectorAll('a[href]').forEach((link) => {
+            const url = new URL(link.getAttribute('href'), location.href);
+            if (url.origin !== location.origin || !url.pathname.includes('/admin/')) return;
+            const screen = url.pathname.split('/').pop();
+            const verb = screen.endsWith('-form') ? (url.searchParams.has('id') ? 'edit' : 'create') : 'view';
+            if (!root.TMH.session.canScreen(screen, verb)) link.remove();
+        });
         const crumbs = (o.crumb || []).map((c, i, arr) => (
             i === arr.length - 1
                 ? `<span>${esc(c.label)}</span>`
@@ -414,7 +427,7 @@
                 <h1>${esc(o.title || '')} ${o.accent ? `<span>${esc(o.accent)}</span>` : ''}</h1>
                 ${o.sub ? `<p class="page-head__sub">${esc(o.sub)}</p>` : ''}
             </div>
-            <div class="page-head__actions">${o.actions || ''}</div>
+            <div class="page-head__actions">${actionHost.innerHTML}</div>
         </div>`;
     }
 
@@ -429,6 +442,7 @@
         const topbarSlot = document.getElementById('topbar');
         if (sidebarSlot) sidebarSlot.outerHTML = sidebarHtml(activeKey);
         if (topbarSlot) topbarSlot.outerHTML = topbarHtml();
+        if (!root.TMH.session.canScreen('enquiries')) document.getElementById('bellBtn')?.remove();
 
         /* ---- collapsed state ---- */
         try {

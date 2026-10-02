@@ -71,7 +71,7 @@
                                             hint: 'Also your sign-in address.',
                                         }),
                                         F.text({ name: 'phone', label: 'Phone', rule: 'phone', placeholder: '+91 90460 05557' }),
-                                        F.media({ name: 'avatar', label: 'Photo', hint: 'Optional. Your initials are used when there is none.' }),
+                                        ...(session.canResource('media') ? [F.media({ name: 'avatar', label: 'Photo', hint: 'Optional. Your initials are used when there is none.' })] : []),
                                     ],
                                 })}
                                 ${F.bar({ singleSave: true, saveLabel: 'Save profile', noCancel: true })}
@@ -170,7 +170,10 @@
                                                 { value: 'enquiries', label: 'Enquiries' },
                                                 { value: 'appointments', label: 'Appointments' },
                                                 { value: 'blog', label: 'Blog & News' },
-                                            ],
+                                                { value: 'jobs', label: 'Vacancies' },
+                                                { value: 'applications', label: 'Applications' },
+                                                { value: 'profile', label: 'My Profile' },
+                                            ].filter((option) => session.canScreen(option.value)),
                                         }),
                                         F.select({
                                             name: 'emailDigest', label: 'Email digest',

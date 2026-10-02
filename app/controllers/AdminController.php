@@ -57,10 +57,7 @@ class AdminController extends SiteController
      */
     private function landingScreen(): string
     {
-        $stored = (string) (Auth::user()['landing_page'] ?? '');
-        $screen = preg_replace('/\.html$/i', '', trim($stored)) ?? '';
-
-        return $this->shellExists($screen) ? $screen : self::HOME;
+        return Permissions::landing();
     }
 
     /**
@@ -88,6 +85,12 @@ class AdminController extends SiteController
             $this->redirect(base_url('admin/login?next=' . urlencode($screen)));
         }
 
+        if (!Permissions::screen($screen)) {
+            http_response_code(403);
+            header('Content-Type: text/plain; charset=utf-8');
+            echo "You do not have permission to access this admin screen.";
+            return;
+        }
         render_view('/app/page/admin/' . $screen . '.php');
     }
 
@@ -140,7 +143,7 @@ class AdminController extends SiteController
             'head' => ['title' => 'Sign in', 'noindex' => true],
             'csrf' => Csrf::token(),
             'action' => base_url('api/auth/login'),
-            'next' => base_url('admin/' . $this->nextScreen()),
+            'next' => base_url('admin'),
         ]);
     }
 

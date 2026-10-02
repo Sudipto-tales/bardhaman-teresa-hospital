@@ -43,6 +43,18 @@
             onAdd: null,
         }, config);
 
+        const allowed = (verb) => root.TMH.session.canResource(cfg.entity, verb);
+        cfg.reorder = cfg.reorder && allowed('edit');
+        cfg.bulkActions = cfg.bulkActions.filter((a) => {
+            const key = typeof a === 'string' ? a : a.key;
+            return allowed(key === 'delete' ? 'delete' : ['publish', 'hide'].includes(key) ? 'publish' : 'edit');
+        });
+        if (!allowed('create')) {
+            cfg.onAdd = null;
+            cfg.addLabel = '';
+            cfg.empty = { ...cfg.empty, onAction: null, actionLabel: '' };
+        }
+
         const host = typeof cfg.mount === 'string'
             ? document.querySelector(cfg.mount)
             : cfg.mount;
@@ -404,7 +416,14 @@
                 closeMenus();
                 const tr = btn.closest('tr');
                 const row = state.rows.find((r) => String(r.id) === tr.dataset.id);
-                const actions = cfg.rowActions ? cfg.rowActions(row) : [];
+                const actions = (cfg.rowActions ? cfg.rowActions(row) : []).filter((a) => {
+                    if (a.divider) return true;
+                    const verb = a.permission || (/delete|trash/.test(a.icon || '') ? 'delete'
+                        : /clone|copy/.test(a.icon || '') ? 'create'
+                        : /cloud-arrow|lock/.test(a.icon || '') ? 'publish'
+                        : /pen|edit/.test(a.icon || '') ? 'edit' : 'view');
+                    return allowed(verb);
+                });
                 if (!actions.length) return;
 
                 const menu = document.createElement('div');

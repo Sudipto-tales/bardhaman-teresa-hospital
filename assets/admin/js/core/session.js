@@ -61,6 +61,22 @@
             return identity().permissions || {};
         },
 
+        can(module, verb = 'view') {
+            if (module === 'account') return !!session.CURRENT_ID;
+            if (module === 'system') return session.isSuper(session.currentSync());
+            return (session.permissions()[module] || []).includes(verb);
+        },
+
+        canScreen(screen, verb = 'view') {
+            const module = (identity().screenModules || {})[screen];
+            return !!module && session.can(module, verb);
+        },
+
+        canResource(resource, verb = 'view') {
+            const module = (identity().resourceModules || {})[resource];
+            return !!module && session.can(module, verb);
+        },
+
         current() {
             const id = session.CURRENT_ID;
             return id ? store().get('users', id) : Promise.resolve(null);
@@ -90,7 +106,7 @@
         roleName(roleId) {
             const s = store();
             const role = s && (s.allSync('roles') || []).find((r) => r.id === roleId);
-            return role ? role.name : (roleId || '—');
+            return role ? role.name : ((session.currentSync() || {}).role || roleId || '—');
         },
 
         statusTag(status) {

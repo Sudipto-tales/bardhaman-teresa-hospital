@@ -578,7 +578,7 @@ class DashboardController extends ApiController
         foreach (ResourceRegistry::all() as $name => $_) {
             $r = ResourceRegistry::get($name);
 
-            if (empty($r['search'])) {
+            if (!Permissions::resource($name) || empty($r['search'])) {
                 continue;
             }
 
@@ -653,10 +653,10 @@ class DashboardController extends ApiController
         $out = [];
         $like = '%' . $q . '%';
 
-        $pages = db_fetch_all(
+        $pages = Permissions::resource('pages') ? db_fetch_all(
             'SELECT slug, title, status FROM pages WHERE title LIKE ? OR slug LIKE ? ORDER BY title LIMIT ' . (self::SEARCH_PER_ENTITY + 1),
             [$like, $like]
-        );
+        ) : [];
 
         if ($pages) {
             $more = count($pages) > self::SEARCH_PER_ENTITY;
@@ -671,12 +671,12 @@ class DashboardController extends ApiController
             ];
         }
 
-        $media = db_fetch_all(
+        $media = Permissions::resource('media') ? db_fetch_all(
             'SELECT public_id, filename, alt FROM media
               WHERE deleted_at IS NULL AND (filename LIKE ? OR alt LIKE ? OR caption LIKE ?)
               ORDER BY filename LIMIT ' . (self::SEARCH_PER_ENTITY + 1),
             [$like, $like, $like]
-        );
+        ) : [];
 
         if ($media) {
             $more = count($media) > self::SEARCH_PER_ENTITY;

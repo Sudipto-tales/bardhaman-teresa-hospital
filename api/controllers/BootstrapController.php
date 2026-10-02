@@ -29,6 +29,7 @@ class BootstrapController extends ResourceController
         $out = [];
 
         foreach (array_keys(ResourceRegistry::all()) as $name) {
+            if (!Permissions::resource($name)) continue;
             $r = ResourceRegistry::get($name);
 
             /* Not every table has a hand-ordered position — an appointment is

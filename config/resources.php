@@ -604,6 +604,8 @@ return [
             'phone' => 'string',
             'avatar' => 'string',
             'twoFactor' => 'bool',
+            'customPermissions' => 'bool',
+            'permissions' => 'json',
             'lastActiveAt' => ['type' => 'datetime', 'readonly' => true],
             /* The profile screen's preferences. `landingPage` is the screen
                `/admin` opens on — a bare screen name like `dashboard`, which

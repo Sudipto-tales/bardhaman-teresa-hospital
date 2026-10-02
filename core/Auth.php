@@ -55,7 +55,7 @@ class Auth
      * The role name is joined in rather than stored on the user, so renaming a
      * role is one row. A user whose role was deleted still signs in — roles
      * are displayed, not enforced (docs/php/06-decisions.md §2), so a missing
-     * one is a blank label and not a locked account.
+     * one has no module permissions until a role is assigned.
      */
     private const SELECT = 'SELECT u.*, r.name AS role, r.public_id AS role_key
         FROM users u LEFT JOIN roles r ON r.id = u.role_id';

@@ -30,7 +30,8 @@
         }
 
         const settings = await store.getDoc('settings');
-        const careersEmail = (settings.contact.emails.find((e) => /careers/i.test(e.label || e.address)) || {}).address
+        const careersEmail = ((settings.contact?.emails || []).find((e) => /careers/i.test(e.label || e.address)) || {}).address
+            || window.TMH.api.me().careersEmail
             || 'headhrtmh@gmail.com';
 
         document.getElementById('pageHead').innerHTML = layout.pageHead({

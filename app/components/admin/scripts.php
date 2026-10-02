@@ -47,11 +47,17 @@ $core = array_merge(
     $bundles[$type] ?? [],
     ['layout']
 );
+
+// A changed script gets a new URL so cached admin code cannot keep an old menu.
+$adminScriptUrl = static function (string $path): string {
+    $file = __BASEDIR__ . '/' . $path;
+    return base_url($path) . '?v=' . (is_file($file) ? filemtime($file) : '0');
+};
 ?>
 
     <!-- core, in dependency order -->
 <?php foreach ($core as $module): ?>
-    <script src="<?= e(base_url("assets/admin/js/core/{$module}.js")) ?>"></script>
+    <script src="<?= e($adminScriptUrl("assets/admin/js/core/{$module}.js")) ?>"></script>
 <?php endforeach; ?>
 
     <!-- The prototype loaded assets/data/*.js here to seed store.js's
@@ -59,7 +65,7 @@ $core = array_merge(
          shipped beside it would be a second copy of the content, stale from
          the first save. -->
 
-    <script src="<?= e(base_url("assets/admin/js/pages/{$script}.js")) ?>"></script>
+    <script src="<?= e($adminScriptUrl("assets/admin/js/pages/{$script}.js")) ?>"></script>
 </body>
 
 </html>

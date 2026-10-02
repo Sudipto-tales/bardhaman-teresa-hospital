@@ -27,21 +27,22 @@ an internal tool for a known set of staff on modern browsers, not a public page.
 
 ---
 
-## 2. Roles are displayed, not enforced
+## 2. Roles are enforced on admin pages and APIs
 
-**Decision.** Real session login with multiple users. The permission matrix on
-`user-form.html` renders and saves, but the server does not check it.
+**Decision.** `core/Permissions.php` defines the shared access policy. Admin
+screens and all session API routes check it before rendering or handling a
+request. Unknown modules deny access. Bootstrap and search include only
+collections the account can view.
 
-**Why.** The hospital has one small admin team, all trusted. Enforcing
-permissions half-way — some endpoints checked, some not — is worse than not
-enforcing them, because it reads as protection that is not there.
+HR accesses Vacancies and Applications; the Careers website editor belongs
+to Pages. Account/profile and sign-out controls remain available to everyone.
+Users, roles, settings and global reports require Super Admin. Other modules
+respect separate view, create, edit, delete and publish permissions. Custom
+user matrices override role permissions; Super Admin retains full access.
 
-**What it costs.** Any panel user can do anything. The activity log is
-therefore the accountability mechanism, not the permission system, and every
-mutation must write to it.
-
-**When to revisit.** The first time someone outside the core team needs an
-account.
+**Deployment.** Run `php vayu migrate` to apply migration 028, which adds
+custom permission storage without replacing existing accounts or roles.
+Run `php tools/check-permissions.php` for isolated regression checks.
 
 ---
 

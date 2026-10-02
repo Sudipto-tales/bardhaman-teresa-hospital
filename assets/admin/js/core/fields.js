@@ -334,16 +334,21 @@
         /* The sticky Cancel / Save draft / Publish bar. */
         bar(o) {
             const c = o || {};
+            const session = root.TMH.session;
+            const screen = document.body.dataset.page;
+            const save = session.canScreen(screen, screen === 'profile' ? 'edit'
+                : /-form$/.test(location.pathname) && !new URLSearchParams(location.search).has('id') ? 'create' : 'edit');
+            const publish = c.singleSave ? save : save && session.canScreen(screen, 'publish');
             return `
             <div class="form-bar" id="formBar">
                 <div class="form-bar__status"></div>
                 ${c.noCancel ? '' : '<button type="button" class="btn btn--ghost" data-cancel>Cancel</button>'}
-                ${c.singleSave
+                ${!save ? '' : c.singleSave
                     ? `<button type="button" class="btn btn--primary" data-publish>
                         <i class="fa-solid fa-floppy-disk"></i> <span id="publishLabel">${esc(c.saveLabel || 'Save changes')}</span></button>`
                     : `<button type="button" class="btn btn--soft" data-save-draft>Save draft</button>
-                       <button type="button" class="btn btn--primary" data-publish>
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span id="publishLabel">${esc(c.saveLabel || 'Publish')}</span></button>`}
+                       ${publish ? `<button type="button" class="btn btn--primary" data-publish>
+                        <i class="fa-solid fa-cloud-arrow-up"></i> <span id="publishLabel">${esc(c.saveLabel || 'Publish')}</span></button>` : ''}`}
             </div>`;
         },
 

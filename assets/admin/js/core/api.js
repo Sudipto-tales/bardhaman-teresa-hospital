@@ -151,11 +151,13 @@
      * screen paints anything.
      */
     const ready = (async function warm() {
-        const [collections, settings, pages, me] = await Promise.all([
+        const me = await get('api/auth/me');
+        identity = me.data || {};
+        const can = (module) => (identity.permissions[module] || []).includes('view');
+        const [collections, settings, pages] = await Promise.all([
             get('api/bootstrap'),
-            get('api/settings'),
-            get('api/pages'),
-            get('api/auth/me'),
+            identity.user.roleId === 'role-super' ? get('api/settings') : Promise.resolve({ data: {} }),
+            can('pages') ? get('api/pages') : Promise.resolve({ data: [] }),
         ]);
 
         Object.assign(cache, collections.data || {});

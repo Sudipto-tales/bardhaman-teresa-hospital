@@ -130,6 +130,14 @@ class AuthController extends ApiController
             Api::unauthenticated();
         }
 
+        $careersEmail = '';
+        foreach ((array) setting('contact', 'emails', []) as $email) {
+            if (is_array($email) && preg_match('/careers/i', (string) ($email['label'] ?? $email['address'] ?? ''))) {
+                $careersEmail = (string) ($email['address'] ?? '');
+                break;
+            }
+        }
+
         return [
             'user' => [
                 'id' => $user['public_id'],
@@ -141,26 +149,13 @@ class AuthController extends ApiController
                 'roleId' => $user['role_key'],
                 'status' => $user['status'],
             ],
-            'permissions' => $this->permissions($user),
+            'permissions' => Permissions::effective($user),
+            'screenModules' => Permissions::SCREENS,
+            'resourceModules' => Permissions::RESOURCES,
+            'landingScreen' => Permissions::landing(),
+            'careersEmail' => $careersEmail,
             'csrfToken' => Csrf::token(),
         ];
-    }
-
-    /**
-     * Sent so the panel can grey out what a role is not meant to touch. The
-     * server does not act on it: see docs/php/06-decisions.md §2. Anything
-     * that must actually be denied has to be denied server-side, and today
-     * nothing is.
-     */
-    private function permissions(array $user): array
-    {
-        if (empty($user['role_id'])) {
-            return [];
-        }
-
-        $raw = db_scalar('SELECT permissions FROM roles WHERE id = ?', [$user['role_id']]);
-
-        return json_column($raw);
     }
 
     /**
